@@ -3,6 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <title>@yield('titulo', 'Yendo - Sistema de Encomiendas')</title>
 
     {{-- Font Awesome (iconografía de AdminLTE) --}}
@@ -117,4 +118,4 @@
 
 @stack('scripts')
 </body>
-</html>
+

@@ -1,62 +1,76 @@
-<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-4" style="z-index: 1056;" data-bs-theme="light">
+{{-- resources/views/layouts/toast.blade.php --}}
+
+<div class="toast-container position-fixed p-3" style="bottom: 0; right: 0; z-index: 1056;">
 
     @foreach (['success', 'error', 'warning', 'info'] as $msgType)
         @if(session($msgType))
             @php
-                $headerClass = '';
                 $iconClass = '';
+                $progressClass = '';
                 $title = '';
-                $btnCloseClass = 'btn-close-white';
 
+                // Asignamos colores semánticos solo al ícono y a la barra
                 switch($msgType) {
                     case 'success':
-                        $headerClass = 'toast-success';
-                        $iconClass = 'fa-solid fa-circle-check';
+                        $iconClass = 'fas fa-check-circle text-success';
+                        $progressClass = 'bg-success';
                         $title = 'Éxito';
                         break;
                     case 'error':
-                        $headerClass = 'toast-error';
-                        $iconClass = 'fa-solid fa-circle-xmark';
-                        $title = 'Error';
+                        $iconClass = 'fas fa-times-circle text-danger';
+                        $progressClass = 'bg-danger';
+                        $title = 'Error de validación';
                         break;
                     case 'warning':
-                        $headerClass = 'toast-warning';
-                        $iconClass = 'fa-solid fa-triangle-exclamation';
+                        $iconClass = 'fas fa-exclamation-triangle text-warning';
+                        $progressClass = 'bg-warning';
                         $title = 'Advertencia';
                         break;
                     case 'info':
-                        $headerClass = 'toast-info';
-                        $iconClass = 'fa-solid fa-circle-info';
+                        $iconClass = 'fas fa-info-circle text-info';
+                        $progressClass = 'bg-info';
                         $title = 'Información';
                         break;
                 }
             @endphp
 
-            <div class="toast {{ $headerClass }} shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" style="width: 500px;">
-                <div class="toast-header">
-                    <i class="{{ $iconClass }} fs-5 me-2"></i>
-                    <strong class="me-auto">{{ $title }}</strong>
-                    <small>Justo ahora</small>
-                    <button type="button" class="btn-close {{ $btnCloseClass }}" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+            {{-- Toast rediseñado con fondo Midnight Indigo y bordes redondeados --}}
+            <div class="toast custom-toast shadow-lg mb-3" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" style="background-color: var(--midnight-indigo); color: var(--vanilla-cream); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="toast-header border-0" style="background-color: rgba(255,255,255,0.03); color: var(--vanilla-cream);">
+                    <i class="{{ $iconClass }} mr-2" style="font-size: 1.1rem;"></i>
+                    <strong class="mr-auto">{{ $title }}</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Cerrar" style="color: var(--vanilla-cream); text-shadow: none; opacity: 0.7; outline: none;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="toast-body text-dark">
+                <div class="toast-body" style="font-size: 0.95rem; padding: 12px 15px;">
                     {{ session($msgType) }}
+                </div>
+                {{-- Contenedor de la barra de progreso --}}
+                <div style="height: 4px; background-color: rgba(255,255,255,0.05); width: 100%;">
+                    <div class="toast-progress {{ $progressClass }}" style="height: 100%; width: 100%;"></div>
                 </div>
             </div>
         @endif
     @endforeach
 
+    {{-- Toasts generados por errores de validación del Request --}}
     @if ($errors->any())
         @foreach ($errors->all() as $error)
-            <div class="toast toast-danger shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" style="width: 500px;">
-                <div class="toast-header">
-                    <i class="fa-solid fa-circle-xmark fs-5 me-2"></i>
-                    <strong class="me-auto">Error de validación</strong>
-                    <small>Justo ahora</small>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+            <div class="toast custom-toast shadow-lg mb-3" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" style="background-color: var(--midnight-indigo); color: var(--vanilla-cream); border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="toast-header border-0" style="background-color: rgba(255,255,255,0.03); color: var(--vanilla-cream);">
+                    <i class="fas fa-times-circle text-danger mr-2" style="font-size: 1.1rem;"></i>
+                    <strong class="mr-auto">Error de validación</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Cerrar" style="color: var(--vanilla-cream); text-shadow: none; opacity: 0.7; outline: none;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="toast-body text-dark">
+                <div class="toast-body" style="font-size: 0.95rem; padding: 12px 15px;">
                     {{ $error }}
+                </div>
+                {{-- Contenedor de la barra de progreso (Rojo por ser error) --}}
+                <div style="height: 4px; background-color: rgba(255,255,255,0.05); width: 100%;">
+                    <div class="toast-progress bg-danger" style="height: 100%; width: 100%;"></div>
                 </div>
             </div>
         @endforeach

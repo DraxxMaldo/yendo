@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
 
     {{-- Estilos específicos de la marca para esta vista --}}
-    {{-- Nota: Asumo que lo guardarás dentro de public/css/usuarios.css por orden --}}
     <link rel="stylesheet" href="{{ asset('css/usuarios.css') }}">
+
+    {{-- Animaciones y posiciones personalizadas para los Toasts --}}
+    <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
 @endpush
 
 @section('contenido')
@@ -90,7 +92,7 @@
                     </button>
                 </div>
 
-                <form id="formUsuario" action="{{ route('usuarios.insertar') }}" method="POST">
+                <form id="formUsuario" action="{{ route('usuarios.insertar') }}" method="POST" novalidate>
                     @csrf
                     <div class="modal-body row pt-4 px-4">
                         <div class="col-md-6 mb-3">
@@ -99,7 +101,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white text-muted"><i class="fas fa-user"></i></span>
                                 </div>
-                                <input type="text" class="form-control border-left-0" id="nombres" name="nombres" required maxlength="100">
+                                <input type="text" class="form-control border-left-0" id="nombres" name="nombres" value="{{ old('nombres') }}" required maxlength="100">
                             </div>
                         </div>
 
@@ -109,7 +111,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white text-muted"><i class="fas fa-user"></i></span>
                                 </div>
-                                <input type="text" class="form-control border-left-0" id="apellidos" name="apellidos" required maxlength="100">
+                                <input type="text" class="form-control border-left-0" id="apellidos" name="apellidos" value="{{ old('apellidos') }}" required maxlength="100">
                             </div>
                         </div>
 
@@ -119,7 +121,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white text-muted"><i class="fas fa-phone"></i></span>
                                 </div>
-                                <input type="text" class="form-control border-left-0" id="telefono" name="telefono" required maxlength="20">
+                                <input type="text" class="form-control border-left-0" id="telefono" name="telefono" value="{{ old('telefono') }}" required maxlength="20">
                             </div>
                         </div>
 
@@ -129,7 +131,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text bg-white text-muted"><i class="fas fa-envelope"></i></span>
                                 </div>
-                                <input type="email" class="form-control border-left-0" id="correo_electronico" name="correo_electronico" required maxlength="150">
+                                <input type="email" class="form-control border-left-0" id="correo_electronico" name="correo_electronico" value="{{ old('correo_electronico') }}" required maxlength="150">
                             </div>
                         </div>
 
@@ -146,10 +148,10 @@
                         <div class="col-md-6 mb-3">
                             <label for="id_rol" class="form-label text-muted small fw-bold text-uppercase">Asignar Rol</label>
                             <select class="form-control" id="id_rol" name="id_rol" required>
-                                <option value="" disabled selected>Seleccione un rol...</option>
+                                <option value="" disabled {{ old('id_rol') ? '' : 'selected' }}>Seleccione un rol...</option>
                                 @if(isset($roles))
                                     @foreach ($roles as $rol)
-                                        <option value="{{ $rol->id_rol }}">{{ $rol->nombre_rol }}</option>
+                                        <option value="{{ $rol->id_rol }}" {{ old('id_rol') == $rol->id_rol ? 'selected' : '' }}>{{ $rol->nombre_rol }}</option>
                                     @endforeach
                                 @endif
                             </select>
@@ -162,6 +164,25 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR USUARIO -->
+    <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0" style="background-color: var(--midnight-indigo); color: var(--vanilla-cream);">
+                    <h5 class="modal-title fw-bold">
+                        <i class="fas fa-edit mr-2" style="color: var(--vanilla-cream);"></i> Editar Usuario
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: var(--vanilla-cream); opacity: 1;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center py-5">
+                    <p class="text-muted">El formulario de edición se programará en la siguiente fase.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -213,5 +234,12 @@
             console.log("Preparando eliminación para el usuario ID:", id);
             $('#nombreEliminar').text(nombre);
         }
+
+        // Reabrir el modal automáticamente si hay errores de validación
+        @if($errors->any())
+        $(document).ready(function() {
+            $('#modalUsuario').modal('show');
+        });
+        @endif
     </script>
 @endpush
