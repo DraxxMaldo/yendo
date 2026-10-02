@@ -13,6 +13,8 @@ class UsuarioController extends Controller
     /**
      * Listado general de usuarios.
      */
+
+
     public function index()
     {
         // Traemos las credenciales junto con su perfil (1 a 1) y su rol (N a 1)[cite: 6, 7]

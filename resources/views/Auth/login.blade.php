@@ -18,7 +18,7 @@
                         </div>
 
                         {{-- Formulario --}}
-                        <form action="#" method="POST" novalidate>
+                        <form action="{{ route('login.post') }}" method="POST" novalidate>
                             @csrf
 
                             <div class="form-group text-left mb-3">
@@ -27,7 +27,8 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-envelope"></i></span>
                                     </div>
-                                    <input type="email" name="correo" id="correo" class="form-control" required>
+                                    {{-- Agregamos value="{{ old('correo') }}" --}}
+                                    <input type="email" name="correo" id="correo" class="form-control" value="{{ old('correo') }}" required>
                                 </div>
                             </div>
 

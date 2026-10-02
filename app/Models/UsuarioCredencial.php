@@ -26,6 +26,7 @@ class UsuarioCredencial extends Authenticatable
         'contrasenha' => 'hashed',
     ];
 
+
     public static function validaciones($id = null): array
     {
         return [
@@ -72,6 +73,8 @@ class UsuarioCredencial extends Authenticatable
     {
         return $this->hasOne(EmpleadoSucursal::class, 'id_usuario', 'id_usuario');
     }
+
+
 
     // LECTURA
     public static function mostrarTodos(): Collection
