@@ -6,6 +6,7 @@ use App\Models\UsuarioCredencial;
 use App\Models\Rol;
 use Illuminate\Http\Request;
 use App\Http\Requests\InsertarUsuarioRequest;
+use App\Http\Requests\ActualizarUsuarioRequest;
 use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
@@ -56,6 +57,50 @@ class UsuarioController extends Controller
 
         return redirect()->route('usuarios.index')
             ->with('success', "Usuario {$datos['nombres']} ingresado correctamente");
+    }
+
+
+    public function desactivar($id)
+    {
+        \App\Models\UsuarioCredencial::actualizar(['estado_cuenta' => false], $id);
+
+        // Retornamos a la vista anterior disparando tu Toast de éxito
+        return back()->with('success', 'El usuario ha sido desactivado exitosamente.');
+    }
+
+
+    public function actualizar(ActualizarUsuarioRequest $request, $id)
+    {
+        // 1. Obtenemos solo los datos que pasaron la validación
+        $datos = $request->validated();
+
+        // 2. Preparamos los datos para la tabla usuarios_credenciales
+        $datosCredencial = [
+            'correo_electronico' => $datos['correo_electronico'],
+            'id_rol'             => $datos['id_rol'],
+        ];
+
+        // Solo encriptamos y actualizamos la contraseña si el usuario escribió una nueva
+        if (!empty($datos['contrasenha'])) {
+            $datosCredencial['contrasenha'] = Hash::make($datos['contrasenha']);
+        }
+
+        // Usamos tu método estático para actualizar la credencial
+        UsuarioCredencial::actualizar($datosCredencial, $id);
+
+        // 3. Preparamos y actualizamos los datos para la tabla perfiles_personas
+        $datosPerfil = [
+            'nombres'   => $datos['nombres'],
+            'apellidos' => $datos['apellidos'],
+            'telefono'  => $datos['telefono'],
+        ];
+
+        // Buscamos al usuario y actualizamos su relación (Perfil)
+        $usuario = UsuarioCredencial::buscarXId($id);
+        $usuario->perfil()->update($datosPerfil);
+
+        // 4. Redirigimos de vuelta con el Toast de éxito
+        return back()->with('success', 'Los datos del usuario se han actualizado correctamente.');
     }
 
 }

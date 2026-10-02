@@ -63,7 +63,9 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-primary mr-1" data-toggle="modal" data-target="#modalEditarUsuario" onclick="editarUsuario({{ $u->id_usuario }})" title="Editar Usuario">
+                                    <button class="btn btn-sm btn-outline-primary mr-1" data-toggle="modal" data-target="#modalEditarUsuario"
+                                            onclick="editarUsuario({{ $u->id_usuario }}, '{{ $u->perfil->nombres ?? '' }}', '{{ $u->perfil->apellidos ?? '' }}', '{{ $u->perfil->telefono ?? '' }}', '{{ $u->correo_electronico }}', {{ $u->id_rol }})"
+                                            title="Editar Usuario">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#modalEliminarUsuario" onclick="eliminarUsuario({{ $u->id_usuario }}, '{{ $u->perfil->nombres ?? 'Usuario' }}')" title="Eliminar Usuario">
@@ -180,9 +182,55 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body text-center py-5">
-                    <p class="text-muted">El formulario de edición se programará en la siguiente fase.</p>
-                </div>
+
+                <form id="formEditarUsuario" method="POST" action="">
+                    @csrf
+                    @method('PUT') {{-- Simula el verbo HTTP PUT para actualizar[cite: 8] --}}
+
+                    <div class="modal-body row pt-4 px-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Nombres</label>
+                            <input type="text" class="form-control border-left-0" id="edit_nombres" name="nombres" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Apellidos</label>
+                            <input type="text" class="form-control border-left-0" id="edit_apellidos" name="apellidos" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Teléfono</label>
+                            <input type="text" class="form-control border-left-0" id="edit_telefono" name="telefono" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Correo Electrónico</label>
+                            <input type="email" class="form-control border-left-0" id="edit_correo" name="correo_electronico" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Nueva Contraseña</label>
+                            <input type="password" class="form-control border-left-0" id="edit_contrasenha" name="contrasenha" placeholder="Dejar en blanco para conservar la actual">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase">Rol</label>
+                            <select class="form-control" id="edit_id_rol" name="id_rol" required>
+                                @if(isset($roles))
+                                    @foreach ($roles as $rol)
+                                        <option value="{{ $rol->id_rol }}">{{ $rol->nombre_rol }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 px-4 pb-4">
+                        <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-brand fw-bold rounded-pill px-4">
+                            <i class="fas fa-save mr-1"></i> Actualizar Usuario
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -191,26 +239,30 @@
     <div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-danger text-white border-0">
-                    <h5 class="modal-title fw-bold" id="modalEliminarUsuarioLabel">
-                        <i class="fas fa-exclamation-triangle mr-2"></i> Confirmar Eliminación
+                {{-- Cambiamos a bg-warning para indicar precaución, no destrucción --}}
+                <div class="modal-header bg-warning border-0">
+                    <h5 class="modal-title fw-bold text-dark" id="modalEliminarUsuarioLabel">
+                        <i class="fas fa-user-slash mr-2"></i> Confirmar Desactivación
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 1;">
+                    <button type="button" class="close text-dark" data-dismiss="modal" aria-label="Close" style="opacity: 1;">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="formEliminar" method="POST" action="#">
+                <form id="formEliminar" method="POST" action="">
                     @csrf
-                    @method('DELETE')
+                    @method('PATCH') {{-- Método REST para actualizaciones parciales --}}
+
                     <div class="modal-body p-4 text-center">
-                        <i class="fas fa-trash-alt text-danger mb-3" style="font-size: 3rem;"></i>
-                        <h5 class="mb-3">¿Estás seguro de que deseas eliminar este usuario?</h5>
-                        <p class="mb-1 text-dark">El usuario <strong id="nombreEliminar" style="color: var(--midnight-indigo);"></strong> será desactivado/eliminado del sistema.</p>
-                        <p class="text-muted small mb-0">Esta acción podría ser irreversible.</p>
+                        <i class="fas fa-user-times text-warning mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="mb-3">¿Estás seguro de desactivar este usuario?</h5>
+                        <p class="mb-1 text-dark">El usuario <strong id="nombreEliminar" style="color: var(--midnight-indigo);"></strong> pasará a estado inactivo y no podrá iniciar sesión en el sistema.</p>
+                        <p class="text-muted small mb-0">Podrás reactivarlo en el futuro si es necesario.</p>
                     </div>
                     <div class="modal-footer border-0 d-flex justify-content-center pb-4">
                         <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4 mx-2" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger fw-bold rounded-pill px-4 mx-2">Eliminar Definitivamente</button>
+                        <button type="submit" class="btn btn-warning fw-bold rounded-pill px-4 mx-2 text-dark">
+                            <i class="fas fa-power-off mr-1"></i> Desactivar Usuario
+                        </button>
                     </div>
                 </form>
             </div>
@@ -226,13 +278,33 @@
     <script src="{{ asset('js/dataTable.js') }}"></script>
 
     <script>
-        function editarUsuario(id) {
-            console.log("Abriendo modal de edición para el usuario ID:", id);
+
+        function editarUsuario(id, nombres, apellidos, telefono, correo, id_rol) {
+            // 1. Generamos la ruta dinámicamente y la asignamos al form
+            // CAMBIAMOS "usuarios.update" por "usuarios.actualizar"
+            let url = '{{ route("usuarios.actualizar", ":id") }}';
+            url = url.replace(':id', id);
+            $('#formEditarUsuario').attr('action', url);
+
+            // 2. Llenamos los campos del modal
+            $('#edit_nombres').val(nombres);
+            $('#edit_apellidos').val(apellidos);
+            $('#edit_telefono').val(telefono);
+            $('#edit_correo').val(correo);
+            $('#edit_id_rol').val(id_rol);
+            $('#edit_contrasenha').val(''); // Aseguramos que la contraseña siempre se abra vacía
         }
 
         function eliminarUsuario(id, nombre) {
-            console.log("Preparando eliminación para el usuario ID:", id);
+            console.log("Preparando desactivación para el usuario ID:", id);
             $('#nombreEliminar').text(nombre);
+
+            // Generamos la ruta dinámicamente reemplazando un parámetro temporal
+            let url = '{{ route("usuarios.desactivar", ":id") }}';
+            url = url.replace(':id', id);
+
+            // Asignamos la nueva URL al formulario del modal
+            $('#formEliminar').attr('action', url);
         }
 
         // Reabrir el modal automáticamente si hay errores de validación
