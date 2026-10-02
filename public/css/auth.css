@@ -1,0 +1,90 @@
+/* public/css/auth.css */
+
+/* 1. Variables Globales y Fondo */
+:root {
+    --midnight-indigo: #282B4A;
+    --vanilla-cream: #EEEBDA;
+}
+
+body {
+    background-color: var(--midnight-indigo);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+}
+
+/* 2. Diseño específico de la tarjeta de login */
+.login-card {
+    border-radius: 8px;
+    padding: 2.5rem 2.5rem;
+}
+
+.login-title {
+    color: var(--midnight-indigo);
+    font-weight: 900;
+    font-size: 1.4rem;
+    margin-top: 0.2rem;
+    margin-bottom: 2rem;
+}
+
+.custom-label {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--midnight-indigo);
+    margin-bottom: 0.3rem;
+}
+
+/* 3. Caja gris de los inputs */
+.custom-input-group .input-group-text {
+    background-color: #B8B8B8;
+    border: none;
+    color: var(--midnight-indigo);
+    border-radius: 4px 0 0 4px;
+    font-size: 1.2rem;
+    padding-left: 1rem;
+}
+
+.custom-input-group .form-control {
+    background-color: #B8B8B8;
+    border: none;
+    color: var(--midnight-indigo);
+    border-radius: 0 4px 4px 0;
+    box-shadow: none !important;
+    height: 48px;
+    font-weight: bold;
+}
+
+/* 4. Botones */
+.btn-ingresar {
+    background-color: var(--midnight-indigo);
+    color: white;
+    font-weight: 800;
+    border-radius: 4px;
+    height: 48px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-ingresar:hover {
+    background-color: #1a1c30;
+    color: white;
+}
+
+.btn-olvidaste {
+    background-color: white;
+    color: var(--midnight-indigo);
+    font-weight: 900;
+    border: 2px solid var(--midnight-indigo);
+    border-radius: 4px;
+    height: 48px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.btn-olvidaste:hover {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-indigo);
+}
