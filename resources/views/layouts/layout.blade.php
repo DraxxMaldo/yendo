@@ -36,9 +36,9 @@
                     {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right shadow border-0 rounded-3">
-                    <form ">
+                    <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="dropdown-item text-danger fw-bold">
+                        <button type="submit" class="dropdown-item text-danger fw-bold" style="cursor: pointer;">
                             <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
                         </button>
                     </form>
