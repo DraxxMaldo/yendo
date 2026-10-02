@@ -1,0 +1,53 @@
+:root {
+    --midnight-indigo: #282B4A;
+    --vanilla-cream: #EEEBDA;
+}
+
+/* Menú Lateral (Midnight Indigo) */
+.main-sidebar, .main-sidebar::before {
+    background-color: var(--midnight-indigo) !important;
+}
+.brand-link {
+    border-bottom: 1px solid rgba(238, 235, 218, 0.2) !important;
+    color: var(--vanilla-cream) !important;
+}
+.brand-link:hover {
+    color: #ffffff !important;
+}
+.sidebar .nav-link {
+    color: rgba(238, 235, 218, 0.8) !important;
+}
+.sidebar .nav-link:hover {
+    color: var(--vanilla-cream) !important;
+}
+
+/* Botón Activo en el Menú (Vanilla Cream con texto Indigo) */
+.sidebar .nav-pills .nav-link.active,
+.sidebar .nav-pills .nav-link.active:hover {
+    background-color: var(--vanilla-cream) !important;
+    color: var(--midnight-indigo) !important;
+    font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Barra Superior (Navbar en Vanilla Cream) */
+.main-header.navbar {
+    background-color: var(--vanilla-cream) !important;
+    border-bottom: 1px solid rgba(40, 43, 74, 0.1) !important;
+}
+.main-header .nav-link {
+    color: var(--midnight-indigo) !important;
+    font-weight: 500;
+}
+
+/* Fondo general sutilmente adaptado al Vanilla Cream */
+.content-wrapper {
+    background-color: #f6f5ef !important;
+}
+
+/* Pie de página */
+.main-footer {
+    background-color: var(--vanilla-cream) !important;
+    border-top: 1px solid rgba(40, 43, 74, 0.1) !important;
+    color: var(--midnight-indigo) !important;
+}
