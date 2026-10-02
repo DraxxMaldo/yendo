@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\UsuarioCredencial;
 use App\Models\Rol;
 use Illuminate\Http\Request;
+use App\Http\Requests\InsertarUsuarioRequest;
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -25,4 +27,33 @@ class UsuarioController extends Controller
         // y le pasamos las variables usando compact()
         return view('Usuarios.usuarios', compact('usuarios', 'roles'));
     }
+
+    public function insertarUsuario(InsertarUsuarioRequest $request)
+    {
+        // 1. Obtenemos los datos limpios y validados del FormRequest
+        $datos = $request->validated();
+
+        // 2. Transacción para asegurar que ambas tablas se guarden juntas
+        DB::transaction(function () use ($datos) {
+
+            // Insertamos la credencial
+            $credencial = UsuarioCredencial::create([
+                'correo_electronico' => $datos['correo_electronico'],
+                'contrasenha'        => bcrypt($datos['contrasenha']),
+                'id_rol'             => $datos['id_rol'],
+                'estado_cuenta'      => true,
+            ]);
+
+            // Usamos la relación perfil() para insertar los datos biográficos
+            $credencial->perfil()->create([
+                'nombres'   => $datos['nombres'],
+                'apellidos' => $datos['apellidos'],
+                'telefono'  => $datos['telefono'],
+            ]);
+        });
+
+        return redirect()->route('usuarios.index')
+            ->with('success', "Usuario {$datos['nombres']} ingresado correctamente");
+    }
+
 }

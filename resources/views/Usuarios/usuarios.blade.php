@@ -90,7 +90,7 @@
                     </button>
                 </div>
 
-                <form id="formUsuario" action="#" method="POST">
+                <form id="formUsuario" action="{{ route('usuarios.insertar') }}" method="POST">
                     @csrf
                     <div class="modal-body row pt-4 px-4">
                         <div class="col-md-6 mb-3">
@@ -157,7 +157,7 @@
                     </div>
                     <div class="modal-footer border-0 px-4 pb-4">
                         <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4" data-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-brand fw-bold rounded-pill px-4">
+                        <button type="submit" class="btn btn-brand fw-bold rounded-pill px-4">
                             <i class="fas fa-save mr-1"></i> Guardar Usuario
                         </button>
                     </div>
