@@ -1,0 +1,37 @@
+/* Botones principales de la marca */
+.btn-brand {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-brand:hover {
+    background-color: #1a1c33 !important; /* Un tono más oscuro para el hover */
+    color: #ffffff !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+/* Cabecera de tabla de la marca */
+.table-brand thead th {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border-bottom: none;
+    font-weight: 600;
+}
+
+/* Personalización de la paginación de DataTables para usar Midnight Indigo */
+.page-item.active .page-link {
+    background-color: var(--midnight-indigo) !important;
+    border-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+}
+.page-link {
+    color: var(--midnight-indigo) !important;
+}
+
+/* Ajuste estético de la tarjeta */
+.card-custom {
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(40, 43, 74, 0.1);
+}

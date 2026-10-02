@@ -66,9 +66,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                        <a href="{{ route('usuarios.index') }}" class="nav-link {{ request()->routeIs('usuarios.index') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user"></i>
-                            <p>Usuario</p>
+                            <p>Usuarios</p>
                         </a>
                     </li>
 
