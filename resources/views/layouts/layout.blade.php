@@ -73,6 +73,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('bitacora') }}" class="nav-link {{ request()->routeIs('bitacora') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-shield-alt"></i>
+                            <p>Auditoría</p>
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
         </div>

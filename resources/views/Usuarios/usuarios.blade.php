@@ -183,7 +183,7 @@
                     </button>
                 </div>
 
-                <form id="formEditarUsuario" method="POST" action="">
+                <form id="formEditarUsuario" method="POST" action="" novalidate>
                     @csrf
                     @method('PUT') {{-- Simula el verbo HTTP PUT para actualizar[cite: 8] --}}
 
