@@ -3,7 +3,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <title>@yield('titulo', 'Yendo - Sistema de Encomiendas')</title>
 
     {{-- Font Awesome (iconografía de AdminLTE) --}}
@@ -12,7 +11,7 @@
     {{-- AdminLTE CSS vía CDN --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
-    {{-- Hoja de estilo propia del proyecto, SIEMPRE después del framework para poder sobrescribirlo[cite: 4] --}}
+    {{-- Hoja de estilo propia del proyecto, SIEMPRE después del framework para poder sobrescribirlo --}}
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
 
     @stack('estilos')
@@ -29,17 +28,60 @@
             </li>
         </ul>
 
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto p-2">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fas fa-user-circle mr-1"></i>
-                    {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
+                {{-- BOTÓN TIPO PÍLDORA (Estilos movidos a la clase .btn-usuario-pildora) --}}
+                <a class="nav-link dropdown-toggle d-flex align-items-center btn-usuario-pildora"
+                   data-toggle="dropdown" href="#">
+
+                    <i class="fas fa-user-circle" style="color: var(--midnight-indigo); font-size: 2.2rem;"></i>
+
+                    <div class="d-flex flex-column text-left">
+                        <span class="fw-bold" style="color: var(--midnight-indigo); line-height: 1.1; font-size: 1.05rem;">
+                            {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
+                        </span>
+                        <small style="color: rgba(40, 43, 74, 0.7); line-height: 1; font-size: 0.8rem;">
+                            {{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}
+                        </small>
+                    </div>
+
+                    <i class="fas fa-chevron-circle-down ml-2" style="color: var(--midnight-indigo); font-size: 1.1rem; opacity: 0.8;"></i>
                 </a>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right shadow border-0 rounded-3">
+
+                {{-- MENÚ DESPLEGABLE --}}
+                <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 mt-2"
+                     style="min-width: 260px; border-radius: 15px;">
+
+                    {{-- 1. Cabecera del Menú (Informativa) --}}
+                    <div class="dropdown-item d-flex align-items-center py-3" style="pointer-events: none; border-radius: 15px 15px 0 0; background-color: rgba(40, 43, 74, 0.03);">
+                        <i class="fas fa-user-circle fa-2x mr-3" style="color: var(--midnight-indigo);"></i>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold" style="color: var(--midnight-indigo); font-size: 1.1rem;">
+                                {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
+                            </span>
+                            <small style="color: rgba(40, 43, 74, 0.7);">
+                                {{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="dropdown-divider my-0"></div>
+
+                    {{-- 2. Opción: Perfil --}}
+                    <a href="#" class="dropdown-item py-3 fw-bold d-flex align-items-center" style="color: var(--midnight-indigo);">
+                        <i class="fas fa-id-badge mr-3 text-center" style="color: var(--midnight-indigo); font-size: 1.25rem; width: 25px;"></i>
+                        <span style="font-size: 1.1rem;">Perfil</span>
+                    </a>
+
+                    <div class="dropdown-divider my-0"></div>
+
+                    {{-- 3. Opción: Cerrar Sesión --}}
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="dropdown-item text-danger fw-bold" style="cursor: pointer;">
-                            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                        <button type="submit" class="dropdown-item py-3 fw-bold d-flex align-items-center"
+                                style="cursor: pointer; border-radius: 0 0 15px 15px; color: var(--midnight-indigo);">
+                            <i class="fas fa-sign-out-alt mr-3 text-center" style="color: var(--midnight-indigo); font-size: 1.25rem; width: 25px;"></i>
+                            <span style="font-size: 1.1rem;">Cerrar Sesión</span>
                         </button>
                     </form>
                 </div>
@@ -49,9 +91,7 @@
 
     {{-- 2. MENÚ LATERAL --}}
     <aside class="main-sidebar elevation-4">
-
         <a href="{{ route('home') }}" class="brand-link text-decoration-none text-center">
-            {{-- Se inserta la imagen usando asset() --}}
             <img src="{{ asset('img/logodos.png') }}" alt="Logo Yendo Logística" class="img-fluid" style="max-height: 40px; width: auto;">
         </a>
 
@@ -77,6 +117,13 @@
                         <a href="{{ route('bitacora') }}" class="nav-link {{ request()->routeIs('bitacora') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-shield-alt"></i>
                             <p>Auditoría</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('establecimientos.index') }}" class="nav-link {{ request()->routeIs('establecimientos.index') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-building"></i>
+                            <p>Establecimientos</p>
                         </a>
                     </li>
 
@@ -125,4 +172,3 @@
 
 @stack('scripts')
 </body>
-

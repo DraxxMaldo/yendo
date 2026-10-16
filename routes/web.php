@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EstablecimientoController;
+use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\MunicipioController;
 
 
 
@@ -33,3 +36,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::patch('/usuarios/{id}/desactivar', [UsuarioController::class, 'desactivar'])->name('usuarios.desactivar');
 
 Route::get('/bitacora', [\App\Http\Controllers\BitacoraController::class, 'index'])->middleware('auth')->name('bitacora');
+
+
+// Rutas de Establecimientos
+
+Route::get('/establecimientos', [EstablecimientoController::class, 'index'])->name('establecimientos.index');
+// NUEVAS RUTAS POST PARA GUARDAR (Usando sus respectivos controladores)[cite: 14]
+Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
+Route::post('/municipios', [MunicipioController::class, 'store'])->name('municipios.store');
+Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');

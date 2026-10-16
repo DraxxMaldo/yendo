@@ -1,6 +1,6 @@
 :root {
-    --midnight-indigo: #282B4A;
-    --vanilla-cream: #EEEBDA;
+    --midnight-indigo: #282b4a;
+    --vanilla-cream: rgb(238 235 218 / 0.8);
 }
 
 /* Menú Lateral (Midnight Indigo) */
@@ -50,4 +50,68 @@
     background-color: var(--vanilla-cream) !important;
     border-top: 1px solid rgba(40, 43, 74, 0.1) !important;
     color: var(--midnight-indigo) !important;
+}
+
+/* ==========================================================================
+   DROPDOWN DE USUARIO (Menú superior tipo píldora)
+   ========================================================================== */
+
+/* Nueva clase que reemplaza los estilos en línea del HTML */
+.btn-usuario-pildora {
+    background-color: rgba(40, 43, 74, 0.08);
+    border: 1px solid rgba(40, 43, 74, 0.15);
+    border-radius: 50px;
+    padding: 0.25rem 1rem 0.25rem 0.5rem;
+    gap: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Sombra exacta implementada aquí */
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-nav .dropdown > .nav-link.btn-usuario-pildora:hover,
+.navbar-nav .dropdown.show > .nav-link.btn-usuario-pildora {
+    background-color: rgba(40, 43, 74, 0.15) !important;
+}
+
+/* Quitar la flechita por defecto del dropdown de Bootstrap */
+.navbar-nav .dropdown-toggle::after {
+    display: none;
+}
+
+/* Animación sutil al abrir el dropdown */
+.dropdown-menu {
+    animation: fadeInDown 0.2s ease-out forwards;
+    transform-origin: top;
+}
+
+/* Estilos de los items del menú desplegable */
+.dropdown-menu .dropdown-item {
+    transition: background-color 0.15s ease-in-out;
+}
+
+/* Hover usando tu color Midnight Indigo con transparencia */
+.dropdown-menu .dropdown-item:hover {
+    background-color: rgba(40, 43, 74, 0.1);
+}
+
+/* Hover específico color rojo para el botón de Cerrar Sesión */
+.dropdown-menu form .dropdown-item:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545 !important;
+}
+
+.dropdown-menu form .dropdown-item:hover i,
+.dropdown-menu form .dropdown-item:hover span {
+    color: #dc3545 !important;
+}
+
+/* Keyframes para la animación de entrada */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

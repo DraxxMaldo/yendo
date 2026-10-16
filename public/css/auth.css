@@ -3,7 +3,7 @@
 /* 1. Variables Globales y Fondo */
 :root {
     --midnight-indigo: #282B4A;
-    --vanilla-cream: #EEEBDA;
+    --vanilla-cream: rgb(238 235 218 / 0.8);
 }
 
 body {

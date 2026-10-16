@@ -1,0 +1,46 @@
+/* ==========================================================================
+   BOTONES DOBLES (Agregar Nuevo)
+   ========================================================================== */
+.btn-agregar-doble {
+    background-color: var(--midnight-indigo);
+    color: rgb(255 255 255 / 0.8);
+    border-radius: 10px;
+    padding: 0.6rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    border: none;
+    transition: all 0.2s ease-in-out;
+    text-align: left;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-agregar-doble:hover {
+    background-color: #1f223a;
+    color: rgb(255 255 255 / 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-agregar-doble i {
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+.btn-agregar-doble .texto-btn {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.btn-agregar-doble .texto-btn span:first-child {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.btn-agregar-doble .texto-btn span:last-child {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
