@@ -119,7 +119,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('departamentos.store') }}" method="POST">
+                <form action="{{ route('departamentos.store') }}" method="POST" novalidate>
                     @csrf
                     <div class="modal-body px-4 py-4">
                         <div class="form-group">
@@ -148,7 +148,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('municipios.store') }}" method="POST">
+                <form action="{{ route('municipios.store') }}" method="POST" novalidate>
                     @csrf
                     <div class="modal-body px-4 py-4">
                         <div class="form-group mb-4">
@@ -189,7 +189,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('establecimientos.store') }}" method="POST">
+                <form action="{{ route('establecimientos.store') }}" method="POST" novalidate>
                     @csrf
                     <div class="modal-body px-4 py-4">
                         {{-- Campo de Nombre (ancho completo) --}}
