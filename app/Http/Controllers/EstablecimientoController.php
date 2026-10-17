@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Establecimiento;
 use App\Models\Departamento;
 use App\Models\Municipio;
-use App\Http\Requests\InsertarEstablecimientoRequest; // 1. Importamos tu nuevo Form Request
+use App\Http\Requests\InsertarEstablecimientoRequest;
+use App\Exports\EstablecimientosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EstablecimientoController extends Controller
 {
@@ -29,5 +31,12 @@ class EstablecimientoController extends Controller
         Establecimiento::insertar($request->validated());
 
         return back()->with('success', 'Establecimiento registrado exitosamente.');
+    }
+
+    // Método para exportar a Excel
+    public function exportarExcel()
+    {
+        // Descarga el archivo generado por la clase EstablecimientosExport
+        return Excel::download(new EstablecimientosExport, 'Reporte_Establecimientos.xlsx');
     }
 }

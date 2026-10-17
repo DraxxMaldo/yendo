@@ -45,3 +45,10 @@ Route::get('/establecimientos', [EstablecimientoController::class, 'index'])->na
 Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
 Route::post('/municipios', [MunicipioController::class, 'store'])->name('municipios.store');
 Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');
+
+
+
+// Ruta para exportar establecimientos a Excel
+Route::get('/establecimientos/exportar/excel', [\App\Http\Controllers\EstablecimientoController::class, 'exportarExcel'])->name('establecimientos.excel');
+
+

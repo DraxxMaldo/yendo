@@ -17,7 +17,33 @@
             </h3>
 
             {{-- CONTENEDOR DE NUEVOS BOTONES DOBLES --}}
-            <div class="d-flex flex-wrap" style="gap: 10px;">
+            <div class="d-flex flex-wrap align-items-stretch" style="gap: 10px;">
+
+                <!-- Botón Desplegable Compartir -->
+                <div class="dropdown d-flex">
+                    <button class="btn text-white fw-bold d-flex align-items-center justify-content-center px-4"
+                            type="button"
+                            id="dropdownCompartir"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            style="background-color: var(--midnight-indigo); border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <i class="fas fa-share-alt mr-2"></i> Compartir
+                    </button>
+                    <div class="dropdown-menu shadow-sm border-0 mt-2" aria-labelledby="dropdownCompartir" style="border-radius: 10px;">
+                        <a class="dropdown-item py-2 fw-semibold" href="{{ route('establecimientos.excel') }}" id="btnExportarExcel">
+                            <i class="fas fa-file-excel text-success mr-2" style="width: 20px;"></i> Exportar Excel
+                        </a>
+                        <a class="dropdown-item py-2 fw-semibold" href="#">
+                            <i class="fas fa-file-pdf text-danger mr-2" style="width: 20px;"></i> Exportar PDF
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item py-2 fw-semibold" href="#">
+                            <i class="fas fa-envelope text-primary mr-2" style="width: 20px;"></i> Mandar por Gmail
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Botón Agregar Establecimiento -->
                 <button class="btn-agregar-doble" data-toggle="modal" data-target="#modalEstablecimiento">
                     <i class="fas fa-plus"></i>
@@ -45,7 +71,6 @@
                     </div>
                 </button>
             </div>
-        </div>
 
         <div class="card-body px-4 pb-4">
             <div class="table-responsive mt-2">
@@ -239,4 +264,6 @@
             </div>
         </div>
     </div>
+
+
 @endsection
