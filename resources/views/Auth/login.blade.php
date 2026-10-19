@@ -39,9 +39,13 @@
                                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                     </div>
                                     <input type="password" name="clave" id="clave" class="form-control" required>
+                                    <div class="input-group-append" id="btnToggleClave" style="cursor: pointer;">
+                                        <span class="input-group-text bg-white border-left-0">
+                                            <i class="fas fa-eye text-muted" id="iconoClave"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-
                             {{-- Botones de Acción --}}
                             <button type="submit" class="btn btn-block btn-ingresar mb-3 d-flex justify-content-center align-items-center">
                                 Ingresar <i class="fas fa-arrow-right ml-3" style="font-size: 1.1rem;"></i>
