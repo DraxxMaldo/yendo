@@ -8,6 +8,7 @@ use App\Models\Municipio;
 use App\Http\Requests\InsertarEstablecimientoRequest;
 use App\Exports\EstablecimientosExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EstablecimientoController extends Controller
 {
@@ -38,5 +39,18 @@ class EstablecimientoController extends Controller
     {
         // Descarga el archivo generado por la clase EstablecimientosExport
         return Excel::download(new EstablecimientosExport, 'Reporte_Establecimientos.xlsx');
+    }
+
+    // Método para exportar a PDF
+    public function exportarPdf()
+    {
+        // Consultamos los datos con sus relaciones (Eager Loading)
+        $establecimientos = Establecimiento::with('municipio.departamento')->orderBy('id_establecimiento', 'DESC')->get();
+
+        // Cargamos la vista que acabamos de crear y le pasamos los datos
+        $pdf = Pdf::loadView('Establecimiento.PDF.TablaEstablecimientoPdf', compact('establecimientos'));
+
+        // Descargamos el archivo generado
+        return $pdf->download('Reporte_Establecimientos.pdf');
     }
 }

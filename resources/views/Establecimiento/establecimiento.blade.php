@@ -34,7 +34,7 @@
                         <a class="dropdown-item py-2 fw-semibold" href="{{ route('establecimientos.excel') }}" id="btnExportarExcel">
                             <i class="fas fa-file-excel text-success mr-2" style="width: 20px;"></i> Exportar Excel
                         </a>
-                        <a class="dropdown-item py-2 fw-semibold" href="#">
+                        <a class="dropdown-item py-2 fw-semibold" href="{{ route('establecimientos.pdf') }}">
                             <i class="fas fa-file-pdf text-danger mr-2" style="width: 20px;"></i> Exportar PDF
                         </a>
                         <div class="dropdown-divider"></div>
