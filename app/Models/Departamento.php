@@ -34,6 +34,11 @@ class Departamento extends Model
         return $this->hasMany(Municipio::class, 'id_departamento', 'id_departamento');
     }
 
+    public function zona()
+    {
+        return $this->belongsTo(Zona::class, 'id_zona', 'id_zona');
+    }
+
     // LECTURA
     public static function mostrarTodos(): Collection
     {
