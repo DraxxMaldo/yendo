@@ -214,17 +214,17 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('establecimientos.store') }}" method="POST" novalidate>
+                <form action="{{ route('establecimientos.store') }}" method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     <div class="modal-body px-4 py-4">
-                        {{-- Campo de Nombre (ancho completo) --}}
+                        {{-- (Tus inputs anteriores de nombre, departamento, municipio y dirección) --}}
+
                         <div class="form-group mb-4">
                             <label class="fw-bold text-muted">Nombre del Establecimiento <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nombre" placeholder="Ej. Sucursal Centro" required>
                         </div>
 
                         <div class="row">
-                            {{-- Nuevo campo: Seleccionar Departamento (no se envía a la BD, solo sirve para filtrar) --}}
                             <div class="col-md-6 form-group mb-4">
                                 <label class="fw-bold text-muted">Departamento <span class="text-danger">*</span></label>
                                 <select class="form-control" id="filtro_departamento">
@@ -235,13 +235,10 @@
                                 </select>
                             </div>
 
-                            {{-- Campo de Municipio (Deshabilitado por defecto hasta que se elija departamento) --}}
                             <div class="col-md-6 form-group mb-4">
                                 <label class="fw-bold text-muted">Municipio Perteneciente <span class="text-danger">*</span></label>
                                 <select class="form-control" name="id_municipio" id="select_municipio" required disabled>
                                     <option value="" disabled selected>Primero seleccione un departamento...</option>
-
-                                    {{-- Iteramos los municipios agregándoles el "data-departamento" --}}
                                     @foreach($municipios as $mun)
                                         <option value="{{ $mun->id_municipio }}" data-departamento="{{ $mun->id_departamento }}">
                                             {{ $mun->nombre_municipio }}
@@ -251,10 +248,18 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-4">
                             <label class="fw-bold text-muted">Dirección Exacta <span class="text-danger">*</span></label>
                             <textarea class="form-control" name="direccion_exacta" rows="3" placeholder="Detalle la dirección del establecimiento..." required></textarea>
                         </div>
+
+                        {{-- NUEVO CAMPO: IMAGEN --}}
+                        <div class="form-group">
+                            <label class="fw-bold text-muted">Fotografía del Establecimiento (Opcional)</label>
+                            <input type="file" class="form-control-file" name="imagen" accept="image/*">
+                            <small class="form-text text-muted">Formatos permitidos: JPG, PNG, WEBP. Máximo 2MB.</small>
+                        </div>
+
                     </div>
                     <div class="modal-footer bg-light" style="border-radius: 0 0 15px 15px;">
                         <button type="button" class="btn btn-secondary fw-bold" data-dismiss="modal">Cancelar</button>

@@ -25,11 +25,16 @@ class EstablecimientoController extends Controller
         return view('Establecimiento.establecimiento', compact('establecimientos', 'departamentos', 'municipios'));
     }
 
-    // 2. Inyectamos el Request personalizado en lugar del Request genérico[cite: 4]
+
     public function store(InsertarEstablecimientoRequest $request)
     {
-        // 3. Como el Request ya validó los datos, usamos validated() para obtener el arreglo limpio
-        Establecimiento::insertar($request->validated());
+        $datos = $request->validated();
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('establecimientos', 'public');
+        }
+
+        Establecimiento::insertar($datos);
 
         return back()->with('success', 'Establecimiento registrado exitosamente.');
     }

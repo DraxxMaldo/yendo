@@ -16,6 +16,7 @@ class Establecimiento extends Model
         'nombre',
         'id_municipio',
         'direccion_exacta',
+        'imagen',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class Establecimiento extends Model
             'nombre' => ['required', 'string', 'max:100'],
             'id_municipio' => ['required', 'integer', 'exists:municipios,id_municipio'],
             'direccion_exacta' => ['required', 'string'],
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
     }
 
