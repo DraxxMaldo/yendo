@@ -7,6 +7,7 @@
 @endpush
 @push('scripts')
     <script src="{{ asset('js/Establecimientos/establecimiento.js') }}?v=1.0"></script>
+    <script src="{{ asset('js/Establecimientos/actualizar-establecimiento.js') }}?v=1.0"></script>
 @endpush
 
 @section('contenido')
@@ -106,11 +107,17 @@
                             <td class="text-muted">{{ $est->direccion_exacta }}</td>
 
                             <td class="text-center">
-                                <button class="btn btn-sm btn-outline-primary mr-1" title="Editar">
+                                <button type="button" class="btn btn-sm btn-outline-primary mr-1 btn-editar"
+                                        title="Editar"
+                                        data-toggle="modal"
+                                        data-target="#modalEditarEstablecimiento"
+                                        data-id="{{ $est->id_establecimiento }}"
+                                        data-nombre="{{ $est->nombre }}"
+                                        data-iddepartamento="{{ $est->municipio->id_departamento ?? '' }}"
+                                        data-idmunicipio="{{ $est->id_municipio }}"
+                                        data-direccion="{{ $est->direccion_exacta }}"
+                                        data-imagen="{{ $est->imagen ? asset('storage/' . $est->imagen) : '' }}">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                    <i class="fas fa-trash-alt"></i>
                                 </button>
                             </td>
                         </tr>
@@ -127,6 +134,100 @@
             </div>
         </div>
     </div>
+
+        {{-- =========================================================================
+         MODAL DE ACTUALIACION DE ESTABLECIMIENTO
+       ========================================================================= --}}
+
+
+        {{-- MODAL EDITAR ESTABLECIMIENTO --}}
+        <div class="modal fade" id="modalEditarEstablecimiento" tabindex="-1" aria-labelledby="modalEditarEstablecimientoLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 15px; border: none;">
+                    <div class="modal-header" style="background-color: var(--amber-citrus, #FFC736); border-radius: 15px 15px 0 0;">
+                        <h5 class="modal-title fw-bold" id="modalEditarEstablecimientoLabel" style="color: var(--midnight-indigo);">
+                            <i class="fas fa-edit mr-2"></i> Editar Establecimiento
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{-- El action lo llenaremos dinámicamente con JS --}}
+                    <form id="formEditarEstablecimiento" method="POST" enctype="multipart/form-data" novalidate>
+                        @csrf
+                        @method('PUT')
+
+                        <div class="modal-body px-4 py-4">
+                            <div class="form-group mb-4">
+                                <label class="fw-bold text-muted">Nombre del Establecimiento <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="nombre" id="edit_nombre" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 form-group mb-4">
+                                    <label class="fw-bold text-muted">Departamento <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="edit_filtro_departamento">
+                                        <option value="" disabled>Seleccione...</option>
+                                        @foreach($departamentos as $dep)
+                                            <option value="{{ $dep->id_departamento }}">{{ $dep->nombre_departamento }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 form-group mb-4">
+                                    <label class="fw-bold text-muted">Municipio <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="id_municipio" id="edit_select_municipio" required>
+                                        <option value="" disabled>Seleccione depto...</option>
+                                        @foreach($municipios as $mun)
+                                            <option value="{{ $mun->id_municipio }}" data-departamento="{{ $mun->id_departamento }}">
+                                                {{ $mun->nombre_municipio }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 form-group mb-4">
+                                    <label class="fw-bold text-muted">Distrito <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="id_distrito" id="edit_select_distrito" required>
+                                        <option value="" disabled>Seleccione muni...</option>
+                                        @foreach($distritos as $dist)
+                                            <option value="{{ $dist->id_distrito }}" data-municipio="{{ $dist->id_municipio }}">
+                                                {{ $dist->nombre_distrito }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-4">
+                                <label class="fw-bold text-muted">Dirección Exacta <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="direccion_exacta" id="edit_direccion_exacta" rows="3" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="fw-bold text-muted">Actualizar Fotografía (Opcional)</label>
+                                <input type="file" class="form-control-file" name="imagen" accept="image/*">
+                                <small class="form-text text-muted">Si no subes una nueva imagen, se conservará la anterior. Formatos: JPG, PNG, WEBP. Máx 2MB.</small>
+                            </div>
+
+                            <div class="mt-3 text-center" id="preview_container" style="display: none;">
+                                <p class="text-muted small mb-1 fw-bold">Vista previa:</p>
+                                <img id="preview_image" src="" alt="Vista previa" class="img-fluid rounded shadow-sm" style="max-height: 160px; object-fit: cover; border: 2px solid var(--amber-citrus, #FFC736);">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer bg-light" style="border-radius: 0 0 15px 15px;">
+                            <button type="button" class="btn btn-secondary fw-bold" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning fw-bold text-dark">Actualizar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
 
     {{-- =========================================================================
          MODALES DE CREACIÓN
@@ -225,23 +326,35 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 form-group mb-4">
+                            <div class="col-md-4 form-group mb-4">
                                 <label class="fw-bold text-muted">Departamento <span class="text-danger">*</span></label>
                                 <select class="form-control" id="filtro_departamento">
-                                    <option value="" disabled selected>Seleccione un departamento...</option>
+                                    <option value="" disabled selected>Seleccione...</option>
                                     @foreach($departamentos as $dep)
                                         <option value="{{ $dep->id_departamento }}">{{ $dep->nombre_departamento }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div class="col-md-6 form-group mb-4">
-                                <label class="fw-bold text-muted">Municipio Perteneciente <span class="text-danger">*</span></label>
+                            <div class="col-md-4 form-group mb-4">
+                                <label class="fw-bold text-muted">Municipio <span class="text-danger">*</span></label>
                                 <select class="form-control" name="id_municipio" id="select_municipio" required disabled>
-                                    <option value="" disabled selected>Primero seleccione un departamento...</option>
+                                    <option value="" disabled selected>Seleccione depto...</option>
                                     @foreach($municipios as $mun)
                                         <option value="{{ $mun->id_municipio }}" data-departamento="{{ $mun->id_departamento }}">
                                             {{ $mun->nombre_municipio }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 form-group mb-4">
+                                <label class="fw-bold text-muted">Distrito <span class="text-danger">*</span></label>
+                                <select class="form-control" name="id_distrito" id="select_distrito" required disabled>
+                                    <option value="" disabled selected>Seleccione muni...</option>
+                                    @foreach($distritos as $dist)
+                                        <option value="{{ $dist->id_distrito }}" data-municipio="{{ $dist->id_municipio }}">
+                                            {{ $dist->nombre_distrito }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -250,7 +363,7 @@
 
                         <div class="form-group mb-4">
                             <label class="fw-bold text-muted">Dirección Exacta <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="direccion_exacta" rows="3" placeholder="Detalle la dirección del establecimiento..." required></textarea>
+                            <textarea class="form-control" name="direcciaon_exacta" rows="3" placeholder="Detalle la dirección del establecimiento..." required></textarea>
                         </div>
 
                         {{-- NUEVO CAMPO: IMAGEN --}}
