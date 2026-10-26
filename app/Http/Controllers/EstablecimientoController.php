@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Establecimiento;
 use App\Models\Departamento;
+use App\Models\Distrito;
 use App\Models\Municipio;
 use App\Http\Requests\InsertarEstablecimientoRequest;
+use App\Http\Requests\ActualizarEstablecimientoRequest;
 use App\Exports\EstablecimientosExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,9 +22,10 @@ class EstablecimientoController extends Controller
         // 2. Consultar catálogos para los modales
         $departamentos = Departamento::orderBy('nombre_departamento', 'ASC')->get();
         $municipios = Municipio::orderBy('nombre_municipio', 'ASC')->get();
+        $distritos = Distrito::orderBy('nombre_distrito', 'ASC')->get();
 
         // 3. Retornar la vista compactando las 3 variables[cite: 4]
-        return view('Establecimiento.establecimiento', compact('establecimientos', 'departamentos', 'municipios'));
+        return view('Establecimiento.establecimiento', compact('establecimientos', 'departamentos', 'municipios', 'distritos'));
     }
 
 
@@ -58,4 +61,23 @@ class EstablecimientoController extends Controller
         // Descargamos el archivo generado
         return $pdf->download('Reporte_Establecimientos.pdf');
     }
+
+
+
+    // Método para actualizar los datos
+    public function update(ActualizarEstablecimientoRequest $request, $id)
+    {
+        $datos = $request->validated();
+
+        // Verificamos si se adjuntó una nueva imagen
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')->store('establecimientos', 'public');
+        }
+
+        // Llamamos al método estático del modelo para actualizar
+        Establecimiento::actualizar($datos, $id);
+
+        return back()->with('success', 'Establecimiento actualizado exitosamente.');
+    }
+
 }

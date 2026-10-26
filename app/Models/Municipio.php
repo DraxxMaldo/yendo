@@ -40,6 +40,12 @@ class Municipio extends Model
         return $this->belongsTo(Departamento::class, 'id_departamento', 'id_departamento');
     }
 
+    public function distritos()
+    {
+        return $this->hasMany(Distrito::class, 'id_municipio', 'id_municipio');
+    }
+
+
     // LECTURA
     public static function mostrarTodos(): Collection
     {

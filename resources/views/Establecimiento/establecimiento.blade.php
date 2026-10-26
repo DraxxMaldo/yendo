@@ -163,6 +163,7 @@
                                 <input type="text" class="form-control" name="nombre" id="edit_nombre" required>
                             </div>
 
+
                             <div class="row">
                                 <div class="col-md-4 form-group mb-4">
                                     <label class="fw-bold text-muted">Departamento <span class="text-danger">*</span></label>
@@ -198,6 +199,7 @@
                                     </select>
                                 </div>
                             </div>
+
 
                             <div class="form-group mb-4">
                                 <label class="fw-bold text-muted">Dirección Exacta <span class="text-danger">*</span></label>

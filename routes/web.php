@@ -49,8 +49,10 @@ Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->n
 
 
 // Ruta para exportar establecimientos a Excel
-Route::get('/establecimientos/exportar/excel', [\App\Http\Controllers\EstablecimientoController::class, 'exportarExcel'])->name('establecimientos.excel');
+Route::get('/establecimientos/exportar/excel', [EstablecimientoController::class, 'exportarExcel'])->name('establecimientos.excel');
 
 // Ruta para exportar en PDF
-Route::get('/establecimientos/exportar/pdf', [\App\Http\Controllers\EstablecimientoController::class, 'exportarPdf'])->name('establecimientos.pdf');
+Route::get('/establecimientos/exportar/pdf', [EstablecimientoController::class, 'exportarPdf'])->name('establecimientos.pdf');
 
+//Ruta para actualizar Establecimiento
+Route::put('/establecimientos/{id}', [EstablecimientoController::class, 'update'])->name('establecimientos.update');
