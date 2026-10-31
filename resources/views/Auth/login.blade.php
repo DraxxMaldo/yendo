@@ -51,7 +51,7 @@
                                 Ingresar <i class="fas fa-arrow-right ml-3" style="font-size: 1.1rem;"></i>
                             </button>
 
-                            <a href="#" class="btn btn-block btn-olvidaste d-flex justify-content-center align-items-center">
+                            <a href="{{ route('password.request') }}" class="btn btn-block btn-olvidaste d-flex justify-content-center align-items-center">
                                 ¿Olvidaste tu contraseña?
                             </a>
                         </form>

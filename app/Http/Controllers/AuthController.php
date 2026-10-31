@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Models\Bitacora;
+//Importaciones para mandar correo electronico
+use App\Models\UsuarioCredencial;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NuevaContrasenaMail;
 
 class AuthController extends Controller
 {
@@ -57,4 +63,37 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('info', '¡Has cerrado sesión correctamente!');
     }
+
+
+    public function enviarNuevaContrasena(Request $request)
+    {
+        // 1. Validar que el correo venga en el formulario y EXISTA en la tabla
+        $request->validate([
+            'correo' => 'required|email|exists:usuarios_credenciales,correo_electronico'
+        ], [
+            'correo.required' => 'El correo es obligatorio.',
+            'correo.email' => 'Ingresa un formato de correo válido.',
+            'correo.exists' => 'Este correo no está registrado en nuestro sistema.'
+        ]);
+
+        // 2. Buscar al usuario
+        $usuario = UsuarioCredencial::where('correo_electronico', $request->correo)->first();
+
+        // 3. Generar nueva contraseña aleatoria (Ejemplo: 8 caracteres alfanuméricos)
+        $nuevaContrasenaPlain = Str::random(8);
+
+        // 4. Actualizar la contraseña en la base de datos (Hasheada por seguridad)
+        $usuario->update([
+            'contrasenha' => Hash::make($nuevaContrasenaPlain)
+        ]);
+
+        // 5. Enviar el correo con la contraseña en texto plano
+        Mail::to($usuario->correo_electronico)->send(new NuevaContrasenaMail($nuevaContrasenaPlain));
+
+        // 6. Retornar a la vista con mensaje de éxito
+        return redirect()->route('login')->with('success', 'Las indicaciones y tu nueva contraseña se enviaron correctamente.');
+    }
+
+
+
 }

@@ -15,7 +15,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 // Ruta oara listar usuarios
-
 Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
 Route::post('/usuarios/insertar', [UsuarioController::class, 'insertarUsuario'])->name('usuarios.insertar');
 // Actualizar usuario existente
@@ -61,3 +60,9 @@ Route::get('/establecimientos/exportar/pdf', [EstablecimientoController::class, 
 
 //Ruta para actualizar Establecimiento
 Route::put('/establecimientos/{id}', [EstablecimientoController::class, 'update'])->name('establecimientos.update');
+
+
+// Ruta para rediccionar a vista de recuperar contraseña
+
+Route::get('/recuperar-contrasena', function () {return view('Auth.recuperar-contrasenha');})->name('password.request');
+Route::post('/recuperar-contrasena', [App\Http\Controllers\AuthController::class, 'enviarNuevaContrasena'])->name('password.email');
