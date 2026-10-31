@@ -9,6 +9,7 @@ use App\Models\Municipio;
 use App\Http\Requests\InsertarEstablecimientoRequest;
 use App\Http\Requests\ActualizarEstablecimientoRequest;
 use App\Exports\EstablecimientosExport;
+use App\Models\Zona;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -16,10 +17,7 @@ class EstablecimientoController extends Controller
 {
     public function index()
     {
-        // 1. Consultar establecimientos con su relación
-        $establecimientos = Establecimiento::with('municipio.departamento')->orderBy('id_establecimiento', 'DESC')->get();
-
-        // 2. Consultar catálogos para los modales
+        $establecimientos = Establecimiento::with('distrito.municipio.departamento', 'distrito.municipio.departamento.zona')->orderBy('id_establecimiento', 'DESC')->get();
         $departamentos = Departamento::orderBy('nombre_departamento', 'ASC')->get();
         $municipios = Municipio::orderBy('nombre_municipio', 'ASC')->get();
         $distritos = Distrito::orderBy('nombre_distrito', 'ASC')->get();

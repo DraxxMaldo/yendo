@@ -16,15 +16,15 @@ return new class extends Migration
             $table->string('nombre', 100);
 
             // Entero (FK): Relación con municipios[cite: 2]
-            $table->unsignedBigInteger('id_municipio');
+            $table->unsignedBigInteger('id_distrito');
 
             // Texto: Dirección exacta[cite: 2]
             $table->text('direccion_exacta');
 
             // Definición de la Llave Foránea[cite: 2]
-            $table->foreign('id_municipio')
-                ->references('id_municipio')
-                ->on('municipios')
+            $table->foreign('id_distrito')
+                ->references('id_distrito')
+                ->on('distritos')
                 ->onDelete('restrict') // Restrict: No borrar un municipio si tiene sucursales[cite: 2]
                 ->onUpdate('cascade');
         });

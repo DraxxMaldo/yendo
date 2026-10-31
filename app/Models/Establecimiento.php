@@ -14,7 +14,7 @@ class Establecimiento extends Model
 
     protected $fillable = [
         'nombre',
-        'id_municipio',
+        'id_distrito',
         'direccion_exacta',
         'imagen',
     ];
@@ -27,7 +27,7 @@ class Establecimiento extends Model
     {
         return [
             'nombre' => ['required', 'string', 'max:100'],
-            'id_municipio' => ['required', 'integer', 'exists:municipios,id_municipio'],
+            'id_distrito'      => ['required', 'integer', 'exists:distritos,id_distrito'],
             'direccion_exacta' => ['required', 'string'],
             'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
@@ -39,9 +39,9 @@ class Establecimiento extends Model
     }
 
     // RELACIONES
-    public function municipio()
+    public function distrito()
     {
-        return $this->belongsTo(Municipio::class, 'id_municipio', 'id_municipio');
+        return $this->belongsTo(Distrito::class, 'id_distrito', 'id_distrito');
     }
 
     public function empleados()

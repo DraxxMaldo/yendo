@@ -15,7 +15,7 @@ class ActualizarEstablecimientoRequest extends FormRequest
     {
         return [
             'nombre'           => ['required', 'string', 'max:100'],
-            'id_municipio'     => ['required', 'integer', 'exists:municipios,id_municipio'],
+            'id_distrito'      => ['required', 'integer', 'exists:distritos,id_distrito'],
             'direccion_exacta' => ['required', 'string'],
             'imagen'           => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
         ];
@@ -28,9 +28,9 @@ class ActualizarEstablecimientoRequest extends FormRequest
             'nombre.string'   => 'El nombre del establecimiento debe ser texto válido.',
             'nombre.max'      => 'El nombre no puede exceder los 100 caracteres.',
 
-            'id_municipio.required' => 'Debe seleccionar el municipio.',
-            'id_municipio.integer'  => 'Formato de municipio inválido.',
-            'id_municipio.exists'   => 'El municipio seleccionado no existe.',
+            'id_distrito.required' => 'Debe seleccionar el distrito donde se ubica el establecimiento.',
+            'id_distrito.integer'  => 'El formato del distrito seleccionado no es válido.',
+            'id_distrito.exists'   => 'El distrito seleccionado no existe.',
 
             'direccion_exacta.required' => 'La dirección exacta es obligatoria.',
 

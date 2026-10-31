@@ -44,3 +44,99 @@
     font-size: 1.05rem;
     font-weight: 700;
 }
+
+/* ==========================================================================
+   ESTILOS GENERALES Y DATATABLES (Corporativo)
+   ========================================================================== */
+.card-custom {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+.table-brand thead th {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-bottom: none;
+}
+
+.table-brand tbody tr:hover {
+    background-color: rgba(26, 26, 28, 0.03);
+}
+
+.btn-brand {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    transition: all 0.2s ease;
+}
+
+.btn-brand:hover {
+    background-color: #151517;
+    color: #fff;
+}
+
+/* ==========================================================================
+   ESTILOS MODERNOS PARA MODALES
+   ========================================================================== */
+.modal-modern .modal-content {
+    border-radius: 16px;
+    border: none;
+    overflow: hidden;
+}
+
+.modal-modern .modal-body {
+    background-color: #fafbfe;
+}
+
+.modal-modern .modal-footer {
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Encabezados y Círculos de Iconos */
+.modal-header-brand {
+    background-color: var(--vanilla-cream);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.icon-circle {
+    background-color: rgba(26, 26, 28, 0.05);
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* Estilos de Formulario y Campos */
+.form-label-modern {
+    font-size: 0.875em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-modern {
+    border-radius: 8px;
+    box-shadow: none !important;
+}
+
+.input-group-modern {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.btn-modern {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-action-brand {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+}
+
+.btn-action-brand:hover {
+    background-color: #151517;
+    color: #fff;
+}

@@ -32,7 +32,7 @@ class AuthController extends Controller
         if (Auth::attempt($credenciales)) {
             $request->session()->regenerate();
 
-            // ---> 1.b. REGISTRO LOGIN_OK:
+
             Bitacora::registrar(Bitacora::LOGIN_OK, 'Autenticación', null, 'Inicio de sesión exitoso');
 
             return redirect()->intended(route('home'))->with('success', '¡Bienvenido al sistema Yendo!');

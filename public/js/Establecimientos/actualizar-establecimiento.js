@@ -1,73 +1,17 @@
-$(document).ready(function() {
-    // 1. Al hacer clic en Editar
-    $('.btn-editar').on('click', function() {
-        let id = $(this).data('id');
-        let nombre = $(this).data('nombre');
-        let idDepartamento = $(this).data('iddepartamento');
-        let idMunicipio = $(this).data('idmunicipio');
-        let direccion = $(this).data('direccion');
-        let imagenUrl = $(this).data('imagen'); // Capturamos la imagen
-
-        $('#formEditarEstablecimiento').attr('action', '/establecimientos/' + id);
-        $('#edit_nombre').val(nombre);
-        $('#edit_direccion_exacta').val(direccion);
-
-        // Lógica de select en cascada
-        $('#edit_filtro_departamento').val(idDepartamento).trigger('change');
-        setTimeout(() => { $('#edit_select_municipio').val(idMunicipio); }, 100);
-
-        // Lógica de la vista previa de la imagen actual
-        $('#edit_imagen').val(''); // Limpiamos el input file por si tenía algo de una edición anterior
-        if (imagenUrl) {
-            $('#preview_image').attr('src', imagenUrl);
-            $('#preview_container').show();
-        } else {
-            $('#preview_image').attr('src', '');
-            $('#preview_container').hide();
-        }
-    });
-
-    // 2. Lógica para el cambio en el select de departamentos
-    $('#edit_filtro_departamento').on('change', function() {
-        let departamentoSeleccionado = $(this).val();
-        let $selectMunicipio = $('#edit_select_municipio');
-
-        $selectMunicipio.prop('disabled', false);
-        $selectMunicipio.find('option').hide();
-        $selectMunicipio.find('option[value=""]').show();
-        $selectMunicipio.find('option[data-departamento="' + departamentoSeleccionado + '"]').show();
-
-        if ($selectMunicipio.find('option:selected').data('departamento') != departamentoSeleccionado) {
-            $selectMunicipio.val('');
-        }
-    });
-
-    // 3. NUEVO: Previsualizar imagen nueva al seleccionar el archivo
-    $('#edit_imagen').on('change', function(event) {
-        let input = event.target;
-        if (input.files && input.files[0]) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                $('#preview_image').attr('src', e.target.result);
-                $('#preview_container').fadeIn();
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    });
-});
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const editSelectDepto = document.getElementById('edit_filtro_departamento');
     const editSelectMuni = document.getElementById('edit_select_municipio');
     const editSelectDist = document.getElementById('edit_select_distrito');
+    const formEditar = document.getElementById('formEditarEstablecimiento');
+    const previewContainer = document.getElementById('preview_container');
+    const previewImage = document.getElementById('preview_image');
+    const inputImagen = document.querySelector('input[name="imagen"]'); // El input del archivo
 
     if (editSelectDepto && editSelectMuni && editSelectDist) {
-        // Clonar opciones en memoria para poder filtrar sin perder datos
+        // Clonar opciones para poder filtrar sin perder datos
         const opcionesMuniEdit = Array.from(editSelectMuni.querySelectorAll('option[data-departamento]')).map(opt => opt.cloneNode(true));
         const opcionesDistEdit = Array.from(editSelectDist.querySelectorAll('option[data-municipio]')).map(opt => opt.cloneNode(true));
 
-        // Función para filtrar municipios basada en el departamento
         function filtrarMunicipiosEdit(idDepto) {
             editSelectMuni.innerHTML = '<option value="" disabled selected>Seleccione un municipio...</option>';
             opcionesMuniEdit.forEach(opcion => {
@@ -77,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Función para filtrar distritos basada en el municipio
         function filtrarDistritosEdit(idMuni) {
             editSelectDist.innerHTML = '<option value="" disabled selected>Seleccione un distrito...</option>';
             opcionesDistEdit.forEach(opcion => {
@@ -87,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Eventos de cambio manuales por el usuario
         editSelectDepto.addEventListener('change', function() {
             filtrarMunicipiosEdit(this.value);
             editSelectDist.innerHTML = '<option value="" disabled selected>Primero seleccione un municipio...</option>';
@@ -97,22 +39,55 @@ document.addEventListener('DOMContentLoaded', function() {
             filtrarDistritosEdit(this.value);
         });
 
-        // Evento al abrir el modal (Si usas jQuery para el clic del botón de la tabla)
-        $('.btn-editar').on('click', function() {
-            let idDepto = $(this).data('iddepartamento');
-            let idMuni = $(this).data('idmunicipio');
-            let idDist = $(this).data('iddistrito');
+        // Capturar clic en botones editar
+        const botonesEditar = document.querySelectorAll('.btn-editar');
+        botonesEditar.forEach(boton => {
+            boton.addEventListener('click', function() {
+                let id = this.dataset.id;
+                let nombre = this.dataset.nombre;
+                let idDepto = this.dataset.iddepartamento;
+                let idMuni = this.dataset.idmunicipio;
+                let idDist = this.dataset.iddistrito;
+                let direccion = this.dataset.direccion;
+                let imagenUrl = this.dataset.imagen;
 
-            // 1. Cargar departamento
-            editSelectDepto.value = idDepto;
+                // 1. Llenar Action y campos de texto
+                formEditar.action = '/establecimientos/' + id;
+                document.getElementById('edit_nombre').value = nombre;
+                document.getElementById('edit_direccion_exacta').value = direccion;
 
-            // 2. Filtrar y cargar municipio
-            filtrarMunicipiosEdit(idDepto);
-            editSelectMuni.value = idMuni;
+                // 2. Llenar Selects en cascada
+                editSelectDepto.value = idDepto;
+                filtrarMunicipiosEdit(idDepto);
+                editSelectMuni.value = idMuni;
+                filtrarDistritosEdit(idMuni);
+                editSelectDist.value = idDist;
 
-            // 3. Filtrar y cargar distrito
-            filtrarDistritosEdit(idMuni);
-            editSelectDist.value = idDist;
+                // 3. Previsualizar imagen actual
+                if (inputImagen) inputImagen.value = '';
+                if (imagenUrl) {
+                    previewImage.src = imagenUrl;
+                    previewContainer.style.display = 'block';
+                } else {
+                    previewImage.src = '';
+                    previewContainer.style.display = 'none';
+                }
+            });
         });
+
+        // 4. Previsualizar nueva imagen seleccionada
+        if (inputImagen) {
+            inputImagen.addEventListener('change', function(event) {
+                let input = event.target;
+                if (input.files && input.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        previewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            });
+        }
     }
 });
