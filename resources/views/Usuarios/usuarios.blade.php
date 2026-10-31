@@ -68,9 +68,22 @@
                                             title="Editar Usuario">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#modalEliminarUsuario" onclick="eliminarUsuario({{ $u->id_usuario }}, '{{ $u->perfil->nombres ?? 'Usuario' }}')" title="Eliminar Usuario">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
+
+                                    @if ($u->estado_cuenta)
+                                        {{-- Botón para Desactivar (Rojo) --}}
+                                        <button class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#modalEliminarUsuario"
+                                                onclick="eliminarUsuario({{ $u->id_usuario }}, '{{ $u->perfil->nombres ?? 'Usuario' }}')"
+                                                title="Desactivar Usuario">
+                                            <i class="fas fa-user-slash"></i>
+                                        </button>
+                                    @else
+                                        {{-- Botón para Reactivar (Verde) --}}
+                                        <button class="btn btn-sm btn-outline-success" data-toggle="modal" data-target="#modalReactivarUsuario"
+                                                onclick="reactivarUsuario({{ $u->id_usuario }}, '{{ $u->perfil->nombres ?? 'Usuario' }}')"
+                                                title="Reactivar Usuario">
+                                            <i class="fas fa-user-check"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -268,6 +281,40 @@
             </div>
         </div>
     </div>
+
+    <!-- MODAL REACTIVAR USUARIO -->
+    <div class="modal fade" id="modalReactivarUsuario" tabindex="-1" aria-labelledby="modalReactivarUsuarioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-success border-0">
+                    <h5 class="modal-title fw-bold text-white" id="modalReactivarUsuarioLabel">
+                        <i class="fas fa-user-check mr-2"></i> Confirmar Reactivación
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 1;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formReactivar" method="POST" action="">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="modal-body p-4 text-center">
+                        <i class="fas fa-user-plus text-success mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="mb-3">¿Estás seguro de reactivar este usuario?</h5>
+                        <p class="mb-1 text-dark">El usuario <strong id="nombreReactivar" style="color: var(--midnight-indigo);"></strong> volverá a estar activo y podrá acceder al sistema nuevamente.</p>
+                    </div>
+                    <div class="modal-footer border-0 d-flex justify-content-center pb-4">
+                        <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4 mx-2" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success fw-bold rounded-pill px-4 mx-2 text-white">
+                            <i class="fas fa-power-off mr-1"></i> Reactivar Usuario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
 @endsection
 
 @push('scripts')
@@ -305,6 +352,17 @@
 
             // Asignamos la nueva URL al formulario del modal
             $('#formEliminar').attr('action', url);
+        }
+
+        function reactivarUsuario(id, nombre) {
+            $('#nombreReactivar').text(nombre);
+
+            // Reemplaza :id por el ID real del usuario
+            let url = '{{ route("usuarios.activar", ":id") }}';
+            url = url.replace(':id', id);
+
+            // Asigna la URL al formulario del modal de reactivación
+            $('#formReactivar').attr('action', url);
         }
 
         // Reabrir el modal automáticamente si hay errores de validación
