@@ -84,6 +84,24 @@ class UsuarioController extends Controller
         return back()->with('success', 'El usuario ha sido desactivado exitosamente.');
     }
 
+    //METODO PARA ACTIVAR UN USUARIO SI HA SIDO DESACTIVDADO
+    public function activar($id)
+    {
+        \App\Models\UsuarioCredencial::actualizar(['estado_cuenta' => true], $id);
+
+        $usuario = \App\Models\UsuarioCredencial::buscarXId($id);
+
+        // ---> REGISTRO DE AUDITORÍA: REACTIVADO
+        Bitacora::registrar(
+            Bitacora::ACTUALIZADO,
+            'Catálogo de Usuarios',
+            $id,
+            "Usuario reactivado y con acceso al sistema: {$usuario->correo_electronico}"
+        );
+
+        return back()->with('success', 'El usuario ha sido reactivado exitosamente.');
+    }
+
 
     public function actualizar(ActualizarUsuarioRequest $request, $id)
     {
