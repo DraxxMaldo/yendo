@@ -33,7 +33,12 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
+// RUTAS DE USUARIO
+//Ruta para desactivar un usuario
 Route::patch('/usuarios/{id}/desactivar', [UsuarioController::class, 'desactivar'])->name('usuarios.desactivar');
+
+// Ruta para Reactivar Usuario
+Route::patch('/usuarios/{id}/activar', [App\Http\Controllers\UsuarioController::class, 'activar'])->name('usuarios.activar');
 
 Route::get('/bitacora', [\App\Http\Controllers\BitacoraController::class, 'index'])->middleware('auth')->name('bitacora');
 
