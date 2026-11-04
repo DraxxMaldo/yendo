@@ -12,15 +12,17 @@ use App\Exports\EstablecimientosExport;
 use App\Models\Zona;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class EstablecimientoController extends Controller
 {
     public function index()
     {
-        $establecimientos = Establecimiento::with('distrito.municipio.departamento', 'distrito.municipio.departamento.zona')->orderBy('id_establecimiento', 'DESC')->get();
+        $establecimientos = Establecimiento::with('distrito.municipio.departamento', 'distrito.municipio.departamento.zona','creador.perfil')->orderBy('id_establecimiento', 'DESC')->get();
         $departamentos = Departamento::orderBy('nombre_departamento', 'ASC')->get();
         $municipios = Municipio::orderBy('nombre_municipio', 'ASC')->get();
         $distritos = Distrito::orderBy('nombre_distrito', 'ASC')->get();
+
 
         // 3. Retornar la vista compactando las 3 variables[cite: 4]
         return view('Establecimiento.establecimiento', compact('establecimientos', 'departamentos', 'municipios', 'distritos'));
@@ -34,6 +36,8 @@ class EstablecimientoController extends Controller
         if ($request->hasFile('imagen')) {
             $datos['imagen'] = $request->file('imagen')->store('establecimientos', 'public');
         }
+
+        $datos['id_usuario'] = Auth::user()->id_usuario;
 
         Establecimiento::insertar($datos);
 

@@ -85,6 +85,7 @@
                         <th>Municipio</th>
                         <th>Distrito</th>
                         <th>Dirección Exacta</th>
+                        <th>Registrado por</th> {{-- Encabezado alineado --}}
                         <th class="text-center" style="width: 8rem;">Acciones</th>
                     </tr>
                     </thead>
@@ -106,6 +107,13 @@
                                 {{ $est->distrito->nombre_distrito ?? 'Sin Distrito' }}
                             </td>
                             <td class="text-muted">{{ $est->direccion_exacta }}</td>
+
+                            <td class="text-muted">
+                                {{ $est->creador->perfil->nombres ?? 'Sistema' }} {{ $est->creador->perfil->apellidos ?? '' }}
+                            </td>
+
+
+
                             <td class="text-center">
                                 <button type="button" class="btn btn-sm btn-outline-primary mr-1 btn-editar"
                                         title="Editar"
@@ -123,6 +131,9 @@
                             </td>
                         </tr>
                     @empty
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">No hay establecimientos registrados.</td>
+                        </tr>
                     @endforelse
                     </tbody>
                 </table>

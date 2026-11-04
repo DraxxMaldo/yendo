@@ -17,6 +17,7 @@ class Establecimiento extends Model
         'id_distrito',
         'direccion_exacta',
         'imagen',
+        'id_usuario'
     ];
 
     protected $casts = [
@@ -47,6 +48,10 @@ class Establecimiento extends Model
     public function empleados()
     {
         return $this->hasMany(EmpleadoSucursal::class, 'id_establecimiento', 'id_establecimiento');
+    }
+    public function creador()
+    {
+        return $this->belongsTo(UsuarioCredencial::class, 'id_usuario', 'id_usuario');
     }
 
     // LECTURA
