@@ -20,6 +20,7 @@ class PerfilPersona extends Model
         'nombres',
         'apellidos',
         'telefono',
+        'nombre_negocio'
     ];
 
     public static function validaciones($id = null): array
@@ -34,6 +35,7 @@ class PerfilPersona extends Model
             'nombres' => ['required', 'string', 'max:100'],
             'apellidos' => ['required', 'string', 'max:100'],
             'telefono' => ['required', 'string', 'max:20'],
+            'nombre_negocio' => ['required', 'string', 'max:150'],
         ];
     }
 
