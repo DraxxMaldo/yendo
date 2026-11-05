@@ -1,0 +1,177 @@
+/* public/css/registro.css */
+
+:root {
+    --midnight-indigo: #282B4A;
+    --vanilla-cream: rgb(238 235 218 / 0.8);
+}
+
+/* Contenedor principal sin tarjeta blanca */
+.registro-minimalista-container {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+#registro-logo-minimalista {
+    max-height: 85px;
+}
+
+/* Tipografía de títulos */
+.registro-titulo {
+    color: white;
+    font-weight: 900;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.registro-subtitulo {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.6;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+/* Contenedor del Formulario */
+#form-registro-paso1 {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* Input de Correo - Estilo minimalista */
+#correo_minimalista {
+    background-color: white;
+    border: none;
+    border-radius: 6px;
+    height: 55px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--midnight-indigo);
+    text-align: center; /* Centramos el texto como en tu imagen */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+#correo_minimalista::placeholder {
+    color: #929292;
+    font-weight: 800;
+}
+
+#correo_minimalista:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4); /* Resplandor color vanilla */
+}
+
+/* Botón Continuar - Transparente con borde */
+#btn-continuar-registro {
+    background-color: transparent;
+    color: white;
+    border: 3px solid white;
+    border-radius: 6px;
+    height: 55px;
+    font-size: 1.15rem;
+    font-weight: 900;
+    transition: all 0.3s ease;
+}
+
+#btn-continuar-registro:hover {
+    background-color: white;
+    color: var(--midnight-indigo);
+}
+
+/* Textos pequeños de advertencia y enlaces */
+.registro-nota {
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    line-height: 1.4;
+}
+
+.registro-link-login {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.registro-link-login:hover {
+    color: var(--vanilla-cream);
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   PASO 2: CAJITAS DEL CÓDIGO DE VERIFICACIÓN
+   ========================================= */
+.codigo-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.codigo-input {
+    width: 55px;
+    height: 75px;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    border-radius: 6px;
+    border: none;
+    color: var(--midnight-indigo);
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.codigo-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4);
+}
+
+.registro-link-reenviar {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+.registro-link-reenviar:hover {
+    color: var(--vanilla-cream);
+    text-decoration: underline;
+}
+
+/* =========================================
+   PASO 3: FORMULARIO "HÁBLANOS DE TI"
+   ========================================= */
+.label-blanco {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 900;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.input-minimalista-sm {
+    background-color: white;
+    border: none;
+    border-radius: 6px;
+    height: 48px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--midnight-indigo);
+    padding-left: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    width: 100%;
+}
+
+.input-minimalista-sm::placeholder {
+    color: #929292;
+    font-weight: 800;
+}
+.input-minimalista-sm:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4);
+}

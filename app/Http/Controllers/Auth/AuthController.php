@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Mail\NuevaContrasenaMail;
 use App\Models\Bitacora;
-//Importaciones para mandar correo electronico
 use App\Models\UsuarioCredencial;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\NuevaContrasenaMail;
+use Illuminate\Support\Str;
+
+//Importaciones para mandar correo electronico
 
 class AuthController extends Controller
 {

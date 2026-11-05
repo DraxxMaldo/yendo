@@ -1,18 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EstablecimientoController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\RegistroController;
 use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\EstablecimientoController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MunicipioController;
-
+use App\Http\Controllers\UsuarioController;
+use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-
+//Rutas para registrarse
+Route::post('/registro/enviar-codigo', [RegistroController::class, 'enviarCodigo'])->name('registro.enviar_codigo');
+Route::post('/registro/verificar-codigo', [RegistroController::class, 'verificarCodigo'])->name('registro.verificar_codigo');
+Route::post('/registro/finalizar', [RegistroController::class, 'finalizarRegistro'])->name('registro.finalizar');
 
 // Ruta oara listar usuarios
 Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -22,8 +25,10 @@ Route::put('/usuarios/{id}', [UsuarioController::class, 'actualizar'])->name('us
 
 
 
-// Ruta de diseño para el Login
+// Ruta para el Login
 Route::get('/login', function () {return view('auth.login');})->name('login');
+//Ruta para vista de register
+route::get( '/registro', function () {return view('auth.registro');})->name('registro');
 
 
 // Rutas de Autenticación
@@ -52,6 +57,10 @@ Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->n
 
 
 
+
+
+
+
 // Ruta para exportar establecimientos a Excel
 Route::get('/establecimientos/exportar/excel', [EstablecimientoController::class, 'exportarExcel'])->name('establecimientos.excel');
 
@@ -65,4 +74,4 @@ Route::put('/establecimientos/{id}', [EstablecimientoController::class, 'update'
 // Ruta para rediccionar a vista de recuperar contraseña
 
 Route::get('/recuperar-contrasena', function () {return view('Auth.recuperar-contrasenha');})->name('password.request');
-Route::post('/recuperar-contrasena', [App\Http\Controllers\AuthController::class, 'enviarNuevaContrasena'])->name('password.email');
+Route::post('/recuperar-contrasena', [\App\Http\Controllers\Auth\AuthController::class, 'enviarNuevaContrasena'])->name('password.email');

@@ -88,3 +88,48 @@ body {
     background-color: var(--vanilla-cream);
     color: var(--midnight-indigo);
 }
+
+
+.btn-registrarse {
+    background-color: white;
+    color: var(--midnight-indigo);
+    font-weight: 900;
+    border: 2px solid var(--midnight-indigo);
+    border-radius: 4px;
+    height: 48px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.btn-crear-cuenta:hover {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-indigo);
+}
+
+
+#registro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 5px;
+    margin-top: 1rem;
+}
+
+#registro-mensaje {
+    color: #929292;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+#registro-enlace {
+    color: var(--midnight-indigo);
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+#registro-enlace:hover {
+    text-decoration: underline;
+}

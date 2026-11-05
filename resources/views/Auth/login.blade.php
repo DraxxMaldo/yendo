@@ -54,12 +54,22 @@
                             <a href="{{ route('password.request') }}" class="btn btn-block btn-olvidaste d-flex justify-content-center align-items-center">
                                 ¿Olvidaste tu contraseña?
                             </a>
-                        </form>
 
+                            <div id="registro-container">
+                             <span id="registro-mensaje">
+                            ¿Aún no tienes una cuenta?
+                             </span>
+                                <a href="{{ route('registro') }}" id="registro-enlace">
+                                    Regístrate en Yendo
+                                </a>
+                            </div>
+
+                        </form>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+
+
 @endsection
