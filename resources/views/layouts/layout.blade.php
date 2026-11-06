@@ -13,6 +13,8 @@
 
     {{-- Hoja de estilo propia del proyecto, SIEMPRE después del framework para poder sobrescribirlo --}}
     <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/barra-superior.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/menu-lateral.css') }}">
 
     @stack('estilos')
 </head>
@@ -21,67 +23,66 @@
 <div class="wrapper">
 
     {{-- 1. BARRA SUPERIOR --}}
-    <nav class="main-header navbar navbar-expand">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+    {{-- Conserva .main-header .navbar .navbar-expand (AdminLTE las necesita). Estilos en public/css/barra-superior.css --}}
+    <nav class="main-header navbar navbar-expand" id="main-header" aria-label="Barra superior">
+
+        {{-- Izquierda: botón del sidebar --}}
+        <ul class="navbar-nav" id="topbar-left-nav">
+            <li class="nav-item" id="sidebar-toggle-item">
+                <a class="nav-link" id="sidebar-toggle-btn" data-widget="pushmenu" href="#" role="button"
+                   aria-label="Mostrar u ocultar menú lateral" title="Menú">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </a>
             </li>
         </ul>
 
-        <ul class="navbar-nav ml-auto p-2">
-            <li class="nav-item dropdown">
-                {{-- BOTÓN TIPO PÍLDORA (Estilos movidos a la clase .btn-usuario-pildora) --}}
-                <a class="nav-link dropdown-toggle d-flex align-items-center btn-usuario-pildora"
-                   data-toggle="dropdown" href="#">
+        {{-- Derecha: usuario --}}
+        <ul class="navbar-nav ml-auto" id="topbar-right-nav">
+            <li class="nav-item dropdown" id="user-dropdown-item">
 
-                    <i class="fas fa-user-circle" style="color: var(--midnight-indigo); font-size: 2.2rem;"></i>
+                {{-- Botón tipo píldora --}}
+                <a class="nav-link dropdown-toggle" id="user-dropdown-toggle"
+                   data-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false" aria-label="Menú de usuario">
 
-                    <div class="d-flex flex-column text-left">
-                        <span class="fw-bold" style="color: var(--midnight-indigo); line-height: 1.1; font-size: 1.05rem;">
-                            {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
-                        </span>
-                        <small style="color: rgba(40, 43, 74, 0.7); line-height: 1; font-size: 0.8rem;">
-                            {{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}
-                        </small>
-                    </div>
+                <span id="user-avatar-box" aria-hidden="true">
+                    <i class="fas fa-user-circle"></i>
+                </span>
 
-                    <i class="fas fa-chevron-circle-down ml-2" style="color: var(--midnight-indigo); font-size: 1.1rem; opacity: 0.8;"></i>
+                    <span id="user-text-block">
+                    <span id="user-name-label">{{ Auth::user()->perfil->nombres ?? 'Usuario' }}</span>
+                    <small id="user-role-label">{{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}</small>
+                </span>
+
+                    <i class="fas fa-chevron-down" id="user-dropdown-chevron" aria-hidden="true"></i>
                 </a>
 
-                {{-- MENÚ DESPLEGABLE --}}
-                <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 mt-2"
-                     style="min-width: 260px; border-radius: 15px;">
+                {{-- Menú desplegable --}}
+                <div class="dropdown-menu dropdown-menu-right" id="user-dropdown-menu">
 
-                    {{-- 1. Cabecera del Menú (Informativa) --}}
-                    <div class="dropdown-item d-flex align-items-center py-3" style="pointer-events: none; border-radius: 15px 15px 0 0; background-color: rgba(40, 43, 74, 0.03);">
-                        <i class="fas fa-user-circle fa-2x mr-3" style="color: var(--midnight-indigo);"></i>
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold" style="color: var(--midnight-indigo); font-size: 1.1rem;">
-                                {{ Auth::user()->perfil->nombres ?? 'Usuario' }}
-                            </span>
-                            <small style="color: rgba(40, 43, 74, 0.7);">
-                                {{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}
-                            </small>
+                    {{-- Cabecera informativa --}}
+                    <div id="user-menu-header">
+                    <span id="user-menu-avatar" aria-hidden="true">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                        <div id="user-menu-text">
+                            <span id="user-menu-name">{{ Auth::user()->perfil->nombres ?? 'Usuario' }}</span>
+                            <small id="user-menu-role">{{ Auth::user()->rol->nombre_rol ?? 'Administrador' }}</small>
                         </div>
                     </div>
 
-                    <div class="dropdown-divider my-0"></div>
-
-                    {{-- 2. Opción: Perfil --}}
-                    <a href="#" class="dropdown-item py-3 fw-bold d-flex align-items-center" style="color: var(--midnight-indigo);">
-                        <i class="fas fa-id-badge mr-3 text-center" style="color: var(--midnight-indigo); font-size: 1.25rem; width: 25px;"></i>
-                        <span style="font-size: 1.1rem;">Perfil</span>
+                    {{-- Perfil --}}
+                    <a href="{{ route('perfil.index') }}" class="dropdown-item user-menu-item" id="user-menu-profile-link">
+                        <i class="fas fa-id-badge" aria-hidden="true"></i>
+                        <span>Perfil</span>
                     </a>
 
-                    <div class="dropdown-divider my-0"></div>
-
-                    {{-- 3. Opción: Cerrar Sesión --}}
-                    <form action="{{ route('logout') }}" method="POST">
+                    {{-- Cerrar sesión --}}
+                    <form action="{{ route('logout') }}" method="POST" id="user-menu-logout-form">
                         @csrf
-                        <button type="submit" class="dropdown-item py-3 fw-bold d-flex align-items-center"
-                                style="cursor: pointer; border-radius: 0 0 15px 15px; color: var(--midnight-indigo);">
-                            <i class="fas fa-sign-out-alt mr-3 text-center" style="color: var(--midnight-indigo); font-size: 1.25rem; width: 25px;"></i>
-                            <span style="font-size: 1.1rem;">Cerrar Sesión</span>
+                        <button type="submit" class="dropdown-item user-menu-item" id="user-menu-logout-btn">
+                            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                            <span>Cerrar Sesión</span>
                         </button>
                     </form>
                 </div>
@@ -90,40 +91,58 @@
     </nav>
 
     {{-- 2. MENÚ LATERAL --}}
-    <aside class="main-sidebar elevation-4">
-        <a href="{{ route('home') }}" class="brand-link text-decoration-none text-center">
-            <img src="{{ asset('img/logodos.png') }}" alt="Logo Yendo Logística" class="img-fluid" style="max-height: 40px; width: auto;">
+    {{-- Conserva .main-sidebar y las clases AdminLTE (nav-pills nav-sidebar, data-widget="treeview").
+         Se quitó "elevation-4" porque AdminLTE lo fuerza con !important. Estilos en public/css/menu-lateral.css --}}
+    <aside class="main-sidebar" id="main-sidebar" aria-label="Menú lateral">
+
+        {{-- Marca --}}
+        <a href="{{ route('home') }}" class="brand-link text-decoration-none" id="sidebar-brand-link" aria-label="Ir al inicio de Yendo Logística">
+            <img src="{{ asset('img/logodos.png') }}" alt="Logo Yendo Logística" class="img-fluid" id="sidebar-brand-logo">
         </a>
 
-        <div class="sidebar">
-            <nav class="mt-4">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <div class="sidebar" id="sidebar-scroll">
+            <nav id="sidebar-nav" aria-label="Navegación principal">
+                <ul class="nav nav-pills nav-sidebar flex-column" id="sidebar-menu" data-widget="treeview" role="menu" data-accordion="false">
 
-                    <li class="nav-item">
-                        <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>Dashboard</p>
+                    <li class="nav-header" id="sidebar-nav-header">Navegación</li>
+
+                    {{-- Dashboard --}}
+                    <li class="nav-item" id="sidebar-item-dashboard">
+                        <a href="{{ route('home') }}" id="sidebar-link-dashboard" title="Dashboard"
+                           class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                           aria-current="{{ request()->routeIs('home') ? 'page' : 'false' }}">
+                            <i class="nav-icon fas fa-tachometer-alt" id="sidebar-icon-dashboard" aria-hidden="true"></i>
+                            <p id="sidebar-label-dashboard">Dashboard</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{ route('usuarios.index') }}" class="nav-link {{ request()->routeIs('usuarios.index') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-user"></i>
-                            <p>Usuarios</p>
+                    {{-- Usuarios (se mantiene activo también en create/edit/show) --}}
+                    <li class="nav-item" id="sidebar-item-usuarios">
+                        <a href="{{ route('usuarios.index') }}" id="sidebar-link-usuarios" title="Usuarios"
+                           class="nav-link {{ request()->routeIs('usuarios.*') ? 'active' : '' }}"
+                           aria-current="{{ request()->routeIs('usuarios.*') ? 'page' : 'false' }}">
+                            <i class="nav-icon fas fa-user" id="sidebar-icon-usuarios" aria-hidden="true"></i>
+                            <p id="sidebar-label-usuarios">Usuarios</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{ route('bitacora') }}" class="nav-link {{ request()->routeIs('bitacora') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-shield-alt"></i>
-                            <p>Auditoría</p>
+                    {{-- Auditoría --}}
+                    <li class="nav-item" id="sidebar-item-auditoria">
+                        <a href="{{ route('bitacora') }}" id="sidebar-link-auditoria" title="Auditoría"
+                           class="nav-link {{ request()->routeIs('bitacora') ? 'active' : '' }}"
+                           aria-current="{{ request()->routeIs('bitacora') ? 'page' : 'false' }}">
+                            <i class="nav-icon fas fa-shield-alt" id="sidebar-icon-auditoria" aria-hidden="true"></i>
+                            <p id="sidebar-label-auditoria">Auditoría</p>
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{{ route('establecimientos.index') }}" class="nav-link {{ request()->routeIs('establecimientos.index') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>Establecimientos</p>
+                    {{-- Establecimientos (activo también en create/edit/show) --}}
+                    <li class="nav-item" id="sidebar-item-establecimientos">
+                        <a href="{{ route('establecimientos.index') }}" id="sidebar-link-establecimientos" title="Establecimientos"
+                           class="nav-link {{ request()->routeIs('establecimientos.*') ? 'active' : '' }}"
+                           aria-current="{{ request()->routeIs('establecimientos.*') ? 'page' : 'false' }}">
+                            <i class="nav-icon fas fa-building" id="sidebar-icon-establecimientos" aria-hidden="true"></i>
+                            <p id="sidebar-label-establecimientos">Establecimientos</p>
                         </a>
                     </li>
 
@@ -151,13 +170,7 @@
         </section>
     </div>
 
-    {{-- 4. PIE DE PÁGINA --}}
-    <footer class="main-footer text-sm">
-        <div class="float-right d-none d-sm-block">
-            <b>Versión</b> 1.0
-        </div>
-        <strong>Copyright &copy; 2026 Yendo - Sistema de Encomiendas.</strong> Todos los derechos reservados.
-    </footer>
+
 
 </div>
 

@@ -1,0 +1,229 @@
+/* ==========================================================================
+   MENÚ LATERAL - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/menu-lateral.css
+   Cárgalo en el <head> de layouts/layout.blade.php (es global, no usa @push)
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --vanilla-cream: #EEEBDA;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-tertiary: #D8B45A;
+
+    --topbar-height: 3.6rem; /* igual que barra-superior.css para alinear marca y barra */
+    --sidebar-border: 3px;
+    --sidebar-radius: 6px;
+    --sidebar-speed: .18s;
+    --sidebar-ease: cubic-bezier(.2, .8, .2, 1);
+    --sidebar-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* =========================
+   CONTENEDOR DEL SIDEBAR
+========================= */
+#main-sidebar {
+    background-color: var(--midnight-indigo);
+    border-right: var(--sidebar-border) solid var(--midnight-dark);
+    box-shadow: none;
+}
+
+/* =========================
+   MARCA / LOGO
+========================= */
+#sidebar-brand-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--topbar-height);
+    padding: .4rem .75rem;
+    overflow: hidden;
+    background-color: var(--midnight-dark);
+    border-bottom: var(--sidebar-border) solid var(--accent-primary);
+    transition: background-color var(--sidebar-speed) ease;
+}
+
+#sidebar-brand-link:hover {
+    background-color: #151829;
+}
+
+#sidebar-brand-link:focus-visible {
+    outline: 3px solid var(--accent-tertiary);
+    outline-offset: -6px;
+}
+
+#sidebar-brand-logo {
+    max-height: 40px;
+    width: auto;
+    transition: transform var(--sidebar-speed) var(--sidebar-ease);
+}
+
+#sidebar-brand-link:hover #sidebar-brand-logo {
+    transform: scale(1.05);
+}
+
+/* =========================
+   ZONA DE SCROLL
+========================= */
+#sidebar-scroll {
+    padding: 0 .85rem .85rem .75rem; /* espacio a la derecha para la sombra dura */
+    scrollbar-width: thin;
+    scrollbar-color: var(--vanilla-cream) transparent;
+}
+
+#sidebar-nav {
+    margin-top: 1.25rem;
+}
+
+/* =========================
+   ENCABEZADO DE SECCIÓN
+========================= */
+#sidebar-nav-header {
+    padding: 0 .25rem .75rem;
+    color: var(--accent-tertiary);
+    font-family: var(--sidebar-font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+#sidebar-nav-header::after {
+    content: "";
+    display: block;
+    height: 0;
+    margin-top: .5rem;
+    border-top: 2px dashed rgba(238, 235, 218, .35);
+}
+
+/* =========================
+   ÍTEMS DE NAVEGACIÓN
+========================= */
+#main-sidebar .nav-sidebar > .nav-item {
+    margin-bottom: .65rem;
+}
+
+#main-sidebar .nav-sidebar > .nav-item > .nav-link {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem .9rem;
+    background-color: transparent;
+    color: var(--vanilla-cream);
+    border: 2px solid transparent;
+    border-radius: var(--sidebar-radius);
+    font-size: .85rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    transition: transform var(--sidebar-speed) var(--sidebar-ease),
+    box-shadow var(--sidebar-speed) var(--sidebar-ease),
+    background-color var(--sidebar-speed) ease,
+    border-color var(--sidebar-speed) ease;
+}
+
+#main-sidebar .nav-sidebar .nav-icon {
+    flex: none;
+    width: 1.75rem;
+    margin: 0;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+#main-sidebar .nav-sidebar > .nav-item > .nav-link p {
+    flex: 1;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Hover */
+#main-sidebar .nav-sidebar > .nav-item > .nav-link:hover {
+    background-color: var(--midnight-light);
+    color: #fff;
+    border-color: var(--vanilla-cream);
+    transform: translateX(4px);
+}
+
+/* Foco por teclado */
+#main-sidebar .nav-sidebar > .nav-item > .nav-link:focus-visible {
+    outline: 3px solid var(--accent-tertiary);
+    outline-offset: 2px;
+}
+
+/* Activo */
+#main-sidebar .nav-sidebar > .nav-item > .nav-link.active,
+#main-sidebar .nav-sidebar > .nav-item > .nav-link.active:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+/* Presionado */
+#main-sidebar .nav-sidebar > .nav-item > .nav-link:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--accent-primary);
+}
+
+/* =========================
+   SUBMENÚ (por si agregas treeview)
+========================= */
+#main-sidebar .nav-treeview {
+    margin: .5rem 0 0 1.25rem;
+    padding-left: .75rem;
+    border-left: 2px dashed rgba(238, 235, 218, .35);
+}
+
+#main-sidebar .nav-treeview > .nav-item > .nav-link {
+    padding: .5rem .75rem;
+    color: var(--cream-dark);
+    border-radius: 4px;
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+#main-sidebar .nav-treeview > .nav-item > .nav-link:hover,
+#main-sidebar .nav-treeview > .nav-item > .nav-link.active {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+/* =========================
+   MODO COLAPSADO (sidebar-mini)
+========================= */
+.sidebar-mini.sidebar-collapse #main-sidebar:not(:hover) .nav-sidebar > .nav-item > .nav-link {
+    justify-content: center;
+    gap: 0;
+    padding-inline: .5rem;
+}
+
+.sidebar-mini.sidebar-collapse #main-sidebar:not(:hover) .nav-sidebar > .nav-item > .nav-link:hover {
+    transform: none;
+}
+
+.sidebar-mini.sidebar-collapse #main-sidebar:not(:hover) #sidebar-scroll {
+    padding-inline: .5rem .75rem;
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    #sidebar-brand-link,
+    #sidebar-brand-logo,
+    #main-sidebar .nav-sidebar > .nav-item > .nav-link {
+        transition: none;
+    }
+    #sidebar-brand-link:hover #sidebar-brand-logo,
+    #main-sidebar .nav-sidebar > .nav-item > .nav-link:hover {
+        transform: none;
+    }
+}

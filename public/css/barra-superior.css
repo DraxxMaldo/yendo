@@ -1,0 +1,336 @@
+/* ==========================================================================
+   BARRA SUPERIOR - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/barra-superior.css
+   Cárgalo en el <head> de layouts/layout.blade.php (es global, no usa @push)
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --vanilla-cream: #EEEBDA;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --topbar-height: 3.6rem;
+    --topbar-border: 3px;
+    --topbar-radius: 6px;
+    --topbar-speed: .18s;
+    --topbar-ease: cubic-bezier(.2, .8, .2, 1);
+    --topbar-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* =========================
+   MAIN HEADER (contenedor)
+========================= */
+#main-header {
+    min-height: var(--topbar-height);
+    padding: .35rem 1rem;
+    background-color: var(--cream-light);
+    border-bottom: var(--topbar-border) solid var(--midnight-dark);
+    box-shadow: 0 4px 0 var(--accent-primary);
+}
+
+#topbar-left-nav,
+#topbar-right-nav {
+    align-items: center;
+}
+
+/* =========================
+   BOTÓN DEL SIDEBAR (hamburguesa)
+========================= */
+#sidebar-toggle-btn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--topbar-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: 1.15rem;
+    transition: transform var(--topbar-speed) var(--topbar-ease),
+    box-shadow var(--topbar-speed) var(--topbar-ease);
+}
+
+#sidebar-toggle-btn:hover {
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+#sidebar-toggle-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#sidebar-toggle-btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* =========================
+   PÍLDORA DE USUARIO
+========================= */
+#user-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .3rem .8rem .3rem .3rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--topbar-radius);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transition: transform var(--topbar-speed) var(--topbar-ease),
+    box-shadow var(--topbar-speed) var(--topbar-ease);
+}
+
+#user-dropdown-toggle::after {
+    display: none; /* usamos nuestro propio chevron */
+}
+
+#user-dropdown-toggle:hover {
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#user-dropdown-toggle:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--accent-primary);
+}
+
+#user-dropdown-toggle:focus-visible {
+    outline: 3px solid var(--midnight-dark);
+    outline-offset: 3px;
+}
+
+#user-avatar-box {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex: none;
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    font-size: 1.5rem;
+}
+
+#user-text-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-align: left;
+}
+
+#user-name-label {
+    max-width: 16ch;
+    overflow: hidden;
+    color: var(--midnight-dark);
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#user-role-label {
+    color: var(--midnight-muted);
+    font-family: var(--topbar-font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+#user-dropdown-chevron {
+    color: var(--midnight-dark);
+    font-size: .9rem;
+    transition: transform var(--topbar-speed) var(--topbar-ease);
+}
+
+#user-dropdown-toggle[aria-expanded="true"] #user-dropdown-chevron {
+    transform: rotate(180deg);
+}
+
+/* =========================
+   MENÚ DESPLEGABLE
+========================= */
+#user-dropdown-menu {
+    min-width: 280px;
+    max-width: calc(100vw - 1rem);
+    margin-top: .7rem;
+    padding: 0;
+    background-color: var(--cream-light);
+    border: var(--topbar-border) solid var(--midnight-dark);
+    border-radius: var(--topbar-radius);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    overflow: hidden;
+}
+
+/* Solo opacity: Popper posiciona el menú con transform inline */
+#user-dropdown-menu.show {
+    animation: topbar-menu-in .16s ease-out both;
+}
+
+@keyframes topbar-menu-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+#user-menu-header {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: 1rem 1.1rem;
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-bottom: var(--topbar-border) solid var(--midnight-dark);
+}
+
+#user-menu-avatar {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-indigo);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--accent-primary);
+    font-size: 1.9rem;
+}
+
+#user-menu-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+#user-menu-name {
+    overflow: hidden;
+    color: var(--vanilla-cream);
+    font-size: 1.05rem;
+    font-weight: 900;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#user-menu-role {
+    margin-top: .25rem;
+    color: var(--accent-tertiary);
+    font-family: var(--topbar-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Ítems del menú */
+#user-dropdown-menu .user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    width: 100%;
+    padding: .9rem 1.1rem;
+    background-color: transparent;
+    color: var(--midnight-dark);
+    border: 0;
+    border-radius: 0;
+    font-size: .95rem;
+    font-weight: 800;
+    letter-spacing: .03em;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color var(--topbar-speed) ease,
+    padding-left var(--topbar-speed) var(--topbar-ease);
+}
+
+#user-dropdown-menu .user-menu-item i {
+    width: 1.5rem;
+    font-size: 1.15rem;
+    text-align: center;
+}
+
+#user-dropdown-menu .user-menu-item:hover,
+#user-dropdown-menu .user-menu-item:focus-visible {
+    padding-left: 1.5rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    outline: 0;
+}
+
+#user-dropdown-menu .user-menu-item:active {
+    background-color: var(--accent-primary);
+    color: var(--midnight-dark);
+}
+
+#user-menu-profile-link {
+    border-bottom: 2px solid var(--midnight-dark);
+}
+
+#user-menu-logout-btn:hover,
+#user-menu-logout-btn:focus-visible {
+    background-color: var(--color-danger);
+    color: var(--vanilla-cream);
+}
+
+#user-menu-logout-btn:active {
+    background-color: var(--midnight-dark);
+    color: var(--vanilla-cream);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 575.98px) {
+    #main-header {
+        padding-inline: .6rem;
+    }
+    /* En móvil solo avatar + chevron */
+    #user-text-block {
+        display: none;
+    }
+    #user-dropdown-toggle {
+        gap: .5rem;
+        padding-right: .6rem;
+    }
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    #sidebar-toggle-btn,
+    #user-dropdown-toggle,
+    #user-dropdown-chevron,
+    #user-dropdown-menu .user-menu-item {
+        transition: none;
+    }
+    #sidebar-toggle-btn:hover,
+    #user-dropdown-toggle:hover {
+        transform: none;
+    }
+    #user-dropdown-menu.show {
+        animation: none;
+    }
+}
