@@ -1,177 +1,520 @@
-/* public/css/registro.css */
+/* ==========================================================================
+   REGISTRO (3 PASOS) - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/registro.css
+   Conserva los nombres de clase/ID que usa Flujo-SPA-registro.js
+   (#paso-1/2/3, .codigo-input, #btn-reenviar-codigo, #timer-text, etc.)
+   ========================================================================== */
 
+/* =========================
+   GLOBAL VARIABLES
+========================= */
 :root {
     --midnight-indigo: #282B4A;
-    --vanilla-cream: rgb(238 235 218 / 0.8);
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --reg-border: 3px;
+    --reg-radius: 6px;
+    --reg-speed: .18s;
+    --reg-ease: cubic-bezier(.2, .8, .2, 1);
+    --reg-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
-/* Contenedor principal sin tarjeta blanca */
+/* =========================
+   CONTENEDOR Y TARJETA
+========================= */
 .registro-minimalista-container {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#registro-card {
+    position: relative;
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.25rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+    background-color: var(--cream-light);
+    color: var(--midnight-indigo);
+    border: var(--reg-border) solid var(--midnight-dark);
+    border-radius: var(--reg-radius);
+    box-shadow: 10px 10px 0 var(--accent-primary);
+    animation: registro-entrada .5s var(--reg-ease) both;
+}
+
+@keyframes registro-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#registro-card-tag {
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--reg-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
 }
 
 #registro-logo-minimalista {
-    max-height: 85px;
+    max-height: 64px;
+    width: auto;
+    margin-bottom: 1.25rem;
 }
 
-/* Tipografía de títulos */
-.registro-titulo {
-    color: white;
+/* =========================
+   INDICADOR DE PASOS
+========================= */
+#registro-stepper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    margin: 0 auto 2rem;
+    padding: 0;
+    max-width: 420px;
+    list-style: none;
+}
+
+.registro-step {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+/* Línea punteada entre pasos */
+.registro-step + .registro-step::before {
+    content: "";
+    position: absolute;
+    top: 21px;
+    right: 50%;
+    width: 100%;
+    border-top: 3px dashed var(--midnight-muted);
+    z-index: 0;
+}
+
+.registro-step-num {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border: 3px solid var(--midnight-dark);
+    border-radius: 4px;
+    font-size: 1.1rem;
     font-weight: 900;
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    letter-spacing: 0.5px;
+    transition: background-color var(--reg-speed) ease,
+    box-shadow var(--reg-speed) var(--reg-ease),
+    transform var(--reg-speed) var(--reg-ease);
+}
+
+.registro-step-label {
+    color: var(--midnight-muted);
+    font-family: var(--reg-font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+/* Paso activo: amarillo con sombra */
+#registro-stepper[data-step="1"] #registro-step-1 .registro-step-num,
+#registro-stepper[data-step="2"] #registro-step-2 .registro-step-num,
+#registro-stepper[data-step="3"] #registro-step-3 .registro-step-num {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+}
+
+#registro-stepper[data-step="1"] #registro-step-1 .registro-step-label,
+#registro-stepper[data-step="2"] #registro-step-2 .registro-step-label,
+#registro-stepper[data-step="3"] #registro-step-3 .registro-step-label {
+    color: var(--midnight-dark);
+}
+
+/* Pasos completados: verde con check */
+#registro-stepper[data-step="2"] #registro-step-1 .registro-step-num,
+#registro-stepper[data-step="3"] #registro-step-1 .registro-step-num,
+#registro-stepper[data-step="3"] #registro-step-2 .registro-step-num {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+    font-size: 0;
+}
+
+#registro-stepper[data-step="2"] #registro-step-1 .registro-step-num::after,
+#registro-stepper[data-step="3"] #registro-step-1 .registro-step-num::after,
+#registro-stepper[data-step="3"] #registro-step-2 .registro-step-num::after {
+    content: "\2713";
+    font-size: 1.2rem;
+}
+
+#registro-stepper[data-step="2"] #registro-step-2::before,
+#registro-stepper[data-step="3"] #registro-step-2::before,
+#registro-stepper[data-step="3"] #registro-step-3::before {
+    border-top-style: solid;
+    border-top-color: var(--midnight-dark);
+}
+
+/* =========================
+   TIPOGRAFÍA
+========================= */
+.registro-titulo {
+    margin: 0 0 1rem;
+    padding-bottom: 1rem;
+    color: var(--midnight-indigo);
+    border-bottom: var(--reg-border) solid var(--midnight-indigo);
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
 }
 
 .registro-subtitulo {
-    color: white;
-    font-size: 0.95rem;
+    max-width: 52ch;
+    margin: 0 auto;
+    color: var(--midnight-muted);
+    font-size: .95rem;
     font-weight: 700;
     line-height: 1.6;
-    max-width: 90%;
-    margin: 0 auto;
 }
 
-/* Contenedor del Formulario */
-#form-registro-paso1 {
+/* =========================
+   CAMPOS (correo, nombres, contraseñas)
+========================= */
+.registro-campo {
     max-width: 480px;
-    margin: 0 auto;
+    margin-inline: auto;
 }
 
-/* Input de Correo - Estilo minimalista */
-#correo_minimalista {
-    background-color: white;
-    border: none;
-    border-radius: 6px;
-    height: 55px;
-    font-size: 1.1rem;
-    font-weight: 800;
+.registro-label {
+    display: block;
+    margin-bottom: .4rem;
     color: var(--midnight-indigo);
-    text-align: center; /* Centramos el texto como en tu imagen */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-family: var(--reg-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
-#correo_minimalista::placeholder {
-    color: #929292;
+.registro-input,
+.input-minimalista-sm {
+    display: block;
+    width: 100%;
+    height: 54px;
+    padding: 0 1rem;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--reg-border) solid var(--midnight-dark);
+    border-radius: var(--reg-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1rem;
     font-weight: 800;
+    transition: transform var(--reg-speed) var(--reg-ease),
+    box-shadow var(--reg-speed) var(--reg-ease);
 }
 
-#correo_minimalista:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4); /* Resplandor color vanilla */
+.registro-input {
+    text-align: center;
 }
 
-/* Botón Continuar - Transparente con borde */
-#btn-continuar-registro {
-    background-color: transparent;
-    color: white;
-    border: 3px solid white;
-    border-radius: 6px;
-    height: 55px;
-    font-size: 1.15rem;
+.registro-input::placeholder,
+.input-minimalista-sm::placeholder {
+    color: #8A8A99;
+    font-weight: 700;
+}
+
+.registro-input:focus,
+.input-minimalista-sm:focus,
+.codigo-input:focus {
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* Estados que pueda poner el JS o Bootstrap */
+.registro-input.is-invalid,
+.input-minimalista-sm.is-invalid,
+.codigo-input.is-invalid {
+    background-image: none;
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+.registro-input.is-valid,
+.input-minimalista-sm.is-valid {
+    background-image: none;
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-secondary);
+}
+
+.registro-input:-webkit-autofill,
+.input-minimalista-sm:-webkit-autofill {
+    -webkit-text-fill-color: var(--midnight-indigo);
+    box-shadow: 0 0 0 100px #fff inset !important;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.registro-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 480px;
+    height: 54px;
+    margin-inline: auto;
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--reg-radius);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-size: 1rem;
     font-weight: 900;
-    transition: all 0.3s ease;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform var(--reg-speed) var(--reg-ease),
+    box-shadow var(--reg-speed) var(--reg-ease),
+    background-color var(--reg-speed) ease;
 }
 
-#btn-continuar-registro:hover {
-    background-color: white;
-    color: var(--midnight-indigo);
+.registro-btn:hover {
+    background-color: var(--midnight-dark);
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
 }
 
-/* Textos pequeños de advertencia y enlaces */
+.registro-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 transparent;
+}
+
+.registro-btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+.registro-btn:disabled,
+.registro-btn.disabled {
+    opacity: .65;
+    cursor: wait;
+    transform: none;
+    box-shadow: 2px 2px 0 var(--accent-primary);
+}
+
+/* =========================
+   NOTA Y ENLACES
+========================= */
 .registro-nota {
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 800;
-    margin-top: 1rem;
+    max-width: 480px;
+    margin: 1.25rem auto 0;
+    padding: .75rem 1rem;
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+    border-left: 6px solid var(--accent-tertiary);
+    border-radius: 3px;
+    font-size: .8rem;
+    font-weight: 700;
     line-height: 1.4;
+    text-align: left;
+}
+
+.registro-nota i {
+    margin-right: .4rem;
+    color: var(--accent-primary);
 }
 
 .registro-link-login {
-    color: white;
-    font-size: 0.85rem;
-    font-weight: 800;
+    padding: 0 .2rem;
+    color: var(--midnight-dark);
+    border-bottom: 3px solid var(--accent-primary);
+    font-size: .85rem;
+    font-weight: 900;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: background-color var(--reg-speed) ease;
 }
 
 .registro-link-login:hover {
-    color: var(--vanilla-cream);
-    text-decoration: underline;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    text-decoration: none;
 }
 
+.registro-link-login:focus-visible,
+.registro-link-reenviar:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
 
-/* =========================================
-   PASO 2: CAJITAS DEL CÓDIGO DE VERIFICACIÓN
-   ========================================= */
+#registro-login-wrap {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 2px dashed var(--midnight-muted);
+}
+
+/* =========================
+   PASO 2: CÓDIGO DE VERIFICACIÓN
+========================= */
 .codigo-container {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    gap: clamp(6px, 2vw, 12px);
+    margin: 2rem 0;
 }
 
 .codigo-input {
-    width: 55px;
-    height: 75px;
-    font-size: 2.5rem;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 58px;
+    height: clamp(58px, 15vw, 76px);
+    padding: 0;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--reg-border) solid var(--midnight-dark);
+    border-radius: var(--reg-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
     font-weight: 900;
     text-align: center;
-    border-radius: 6px;
-    border: none;
-    color: var(--midnight-indigo);
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform var(--reg-speed) var(--reg-ease),
+    box-shadow var(--reg-speed) var(--reg-ease);
 }
 
-.codigo-input:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4);
+.codigo-input.is-invalid {
+    animation: registro-sacudida .35s ease-in-out;
+}
+
+@keyframes registro-sacudida {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-5px); }
+    75%      { transform: translateX(5px); }
 }
 
 .registro-link-reenviar {
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 800;
-    text-decoration: none;
-    cursor: pointer;
-}
-.registro-link-reenviar:hover {
-    color: var(--vanilla-cream);
-    text-decoration: underline;
-}
-
-/* =========================================
-   PASO 3: FORMULARIO "HÁBLANOS DE TI"
-   ========================================= */
-.label-blanco {
-    color: white;
-    font-size: 0.85rem;
+    display: inline-block;
+    padding: .5rem 1rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--reg-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .85rem;
     font-weight: 900;
-    display: block;
-    margin-bottom: 0.4rem;
+    letter-spacing: .04em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform var(--reg-speed) var(--reg-ease),
+    box-shadow var(--reg-speed) var(--reg-ease),
+    background-color var(--reg-speed) ease;
 }
 
-.input-minimalista-sm {
-    background-color: white;
-    border: none;
-    border-radius: 6px;
-    height: 48px;
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--midnight-indigo);
-    padding-left: 1rem;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    width: 100%;
+.registro-link-reenviar:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    text-decoration: none;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
 }
 
-.input-minimalista-sm::placeholder {
-    color: #929292;
-    font-weight: 800;
+.registro-link-reenviar:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
 }
-.input-minimalista-sm:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(238, 235, 218, 0.4);
+
+/* Reenvío bloqueado mientras corre el temporizador (cualquier forma que use el JS) */
+.registro-link-reenviar.disabled,
+.registro-link-reenviar.is-disabled,
+.registro-link-reenviar[disabled],
+.registro-link-reenviar[aria-disabled="true"],
+.registro-link-reenviar[style*="pointer-events: none"] {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    box-shadow: 2px 2px 0 var(--midnight-muted);
+    border-color: var(--midnight-muted);
+    cursor: not-allowed;
+    transform: none;
+}
+
+#timer-text {
+    font-family: var(--reg-font-mono);
+    font-weight: 700;
+}
+
+/* =========================
+   PASO 3: FORMULARIO
+========================= */
+#registro-form-campos {
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+#form-paso-3 .registro-btn {
+    max-width: 420px;
+    margin-top: .5rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 575.98px) {
+    #registro-card {
+        box-shadow: 6px 6px 0 var(--accent-primary);
+    }
+    .registro-step-label {
+        font-size: .6rem;
+    }
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    #registro-card,
+    .codigo-input.is-invalid {
+        animation: none;
+    }
+    .registro-input,
+    .input-minimalista-sm,
+    .codigo-input,
+    .registro-btn,
+    .registro-link-reenviar,
+    .registro-step-num {
+        transition: none;
+    }
+    .registro-input:focus,
+    .input-minimalista-sm:focus,
+    .codigo-input:focus,
+    .registro-btn:hover,
+    .registro-link-reenviar:hover {
+        transform: none;
+    }
 }
