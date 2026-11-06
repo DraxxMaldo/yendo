@@ -1,135 +1,405 @@
-/* public/css/auth.css */
+/* ==========================================================================
+   AUTH (LOGIN) - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/auth.css
+   Mantiene los nombres de clase originales (login-card, custom-input-group,
+   btn-ingresar, btn-olvidaste, registro-*) para que registro / recuperar
+   contraseña hereden el mismo diseño sin tocar su HTML.
+   ========================================================================== */
 
-/* 1. Variables Globales y Fondo */
+/* =========================
+   GLOBAL VARIABLES
+========================= */
 :root {
     --midnight-indigo: #282B4A;
-    --vanilla-cream: rgb(238 235 218 / 0.8);
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --auth-border: 3px;
+    --auth-radius: 6px;
+    --auth-speed: .18s;
+    --auth-ease: cubic-bezier(.2, .8, .2, 1);
+    --auth-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
+/* =========================
+   FONDO Y CUERPO
+========================= */
 body {
-    background-color: var(--midnight-indigo);
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
     margin: 0;
+    padding: 1.5rem 0;
+    background-color: var(--midnight-indigo);
+    /* Trama de puntos sólida, sin degradados */
+    background-image: radial-gradient(rgba(238, 235, 218, .12) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* 2. Diseño específico de la tarjeta de login */
+/* Formas geométricas decorativas (detrás de la tarjeta) */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+    border: var(--auth-border) solid var(--midnight-dark);
+}
+
+body::before {
+    left: 6%;
+    bottom: 8%;
+    width: clamp(110px, 20vw, 300px);
+    aspect-ratio: 1;
+    background-color: var(--accent-primary);
+    border-radius: var(--auth-radius);
+    box-shadow: 8px 8px 0 var(--midnight-dark);
+    transform: rotate(-8deg);
+}
+
+body::after {
+    top: 9%;
+    right: 7%;
+    width: clamp(70px, 12vw, 180px);
+    aspect-ratio: 1;
+    background-color: var(--accent-tertiary);
+    border-radius: 50%;
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+/* =========================
+   TARJETA DE LOGIN
+========================= */
 .login-card {
-    border-radius: 8px;
-    padding: 2.5rem 2.5rem;
+    position: relative;
+    padding: clamp(2rem, 5vw, 2.75rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2rem);
+    background-color: var(--cream-light);
+    color: var(--midnight-indigo);
+    /* !important: neutraliza .border-0 y .shadow-lg de Bootstrap si siguen en otras vistas */
+    border: var(--auth-border) solid var(--midnight-dark) !important;
+    border-radius: var(--auth-radius);
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;
+    animation: auth-entrada .5s var(--auth-ease) both;
+}
+
+@keyframes auth-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#login-card-tag {
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--auth-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+#login-header {
+    margin-bottom: 1.75rem;
 }
 
 .login-title {
+    margin: .75rem 0 0;
+    padding-bottom: 1rem;
     color: var(--midnight-indigo);
+    border-bottom: var(--auth-border) solid var(--midnight-indigo);
+    font-size: clamp(1.25rem, 3.5vw, 1.55rem);
     font-weight: 900;
-    font-size: 1.4rem;
-    margin-top: 0.2rem;
-    margin-bottom: 2rem;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
 }
 
+/* =========================
+   ETIQUETAS E INPUTS
+========================= */
 .custom-label {
-    font-size: 0.8rem;
-    font-weight: 900;
+    display: block;
+    margin-bottom: .4rem;
     color: var(--midnight-indigo);
-    margin-bottom: 0.3rem;
+    font-family: var(--auth-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
-/* 3. Caja gris de los inputs */
-.custom-input-group .input-group-text {
-    background-color: #B8B8B8;
-    border: none;
-    color: var(--midnight-indigo);
-    border-radius: 4px 0 0 4px;
-    font-size: 1.2rem;
-    padding-left: 1rem;
+.custom-input-group.input-group {
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow: hidden;
+    background-color: #fff;
+    border: var(--auth-border) solid var(--midnight-dark);
+    border-radius: var(--auth-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    transition: transform var(--auth-speed) var(--auth-ease),
+    box-shadow var(--auth-speed) var(--auth-ease);
 }
 
-.custom-input-group .form-control {
-    background-color: #B8B8B8;
-    border: none;
+.custom-input-group.input-group:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+/* Cajas de ícono (izquierda) */
+.custom-input-group.input-group .input-group-text {
+    padding: 0 1rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 0;
+    border-radius: 0;
+    font-size: 1.1rem;
+}
+
+.custom-input-group.input-group .input-group-prepend .input-group-text {
+    border-right: var(--auth-border) solid var(--midnight-dark);
+}
+
+/* Botón mostrar/ocultar contraseña (derecha) */
+.custom-input-group.input-group .input-group-append .input-group-text {
+    min-width: 3.25rem;
+    justify-content: center;
+    background-color: var(--cream-dark);
+    border-left: var(--auth-border) solid var(--midnight-dark);
+    cursor: pointer;
+    transition: background-color var(--auth-speed) ease;
+}
+
+.custom-input-group.input-group .input-group-append .input-group-text:hover {
+    background-color: var(--accent-tertiary);
+}
+
+.custom-input-group.input-group .input-group-append .input-group-text:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: -6px;
+}
+
+.custom-input-group.input-group .input-group-append .input-group-text i {
+    color: var(--midnight-dark);
+}
+
+/* Campo */
+.custom-input-group.input-group .form-control {
+    height: 50px;
+    background-color: #fff;
     color: var(--midnight-indigo);
-    border-radius: 0 4px 4px 0;
+    border: 0;
+    border-radius: 0;
     box-shadow: none !important;
-    height: 48px;
-    font-weight: bold;
-}
-
-/* 4. Botones */
-.btn-ingresar {
-    background-color: var(--midnight-indigo);
-    color: white;
-    font-weight: 800;
-    border-radius: 4px;
-    height: 48px;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    font-weight: 700;
 }
 
-.btn-ingresar:hover {
-    background-color: #1a1c30;
-    color: white;
+.custom-input-group.input-group .form-control:focus {
+    background-color: #fff;
+    color: var(--midnight-dark);
+    outline: 0;
 }
 
-.btn-olvidaste {
-    background-color: white;
-    color: var(--midnight-indigo);
+.custom-input-group.input-group .form-control:-webkit-autofill {
+    -webkit-text-fill-color: var(--midnight-indigo);
+    box-shadow: 0 0 0 100px #fff inset !important;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.btn.btn-ingresar,
+.btn.btn-olvidaste,
+.btn.btn-registrarse,
+.btn.btn-crear-cuenta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--auth-radius);
     font-weight: 900;
-    border: 2px solid var(--midnight-indigo);
-    border-radius: 4px;
-    height: 48px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform var(--auth-speed) var(--auth-ease),
+    box-shadow var(--auth-speed) var(--auth-ease),
+    background-color var(--auth-speed) ease;
 }
 
-.btn-olvidaste:hover {
+.btn.btn-ingresar:hover,
+.btn.btn-olvidaste:hover,
+.btn.btn-registrarse:hover,
+.btn.btn-crear-cuenta:hover {
+    transform: translate(-2px, -2px);
+}
+
+.btn.btn-ingresar:active,
+.btn.btn-olvidaste:active,
+.btn.btn-registrarse:active,
+.btn.btn-crear-cuenta:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 transparent;
+}
+
+.btn.btn-ingresar:focus-visible,
+.btn.btn-olvidaste:focus-visible,
+.btn.btn-registrarse:focus-visible,
+.btn.btn-crear-cuenta:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+/* Principal */
+.btn.btn-ingresar {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-size: 1rem;
+}
+
+.btn.btn-ingresar:hover {
+    background-color: var(--midnight-dark);
+    color: #fff;
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.btn.btn-ingresar i {
+    margin-left: .9rem;
+    transition: transform var(--auth-speed) var(--auth-ease);
+}
+
+.btn.btn-ingresar:hover i {
+    transform: translateX(4px);
+}
+
+/* Secundarios */
+.btn.btn-olvidaste,
+.btn.btn-registrarse,
+.btn.btn-crear-cuenta {
     background-color: var(--vanilla-cream);
-    color: var(--midnight-indigo);
+    color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .85rem;
 }
 
-
-.btn-registrarse {
-    background-color: white;
-    color: var(--midnight-indigo);
-    font-weight: 900;
-    border: 2px solid var(--midnight-indigo);
-    border-radius: 4px;
-    height: 48px;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+.btn.btn-olvidaste:hover,
+.btn.btn-registrarse:hover,
+.btn.btn-crear-cuenta:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
 }
 
-.btn-crear-cuenta:hover {
-    background-color: var(--vanilla-cream);
-    color: var(--midnight-indigo);
-}
-
-
+/* =========================
+   ENLACE DE REGISTRO
+========================= */
 #registro-container {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
     align-items: center;
-    flex-wrap: nowrap;
-    white-space: nowrap;
-    gap: 5px;
-    margin-top: 1rem;
+    justify-content: center;
+    gap: .25rem .5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 2px dashed var(--midnight-muted);
 }
 
 #registro-mensaje {
-    color: #929292;
-    font-size: 0.85rem;
+    color: var(--midnight-muted);
+    font-size: .85rem;
     font-weight: 700;
 }
 
 #registro-enlace {
-    color: var(--midnight-indigo);
-    font-size: 0.85rem;
+    padding: 0 .2rem;
+    color: var(--midnight-dark);
+    border-bottom: 3px solid var(--accent-primary);
+    font-size: .85rem;
     font-weight: 900;
     text-decoration: none;
+    transition: background-color var(--auth-speed) ease;
 }
 
 #registro-enlace:hover {
-    text-decoration: underline;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    text-decoration: none;
+}
+
+#registro-enlace:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* =========================
+   ALERTAS (si el layout las muestra dentro de la tarjeta)
+========================= */
+.login-card .alert {
+    margin-bottom: 1.25rem;
+    padding: .75rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-left-width: 8px;
+    border-left-color: var(--color-danger);
+    border-radius: var(--auth-radius);
+    font-size: .88rem;
+    font-weight: 700;
+    text-align: left;
+}
+
+.login-card .alert-success {
+    border-left-color: var(--accent-secondary);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 575.98px) {
+    body::before { left: -4%; bottom: 2%; }
+    body::after  { top: 2%; right: -3%; }
+    .login-card  { box-shadow: 6px 6px 0 var(--accent-primary) !important; }
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    .login-card {
+        animation: none;
+    }
+    .custom-input-group.input-group,
+    .btn.btn-ingresar,
+    .btn.btn-olvidaste,
+    .btn.btn-registrarse,
+    .btn.btn-crear-cuenta,
+    .btn.btn-ingresar i {
+        transition: none;
+    }
+    .custom-input-group.input-group:focus-within,
+    .btn.btn-ingresar:hover,
+    .btn.btn-olvidaste:hover,
+    .btn.btn-registrarse:hover,
+    .btn.btn-crear-cuenta:hover {
+        transform: none;
+    }
 }
