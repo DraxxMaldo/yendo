@@ -3,73 +3,76 @@
 @section('titulo', 'Iniciar Sesión | Yendo')
 
 @section('contenido')
-    <div class="container">
-        <div class="row justify-content-center">
+    <div class="container" id="login-wrapper">
+        <div class="row justify-content-center" id="login-row">
             {{-- Tamaño ajustado para mantener las proporciones de la imagen --}}
-            <div class="col-11 col-sm-8 col-md-6 col-lg-4">
+            <div class="col-11 col-sm-8 col-md-6 col-lg-4" id="login-column">
 
-                <div class="card border-0 shadow-lg login-card">
-                    <div class="card-body p-0 text-center">
+                {{-- Se quitaron "border-0 shadow-lg": Bootstrap los fuerza con !important y pisan el diseño --}}
+                <main class="card login-card" id="login-card">
 
-                        {{-- Logo y Cabecera --}}
-                        <div class="text-center">
-                            <img src="{{ asset('img/logo.png') }}" alt="Logo Yendo" class="img-fluid" style="max-height: 70px;">
-                            <h4 class="login-title">Sistema de logistica</h4>
-                        </div>
+
+                    <div class="card-body p-0 text-center" id="login-card-body">
+
+                        {{-- Logo y cabecera --}}
+                        <header class="text-center" id="login-header">
+                            <img src="{{ asset('img/logo.png') }}" alt="Logo Yendo" class="img-fluid" id="login-logo" width="auto" height="70" style="max-height: 70px;">
+                            <h1 class="login-title" id="login-title">Sistema de logística</h1>
+                        </header>
 
                         {{-- Formulario --}}
-                        <form action="{{ route('login.post') }}" method="POST" novalidate>
+                        <form action="{{ route('login.post') }}" method="POST" id="login-form" novalidate>
                             @csrf
 
-                            <div class="form-group text-left mb-3">
-                                <label for="correo" class="custom-label">Correo electronico</label>
+                            <div class="form-group text-left mb-3" id="login-group-correo">
+                                <label for="correo" class="custom-label" id="login-label-correo">Correo electrónico</label>
                                 <div class="input-group custom-input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                                        <span class="input-group-text"><i class="far fa-envelope" aria-hidden="true"></i></span>
                                     </div>
-                                    {{-- Agregamos value="{{ old('correo') }}" --}}
-                                    <input type="email" name="correo" id="correo" class="form-control" value="{{ old('correo') }}" required>
+                                    {{-- Conserva value="{{ old('correo') }}" --}}
+                                    <input type="email" name="correo" id="correo" class="form-control"
+                                           value="{{ old('correo') }}" autocomplete="email" autofocus required>
                                 </div>
                             </div>
 
-                            <div class="form-group text-left mb-4">
-                                <label for="clave" class="custom-label">Contraseña</label>
+                            <div class="form-group text-left mb-4" id="login-group-clave">
+                                <label for="clave" class="custom-label" id="login-label-clave">Contraseña</label>
                                 <div class="input-group custom-input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                        <span class="input-group-text"><i class="fas fa-lock" aria-hidden="true"></i></span>
                                     </div>
-                                    <input type="password" name="clave" id="clave" class="form-control" required>
-                                    <div class="input-group-append" id="btnToggleClave" style="cursor: pointer;">
-                                        <span class="input-group-text bg-white border-left-0">
-                                            <i class="fas fa-eye text-muted" id="iconoClave"></i>
-                                        </span>
+                                    <input type="password" name="clave" id="clave" class="form-control"
+                                           autocomplete="current-password" required>
+                                    {{-- #btnToggleClave e #iconoClave se mantienen para tu JS de mostrar/ocultar.
+                                         Ahora es un <button> real: accesible por teclado (Tab / Enter / Espacio) --}}
+                                    <div class="input-group-append">
+                                        <button type="button" class="input-group-text" id="btnToggleClave"
+                                                aria-label="Mostrar u ocultar contraseña" title="Mostrar u ocultar contraseña">
+                                            <i class="fas fa-eye" id="iconoClave" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            {{-- Botones de Acción --}}
-                            <button type="submit" class="btn btn-block btn-ingresar mb-3 d-flex justify-content-center align-items-center">
-                                Ingresar <i class="fas fa-arrow-right ml-3" style="font-size: 1.1rem;"></i>
+
+                            {{-- Botones de acción --}}
+                            <button type="submit" class="btn btn-ingresar mb-3" id="login-submit-btn">
+                                Ingresar <i class="fas fa-arrow-right" id="login-submit-icon" aria-hidden="true"></i>
                             </button>
 
-                            <a href="{{ route('password.request') }}" class="btn btn-block btn-olvidaste d-flex justify-content-center align-items-center">
+                            <a href="{{ route('password.request') }}" class="btn btn-olvidaste" id="login-forgot-btn">
                                 ¿Olvidaste tu contraseña?
                             </a>
 
                             <div id="registro-container">
-                             <span id="registro-mensaje">
-                            ¿Aún no tienes una cuenta?
-                             </span>
-                                <a href="{{ route('registro') }}" id="registro-enlace">
-                                    Regístrate en Yendo
-                                </a>
+                                <span id="registro-mensaje">¿Aún no tienes una cuenta?</span>
+                                <a href="{{ route('registro') }}" id="registro-enlace">Regístrate en Yendo</a>
                             </div>
 
                         </form>
                     </div>
-                </div>
+                </main>
             </div>
         </div>
     </div>
-
-
 @endsection
