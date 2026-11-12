@@ -641,3 +641,580 @@
         transform: none;
     }
 }
+
+
+/* ==========================================================================
+   PERFIL - COMPONENTES NUEVOS (modales, afiliación, barra medidora)
+   NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/perfil-modales.css
+   (o pega este bloque al final de perfil.css)
+
+   - Solo CSS: no toca tu HTML ni tus JS.
+   - Usa las variables de perfil.css (:root), que ya se carga en la vista.
+   - Va DESPUÉS de perfil.css. Como cropper.min.css se carga al final del
+     @push('estilos'), los estilos de Cropper llevan el prefijo #modalCropper
+     para ganar en especificidad.
+   - Los !important aparecen solo donde tu HTML tiene estilos inline o donde
+     Bootstrap usa !important (border-0, shadow-lg, rounded-pill, text-*, bg-success, pb-0).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1) BOTÓN "SOLICITAR AFILIACIÓN" / "SOLICITUD EN REVISIÓN" (tarjeta de identidad)
+   ========================================================================== */
+#perfil-tarjeta-identidad .btn.rounded-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    border-radius: var(--perfil-radius) !important;   /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--perfil-speed) var(--perfil-ease),
+    box-shadow var(--perfil-speed) var(--perfil-ease);
+}
+
+#perfil-tarjeta-identidad .btn.rounded-pill i {
+    margin: 0 !important;   /* anula .mr-1 y usa el gap */
+}
+
+#perfil-tarjeta-identidad .btn.rounded-pill:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#perfil-tarjeta-identidad .btn.rounded-pill:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--accent-primary);
+}
+
+#perfil-tarjeta-identidad .btn.rounded-pill:focus-visible {
+    outline: 3px solid var(--vanilla-cream);
+    outline-offset: 3px;
+}
+
+/* En revisión (deshabilitado): borde punteado, sin sombra, sin levantarse */
+#perfil-tarjeta-identidad .btn.rounded-pill:disabled {
+    border-style: dashed !important;
+    box-shadow: none;
+    opacity: 1;
+    transform: none;
+}
+
+
+/* ==========================================================================
+   2) CAMPO "NEGOCIO" PARA CUENTAS BÁSICAS (rol 3)
+   ========================================================================== */
+
+/* Chip "Función para usuarios afiliados" */
+.perfil-label .badge.badge-warning {
+    display: inline-block;
+    padding: .2rem .5rem;
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 var(--midnight-dark);
+    font-family: var(--perfil-font-mono);
+    font-size: .62rem !important;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+/* Contenedor atenuado por el style inline: se queda legible, el input ya trae su estilo deshabilitado */
+.perfil-campo--completo .input-group-brutalist[style*="opacity"] {
+    opacity: .85 !important;
+    background-color: transparent !important;
+}
+
+/* Nota "Esta opción se habilitará al afiliarse" */
+.perfil-campo--completo small.text-muted {
+    padding: .5rem .75rem;
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark) !important;     /* anula .text-muted */
+    border-left: 6px solid var(--accent-tertiary);
+    border-radius: 3px;
+    font-size: .78rem !important;
+    font-weight: 700;
+}
+
+.perfil-campo--completo small.text-muted i {
+    margin-right: .4rem !important;
+    color: var(--accent-primary);
+}
+
+
+/* ==========================================================================
+   3) FONDO OSCURO Y ANIMACIÓN DE LOS MODALES (ambos)
+   ========================================================================== */
+.modal-backdrop.show {
+    background-color: var(--midnight-dark);
+    opacity: .82;
+}
+
+.modal.fade .modal-dialog {
+    transform: translateY(28px) scale(.97);
+    transition: transform .28s var(--perfil-ease);
+}
+
+.modal.show .modal-dialog {
+    transform: none;
+}
+
+/* Cabecera, cerrar y chip, compartidos por los dos modales */
+#modalCropper .modal-content,
+#modalAfiliacionSPA .modal-content {
+    position: relative;
+    border: 3px solid var(--midnight-dark) !important;   /* anula .border-0 y el inline */
+    border-radius: var(--perfil-radius) !important;
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;   /* anula .shadow-lg */
+}
+
+#modalCropper .modal-content::before,
+#modalAfiliacionSPA .modal-content::before {
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--perfil-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+#modalCropper .modal-content::before        { content: "Foto de perfil"; }
+#modalAfiliacionSPA .modal-content::before  { content: "Afiliación"; }
+
+#modalCropper .modal-header,
+#modalAfiliacionSPA .modal-header {
+    padding: 1.5rem 1.5rem 1rem !important;   /* anula .pb-0 */
+    border-bottom: 3px solid currentColor !important;   /* anula .border-0 */
+}
+
+#modalCropper .modal-title,
+#modalAfiliacionSPA .modal-title {
+    font-size: clamp(.95rem, 2.5vw, 1.15rem);
+    font-weight: 900;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+#modalCropper .modal-header .close,
+#modalAfiliacionSPA .modal-header .close {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;   /* anula .text-white y el inline */
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: 1.2rem;
+    font-weight: 900;
+    line-height: 1;
+    opacity: 1 !important;
+    text-shadow: none;
+    transition: transform var(--perfil-speed) var(--perfil-ease),
+    box-shadow var(--perfil-speed) var(--perfil-ease);
+}
+
+#modalCropper .modal-header .close:hover,
+#modalAfiliacionSPA .modal-header .close:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#modalCropper .modal-header .close:active,
+#modalAfiliacionSPA .modal-header .close:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#modalCropper .modal-header .close:focus-visible,
+#modalAfiliacionSPA .modal-header .close:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* Botones de los pies de modal */
+#modalCropper .modal-footer .btn,
+#modalAfiliacionSPA .modal-body form .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--perfil-radius) !important;   /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--perfil-speed) var(--perfil-ease),
+    box-shadow var(--perfil-speed) var(--perfil-ease),
+    background-color var(--perfil-speed) ease;
+}
+
+#modalCropper .modal-footer .btn i,
+#modalAfiliacionSPA .modal-body form .btn i {
+    margin: 0 !important;
+}
+
+#modalCropper .modal-footer .btn:hover,
+#modalAfiliacionSPA .modal-body form .btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+#modalCropper .modal-footer .btn:active,
+#modalAfiliacionSPA .modal-body form .btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#modalCropper .modal-footer .btn:focus,
+#modalAfiliacionSPA .modal-body form .btn:focus {
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#modalCropper .modal-footer .btn:focus-visible,
+#modalAfiliacionSPA .modal-body form .btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   4) MODAL: RECORTAR FOTO (#modalCropper)
+   ========================================================================== */
+#modalCropper .modal-body {
+    padding: 1.5rem !important;
+}
+
+/* Marco del recorte */
+#modalCropper .img-container {
+    background: var(--midnight-dark) !important;
+    border: 3px solid var(--vanilla-cream);
+    border-radius: var(--perfil-radius) !important;
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+/* Botones del pie */
+#modalCropper .modal-footer {
+    padding-top: 1rem !important;
+    gap: .75rem;
+    flex-wrap: wrap;
+}
+
+#modalCropper #btnCancelarRecorte {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+#modalCropper #btnCancelarRecorte:hover,
+#modalCropper #btnCancelarRecorte:focus {
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+}
+
+#modalCropper #btnRecortarYGuardar {
+    box-shadow: 4px 4px 0 var(--accent-primary);
+}
+
+#modalCropper #btnRecortarYGuardar:hover {
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#modalCropper #btnRecortarYGuardar:focus {
+    box-shadow: 4px 4px 0 var(--accent-primary);
+}
+
+/* --- Interfaz de Cropper.js con la paleta de la marca --- */
+#modalCropper .cropper-view-box {
+    outline: 2px solid var(--accent-tertiary);
+    outline-color: var(--accent-tertiary);
+}
+
+#modalCropper .cropper-line {
+    background-color: var(--accent-tertiary);
+    opacity: .35;
+}
+
+#modalCropper .cropper-dashed {
+    border-color: var(--vanilla-cream);
+    opacity: .6;
+}
+
+#modalCropper .cropper-point {
+    width: 12px;
+    height: 12px;
+    background-color: var(--accent-tertiary);
+    border: 2px solid var(--midnight-dark);
+    opacity: 1;
+}
+
+#modalCropper .cropper-point.point-e  { right: -6px;  margin-top: -6px; }
+#modalCropper .cropper-point.point-n  { top: -6px;    margin-left: -6px; }
+#modalCropper .cropper-point.point-w  { left: -6px;   margin-top: -6px; }
+#modalCropper .cropper-point.point-s  { bottom: -6px; margin-left: -6px; }
+#modalCropper .cropper-point.point-ne { top: -6px;    right: -6px; }
+#modalCropper .cropper-point.point-nw { top: -6px;    left: -6px; }
+#modalCropper .cropper-point.point-sw { bottom: -6px; left: -6px; }
+#modalCropper .cropper-point.point-se { bottom: -6px; right: -6px; width: 12px; height: 12px; opacity: 1; }
+
+#modalCropper .cropper-point.point-se::before {
+    background-color: transparent;
+}
+
+
+/* ==========================================================================
+   5) MODAL: SOLICITUD DE AFILIACIÓN (#modalAfiliacionSPA)
+   ========================================================================== */
+#modalAfiliacionSPA .modal-content {
+    background-color: var(--cream-light) !important;   /* anula el inline */
+}
+
+#modalAfiliacionSPA .modal-body h4 {
+    font-size: clamp(1.1rem, 3vw, 1.5rem);
+    font-weight: 900;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+#modalAfiliacionSPA .modal-body p.text-muted {
+    color: var(--midnight-muted) !important;   /* anula .text-muted */
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+/* ---------- Barra medidora ---------- */
+#modalAfiliacionSPA .modal-body > .mb-4 > .d-flex.justify-content-between {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+#modalAfiliacionSPA .modal-body .text-dark {
+    color: var(--midnight-indigo) !important;   /* anula .text-dark */
+    font-family: var(--perfil-font-mono);
+    font-size: .74rem;
+    font-weight: 700 !important;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+#modalAfiliacionSPA #porcentajeTexto {
+    min-width: 3.6rem;
+    padding: .15rem .6rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;   /* anula .text-primary */
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--perfil-font-mono);
+    font-size: 1.05rem;
+    font-weight: 900 !important;
+    text-align: center;
+}
+
+#modalAfiliacionSPA .progress {
+    height: 24px !important;                     /* anula el inline de 15px */
+    overflow: hidden;
+    background-color: #fff !important;
+    border: 3px solid var(--midnight-dark) !important;
+    border-radius: 3px !important;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#modalAfiliacionSPA #barraProgresoPerfil {
+    background-color: var(--accent-tertiary) !important;   /* anula .bg-success */
+    background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(29, 32, 56, .22) 0 8px,
+        transparent 8px 16px
+    );
+    background-size: 22.6px 22.6px;
+    border-right: 3px solid var(--midnight-dark);
+    transition: width .5s var(--perfil-ease), background-color .3s ease;
+    animation: perfil-rayas 1s linear infinite;
+}
+
+/* Sin progreso: sin el borde de cierre */
+#modalAfiliacionSPA #barraProgresoPerfil[aria-valuenow="0"] {
+    border-right: 0;
+}
+
+/* Completo: verde sólido y rayas quietas */
+#modalAfiliacionSPA #barraProgresoPerfil[aria-valuenow="100"] {
+    background-color: var(--accent-secondary) !important;
+    background-image: none;
+    animation: none;
+}
+
+@keyframes perfil-rayas {
+    from { background-position: 0 0; }
+    to   { background-position: 22.6px 0; }
+}
+
+/* ---------- Campos del modal ---------- */
+#modalAfiliacionSPA .modal-body label {
+    display: block;
+    margin-bottom: .4rem;
+    color: var(--midnight-indigo);
+    font-family: var(--perfil-font-mono);
+    font-size: .72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+#modalAfiliacionSPA .perfil-input-val {
+    height: 48px;
+    padding: 0 1rem;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: 3px solid var(--midnight-dark);
+    border-radius: var(--perfil-radius);
+    box-shadow: 4px 4px 0 var(--accent-secondary);   /* completo */
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform var(--perfil-speed) var(--perfil-ease),
+    box-shadow var(--perfil-speed) var(--perfil-ease),
+    background-color var(--perfil-speed) ease;
+}
+
+/* Vacío (required sin valor): punteado y apagado, igual que "pendiente" */
+#modalAfiliacionSPA .perfil-input-val:invalid {
+    background-color: var(--cream-dark);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+}
+
+#modalAfiliacionSPA .perfil-input-val:focus {
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border-style: solid;
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* ---------- Acciones ---------- */
+#modalAfiliacionSPA .modal-body form > .d-flex {
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: .5rem;
+    padding-top: 1.25rem;
+    border-top: 3px solid var(--midnight-indigo);
+}
+
+#modalAfiliacionSPA .modal-body form .btn-outline-secondary {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+#modalAfiliacionSPA .modal-body form .btn-outline-secondary:hover,
+#modalAfiliacionSPA .modal-body form .btn-outline-secondary:focus {
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+}
+
+#modalAfiliacionSPA .modal-body form .btn-success {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+#modalAfiliacionSPA .modal-body form .btn-success:hover,
+#modalAfiliacionSPA .modal-body form .btn-success:focus {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+/* Enviar bloqueado hasta llegar al 100% */
+#modalAfiliacionSPA #btnEnviarSolicitudFinal:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Al habilitarse (100%): un pequeño "pop" que avisa que ya se puede enviar */
+#modalAfiliacionSPA #btnEnviarSolicitudFinal:not(:disabled) {
+    animation: perfil-listo .5s var(--perfil-ease);
+}
+
+@keyframes perfil-listo {
+    0%   { transform: scale(.94); }
+    60%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+
+/* ==========================================================================
+   6) RESPONSIVE
+   ========================================================================== */
+@media (max-width: 575.98px) {
+    #modalCropper .modal-content,
+    #modalAfiliacionSPA .modal-content {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+    #modalCropper .modal-footer .btn,
+    #modalAfiliacionSPA .modal-body form > .d-flex > .btn {
+        flex: 1 1 100%;
+    }
+    #modalAfiliacionSPA .modal-body form > .d-flex {
+        flex-direction: column-reverse;
+        align-items: stretch !important;
+    }
+}
+
+
+/* ==========================================================================
+   7) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .modal.fade .modal-dialog {
+        transform: none;
+        transition: none;
+    }
+    #modalAfiliacionSPA #barraProgresoPerfil {
+        animation: none;
+        transition: none;
+    }
+    #modalAfiliacionSPA #btnEnviarSolicitudFinal:not(:disabled) {
+        animation: none;
+    }
+    #perfil-tarjeta-identidad .btn.rounded-pill,
+    #modalCropper .modal-footer .btn,
+    #modalAfiliacionSPA .modal-body form .btn,
+    #modalAfiliacionSPA .perfil-input-val,
+    #modalCropper .modal-header .close,
+    #modalAfiliacionSPA .modal-header .close {
+        transition: none;
+    }
+    #perfil-tarjeta-identidad .btn.rounded-pill:hover,
+    #modalCropper .modal-footer .btn:hover,
+    #modalAfiliacionSPA .modal-body form .btn:hover:not(:disabled),
+    #modalAfiliacionSPA .perfil-input-val:focus {
+        transform: none;
+    }
+}
