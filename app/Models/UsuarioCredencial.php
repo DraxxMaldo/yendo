@@ -107,4 +107,13 @@ class UsuarioCredencial extends Authenticatable
     {
         return UsuarioCredencial::find($id)->delete();
     }
+
+    public function tieneAlgunRol(array $roles): bool
+    {
+        // Obtenemos el nombre del rol asociado a este usuario (ej: 'admin')
+        $nombreRol = $this->rol->nombre_rol ?? null;
+
+        // Verificamos si ese rol está dentro del arreglo de roles permitidos en la ruta
+        return in_array($nombreRol, $roles);
+    }
 }
