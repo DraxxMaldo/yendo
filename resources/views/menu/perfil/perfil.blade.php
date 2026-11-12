@@ -65,6 +65,28 @@
 
                         {{-- ID de usuario real --}}
                         <p class="perfil-id-usuario">ID de usuario: <strong>#US-{{ str_pad($datosUsuario['id_usuario'], 5, '0', STR_PAD_LEFT) }}</strong></p>
+
+                        {{-- BOTÓN DE SOLICITAR AFILIACIÓN (Visible para rol básico ID 3) --}}
+                        @if(Auth::user()->id_rol == 3)
+                            <div class="mt-3 w-100">
+                                @php
+                                    $estadoSol = $datosUsuario['estado_solicitud'] ?? null;
+                                @endphp
+
+                                @if($estadoSol === 'pendiente')
+                                    {{-- Si la solicitud está pendiente, muestra el estado de revisión --}}
+                                    <button type="button" class="btn fw-bold rounded-pill px-4 py-2 w-100" style="background-color: var(--cream-dark); color: var(--midnight-dark); border: 2px solid var(--midnight-dark); cursor: not-allowed;" disabled>
+                                        <i class="fas fa-clock mr-1"></i> Solicitud en Revisión
+                                    </button>
+                                @else
+                                    {{-- Si no tiene solicitud pendiente (sea nula, rechazada o incluso aprobada mientras siga siendo rol básico), muestra siempre el botón de solicitar --}}
+                                    <button type="button" class="btn btn-brand fw-bold rounded-pill px-4 py-2 w-100" data-toggle="modal" data-target="#modalAfiliacionSPA" style="background-color: var(--accent-tertiary); color: var(--midnight-dark); border: 2px solid var(--midnight-dark);">
+                                        <i class="fas fa-id-badge mr-1"></i>
+                                        {{ $estadoSol === 'rechazada' ? 'Reintentar Solicitud' : 'Solicitar Afiliación' }}
+                                    </button>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </section>
             </aside>
@@ -122,11 +144,25 @@
                                 </div>
 
                                 <div class="perfil-campo--completo">
-                                    <label class="perfil-label" for="perfil-input-negocio">Nombre del negocio / emprendimiento (opcional)</label>
-                                    <div class="input-group-brutalist">
+                                    <label class="perfil-label" for="perfil-input-negocio">
+                                        Nombre del negocio / emprendimiento
+                                        @if(Auth::user()->id_rol == 3)
+                                            <span class="badge badge-warning ml-2" style="font-size: 0.65rem; background-color: var(--accent-tertiary); color: var(--midnight-dark);">Función para usuarios afiliados</span>
+                                        @endif
+                                    </label>
+                                    <div class="input-group-brutalist" @if(Auth::user()->id_rol == 3) style="opacity: 0.65; background-color: #e9ecef;" @endif>
                                         <span class="input-icon"><i class="fas fa-store" aria-hidden="true"></i></span>
-                                        <input type="text" id="perfil-input-negocio" name="nombre_negocio" class="form-control perfil-input" value="{{ old('nombre_negocio', $datosUsuario['nombre_negocio']) }}" autocomplete="organization" readonly>
+                                        <input type="text" id="perfil-input-negocio" name="nombre_negocio"
+                                               class="form-control perfil-input"
+                                               value="{{ Auth::user()->id_rol == 3 ? 'No disponible para cuentas básicas' : old('nombre_negocio', $datosUsuario['nombre_negocio']) }}"
+                                               autocomplete="organization"
+                                               @if(Auth::user()->id_rol == 3) disabled title="Actualiza tu cuenta a afiliado para gestionar tu negocio" @else readonly @endif>
                                     </div>
+                                    @if(Auth::user()->id_rol == 3)
+                                        <small class="text-muted mt-1 d-block" style="font-size: 0.8rem;">
+                                            <i class="fas fa-info-circle mr-1"></i> Esta opción se habilitará al afiliarse.
+                                        </small>
+                                    @endif
                                 </div>
                             </div>
 
@@ -199,6 +235,73 @@
             </div>
         </div>
     </div>
+
+
+    <!-- MODAL SPA PARA SOLICITUD DE AFILIACIÓN Y BARRA MEDIDORA -->
+    <div class="modal fade" id="modalAfiliacionSPA" tabindex="-1" aria-labelledby="modalAfiliacionLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg" style="background-color: var(--vanilla-cream); color: var(--midnight-indigo); border: 2px solid var(--midnight-indigo) !important; border-radius: 8px;">
+
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="modalAfiliacionLabel">
+                        <i class="fas fa-shield-alt mr-2" style="color: var(--accent-primary);"></i> Solicitud de Afiliación a Yendo
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: var(--midnight-indigo);">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <h4 class="fw-bold mb-2">Completar Perfil de Usuario</h4>
+                    <p class="text-muted mb-4">Para enviar tu solicitud de afiliación, verifica y completa todos tus datos personales. La barra indicará cuando esté listo al 100%.</p>
+
+                    <!-- Barra Medidora de Progreso -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="fw-bold text-dark">Progreso de campos completados:</span>
+                            <span id="porcentajeTexto" class="fw-bold text-primary">0%</span>
+                        </div>
+                        <div class="progress" style="height: 15px; border: 2px solid var(--midnight-indigo); border-radius: 4px; background-color: #fff;">
+                            <div id="barraProgresoPerfil" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <!-- Campos del perfil a evaluar en tiempo real -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small">Nombres</label>
+                            <input type="text" id="afi_nombres" class="form-control perfil-input-val" value="{{ $datosUsuario['nombres'] }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small">Apellidos</label>
+                            <input type="text" id="afi_apellidos" class="form-control perfil-input-val" value="{{ $datosUsuario['apellidos'] }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small">Teléfono</label>
+                            <input type="tel" id="afi_telefono" class="form-control perfil-input-val" value="{{ $datosUsuario['telefono'] }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small">Nombre del Negocio / Emprendimiento</label>
+                            <input type="text" id="afi_negocio" class="form-control perfil-input-val" value="{{ $datosUsuario['nombre_negocio'] }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Formulario real de envío de solicitud (se habilita al llegar al 100%) -->
+                    <form action="{{ route('perfil.solicitar_afiliacion') }}" method="POST">
+                        @csrf
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-outline-secondary fw-bold rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+
+                            <button type="submit" id="btnEnviarSolicitudFinal" class="btn btn-success fw-bold rounded-pill px-4" disabled>
+                                <i class="fas fa-paper-plane mr-1"></i> Enviar Solicitud de Afiliación
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -209,11 +312,11 @@
             actualizarInformacion: "{{ route('perfil.actualizar_informacion') }}"
         };
     </script>
-
     {{-- Cropper.js JS --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
     {{-- Archivos de script separados por responsabilidades --}}
     <script src="{{ asset('js/Perfil/perfil-avatar.js') }}"></script>
     <script src="{{ asset('js/Perfil/perfil-edicion.js') }}"></script>
+    {{-- Script de la barra medidora para el Modal SPA de Afiliación --}}
+    <script src="{{ asset('js/Admin/barra-medidora-afiliacion.js') }}"></script>
 @endpush

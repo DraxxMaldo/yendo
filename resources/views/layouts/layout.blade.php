@@ -156,6 +156,17 @@
                         </a>
                     </li>
 
+                    @if(Auth::check() && Auth::user()->id_rol == 1)
+                        <li class="nav-item" id="sidebar-item-solicitudes">
+                            <a href="{{ route('admin.solicitudes_afiliacion') }}" id="sidebar-link-solicitudes" title="Solicitudes de Afiliación"
+                               class="nav-link {{ request()->routeIs('admin.solicitudes_afiliacion') ? 'active' : '' }}"
+                               aria-current="{{ request()->routeIs('admin.solicitudes_afiliacion') ? 'page' : 'false' }}">
+                                <i class="nav-icon fas fa-user-check" id="sidebar-icon-solicitudes" aria-hidden="true"></i>
+                                <p id="sidebar-label-solicitudes">Solicitudes Afiliación</p>
+                            </a>
+                        </li>
+                    @endif
+
                 </ul>
             </nav>
         </div>

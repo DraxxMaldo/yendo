@@ -23,6 +23,13 @@ class PerfilController extends Controller
         $usuarioCredencial = Auth::user();
         $perfilPersona = PerfilPersona::where('id_usuario', $usuarioCredencial->id_usuario)->first();
 
+        // Consultar la última solicitud de afiliación del usuario
+        $solicitudAfiliacion = \App\Models\SolicitudAfiliacion::where('id_usuario', $usuarioCredencial->id_usuario)
+            ->latest()
+            ->first();
+
+        $estadoSolicitud = $solicitudAfiliacion ? $solicitudAfiliacion->estado : null; // 'pendiente', 'aprobada', 'rechazada' o null
+
         $nombreRol = 'Usuario';
         if ($usuarioCredencial->id_rol == 1) {
             $nombreRol = 'Administrador';
@@ -37,14 +44,15 @@ class PerfilController extends Controller
             : 'https://ui-avatars.com/api/?name=' . urlencode(($perfilPersona ? $perfilPersona->nombres : 'Usuario') . ' ' . ($perfilPersona ? $perfilPersona->apellidos : '')) . '&background=EEEBDA&color=282B4A&size=180&bold=true';
 
         $datosUsuario = [
-            'id_usuario'     => $usuarioCredencial->id_usuario,
-            'correo'         => $usuarioCredencial->correo_electronico,
-            'nombres'        => $perfilPersona ? $perfilPersona->nombres : '',
-            'apellidos'      => $perfilPersona ? $perfilPersona->apellidos : '',
-            'telefono'       => $perfilPersona ? $perfilPersona->telefono : '',
-            'nombre_negocio' => $perfilPersona ? $perfilPersona->nombre_negocio : '',
-            'imagen'         => $urlImagen,
-            'rol'            => $nombreRol,
+            'id_usuario'       => $usuarioCredencial->id_usuario,
+            'correo'           => $usuarioCredencial->correo_electronico,
+            'nombres'          => $perfilPersona ? $perfilPersona->nombres : '',
+            'apellidos'        => $perfilPersona ? $perfilPersona->apellidos : '',
+            'telefono'         => $perfilPersona ? $perfilPersona->telefono : '',
+            'nombre_negocio'   => $perfilPersona ? $perfilPersona->nombre_negocio : '',
+            'imagen'           => $urlImagen,
+            'rol'              => $nombreRol,
+            'estado_solicitud' => $estadoSolicitud,
         ];
 
         return view('menu.perfil.perfil', compact('datosUsuario'));
@@ -92,6 +100,12 @@ class PerfilController extends Controller
         $datos = $request->validated();
 
         $usuarioCredencial = Auth::user();
+
+        // Si el usuario es rol básico (3), evitamos que modifique el nombre del negocio
+        if ($usuarioCredencial->id_rol == 3) {
+            $datos['nombre_negocio'] = null; // O mantenemos el valor actual que tenga
+        }
+
         $perfilPersona = PerfilPersona::where('id_usuario', $usuarioCredencial->id_usuario)->first();
 
         if ($perfilPersona) {
@@ -99,7 +113,7 @@ class PerfilController extends Controller
                 'nombres'        => $datos['nombres'],
                 'apellidos'      => $datos['apellidos'],
                 'telefono'       => $datos['telefono'],
-                'nombre_negocio' => $datos['nombre_negocio'],
+                'nombre_negocio' => $usuarioCredencial->id_rol == 3 ? $perfilPersona->nombre_negocio : $datos['nombre_negocio'],
             ]);
 
             Bitacora::registrar(Bitacora::ACTUALIZADO, 'Perfil de Usuario', $usuarioCredencial->id_usuario, "El usuario actualizó su información personal.");

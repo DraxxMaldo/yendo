@@ -11,6 +11,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\DestinoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SolicitudAfiliacionController;
 
 // Definición de roles del sistema tal como lo maneja tu equipo
 $roles = ["admin", "Afiliado", "Basico"];
@@ -56,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/verificar-codigo', [PerfilController::class, 'verificarCodigoPassword'])->name('verificar_codigo');
         Route::post('/actualizar-final', [PerfilController::class, 'actualizarPasswordFinal'])->name('actualizar_final');
     });
+
+    // Ruta para que el usuario básico envíe su solicitud
+    Route::post('/perfil/solicitar-afiliacion', [SolicitudAfiliacionController::class, 'store'])->name('perfil.solicitar_afiliacion');
 });
 
 
@@ -87,5 +91,9 @@ Route::middleware(['auth', "rol:{$roles[0]}"])->group(function () {
     Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
     Route::post('/municipios', [MunicipioController::class, 'store'])->name('municipios.store');
     Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');
+
+
+    Route::get('/admin/solicitudes-afiliacion', [SolicitudAfiliacionController::class, 'indexAdmin'])->name('admin.solicitudes_afiliacion');
+    Route::post('/admin/solicitudes-afiliacion/{id}/estado', [SolicitudAfiliacionController::class, 'cambiarEstado'])->name('admin.solicitudes.estado');
 
 });
