@@ -116,6 +116,8 @@
                         </a>
                     </li>
 
+
+                    @if(Auth::check() && Auth::user()->id_rol == 1)
                     {{-- Dashboard --}}
                     <li class="nav-item" id="sidebar-item-dashboard">
                         <a href="{{ route('home') }}" id="sidebar-link-dashboard" title="Dashboard"
@@ -125,7 +127,9 @@
                             <p id="sidebar-label-dashboard">Dashboard</p>
                         </a>
                     </li>
+                    @endif
 
+                    @if(Auth::check() && Auth::user()->id_rol == 1)
                     {{-- Usuarios (se mantiene activo también en create/edit/show) --}}
                     <li class="nav-item" id="sidebar-item-usuarios">
                         <a href="{{ route('usuarios.index') }}" id="sidebar-link-usuarios" title="Usuarios"
@@ -135,7 +139,9 @@
                             <p id="sidebar-label-usuarios">Usuarios</p>
                         </a>
                     </li>
+                    @endif
 
+                    @if(Auth::check() && Auth::user()->id_rol == 1)
                     {{-- Auditoría --}}
                     <li class="nav-item" id="sidebar-item-auditoria">
                         <a href="{{ route('bitacora') }}" id="sidebar-link-auditoria" title="Auditoría"
@@ -145,7 +151,9 @@
                             <p id="sidebar-label-auditoria">Auditoría</p>
                         </a>
                     </li>
+                    @endif
 
+                    @if(Auth::check() && Auth::user()->id_rol == 1)
                     {{-- Establecimientos (activo también en create/edit/show) --}}
                     <li class="nav-item" id="sidebar-item-establecimientos">
                         <a href="{{ route('establecimientos.index') }}" id="sidebar-link-establecimientos" title="Establecimientos"
@@ -155,6 +163,7 @@
                             <p id="sidebar-label-establecimientos">Establecimientos</p>
                         </a>
                     </li>
+                    @endif
 
                     @if(Auth::check() && Auth::user()->id_rol == 1)
                         <li class="nav-item" id="sidebar-item-solicitudes">
