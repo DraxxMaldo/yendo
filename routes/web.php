@@ -7,6 +7,7 @@ use App\Http\Controllers\EstablecimientoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -75,3 +76,16 @@ Route::put('/establecimientos/{id}', [EstablecimientoController::class, 'update'
 
 Route::get('/recuperar-contrasena', function () {return view('Auth.recuperar-contrasenha');})->name('password.request');
 Route::post('/recuperar-contrasena', [\App\Http\Controllers\Auth\AuthController::class, 'enviarNuevaContrasena'])->name('password.email');
+
+
+
+Route::middleware(['auth'])->group(function () {
+
+
+    Route::get('/perfil', [PerfilController::class, 'index'])->name('perfil.index');
+
+    //Ruta para actualizar foto de perfil
+    Route::post('/perfil/actualizar-foto', [PerfilController::class, 'actualizarFoto'])->name('perfil.actualizar_foto');
+    //Ruta oara actualizar información en la vista de perfil
+    Route::put('/perfil/actualizar-informacion', [PerfilController::class, 'actualizarInformacion'])->name('perfil.actualizar_informacion');
+});
