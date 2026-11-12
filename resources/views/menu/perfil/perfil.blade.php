@@ -160,9 +160,9 @@
                                 <p class="perfil-seguridad-titulo">Contraseña de acceso</p>
                                 <p class="perfil-seguridad-detalle">Última modificación realizada durante el registro inicial del sistema.</p>
                             </div>
-                            <button type="button" class="btn perfil-btn perfil-btn-secundario" id="perfil-btn-cambiar-password">
+                            <a href="{{ route('perfil.seguridad.index') }}" class="btn perfil-btn perfil-btn-secundario" id="perfil-btn-cambiar-password">
                                 <i class="fas fa-key perfil-icono" aria-hidden="true"></i> Cambiar contraseña
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </section>

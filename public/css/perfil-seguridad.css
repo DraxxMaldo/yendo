@@ -1,0 +1,587 @@
+/* ==========================================================================
+   PERFIL > SEGURIDAD (CAMBIO DE CONTRASEÑA) - NEOBRUTALISTA
+   Archivo: public/css/perfil-seguridad.css
+
+   Pensado para tu vista ORIGINAL, sin tocar el HTML.
+   Todo va acotado a .card-custom para no afectar otras páginas.
+   Los !important aparecen solo donde Bootstrap o el HTML (estilos inline)
+   ya usan !important o inline: border-0, shadow-lg, text-muted, text-danger,
+   text-warning, text-success, rounded-pill y el input del código.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES (mismos valores que perfil.css)
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --seg-border: 3px;
+    --seg-radius: 6px;
+    --seg-speed: .18s;
+    --seg-ease: cubic-bezier(.2, .8, .2, 1);
+    --seg-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* =========================
+   TARJETA PRINCIPAL
+========================= */
+.card.card-custom {
+    position: relative;
+    background-color: var(--cream-light);
+    color: var(--midnight-indigo);
+    border: var(--seg-border) solid var(--midnight-dark) !important;   /* anula .border-0 */
+    border-radius: var(--seg-radius);
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;          /* anula .shadow-lg */
+    animation: seg-entrada .5s var(--seg-ease) both;
+}
+
+@keyframes seg-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Etiqueta amarilla sobre la tarjeta (solo CSS) */
+.card.card-custom::before {
+    content: "Verificación en dos pasos";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--seg-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+.card-custom > .text-center.mb-4 {
+    padding-bottom: 1.25rem;
+    border-bottom: var(--seg-border) solid var(--midnight-indigo);
+}
+
+.card-custom > .text-center.mb-4 h2 {
+    margin: .5rem 0 .4rem;
+    font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.card-custom > .text-center.mb-4 p {
+    max-width: 52ch;
+    margin: 0 auto;
+}
+
+/* =========================
+   TEXTOS GENERALES
+========================= */
+.card-custom h4 {
+    margin-bottom: .6rem;
+    color: var(--midnight-indigo);
+    font-size: clamp(1.05rem, 2.8vw, 1.4rem);
+    font-weight: 900;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+.card-custom .text-muted {
+    color: var(--midnight-muted) !important;   /* anula .text-muted de Bootstrap */
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.card-custom [id^="paso-"] > p {
+    max-width: 52ch;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ancho cómodo para el contenido de cada paso */
+.card-custom [id^="paso-"] {
+    padding-left: clamp(.25rem, 3vw, 1.5rem);
+    padding-right: clamp(.25rem, 3vw, 1.5rem);
+}
+
+/* =========================
+   ICONO GRANDE DE CADA PASO (el <i class="fa-3x">)
+========================= */
+.card-custom [id^="paso-"] > i.fa-3x {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--accent-tertiary);
+    border: var(--seg-border) solid var(--midnight-dark);
+    border-radius: var(--seg-radius);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+    font-size: 2rem;
+    transform: rotate(-3deg);
+}
+
+/* Paso 2: escudo amarillo sobre índigo */
+.card-custom #paso-2 > i.fa-3x {
+    background-color: var(--midnight-indigo);
+    color: var(--accent-tertiary) !important;   /* anula .text-warning */
+}
+
+/* Paso 3: check oscuro sobre verde */
+.card-custom #paso-3 > i.fa-3x {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark) !important;     /* anula .text-success */
+}
+
+/* =========================
+   PASO 1: RADIOS COMO TARJETAS (sin tocar el HTML)
+========================= */
+.card-custom #paso-1 form > .d-flex.mb-4 {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-custom .custom-control.custom-radio {
+    flex: 1 1 280px;
+    max-width: 330px;
+    margin: 0;
+    padding-left: 0;
+}
+
+.card-custom .custom-radio .custom-control-label {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-height: 64px;
+    margin: 0;
+    padding: 1rem 1rem 1rem 3.75rem;
+    background-color: #fff;
+    border: var(--seg-border) solid var(--midnight-dark);
+    border-radius: var(--seg-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .88rem;
+    letter-spacing: .03em;
+    line-height: 1.25;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform var(--seg-speed) var(--seg-ease),
+    box-shadow var(--seg-speed) var(--seg-ease),
+    background-color var(--seg-speed) ease;
+}
+
+.card-custom .custom-radio .custom-control-label:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+/* Cuadro indicador (reemplaza el círculo azul de Bootstrap) */
+.card-custom .custom-radio .custom-control-label::before {
+    top: 50%;
+    left: 1rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    background-color: var(--cream-dark);
+    border: 3px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: none;
+    transform: translateY(-50%);
+}
+
+.card-custom .custom-radio .custom-control-label::after {
+    content: "\2713";
+    top: 50%;
+    left: 1rem;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    background: none;
+    color: transparent;
+    font-size: .95rem;
+    font-weight: 900;
+    transform: translateY(-50%);
+}
+
+/* Seleccionado */
+.card-custom .custom-radio .custom-control-input:checked ~ .custom-control-label {
+    background-color: var(--accent-tertiary);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+}
+
+.card-custom .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: var(--midnight-indigo);
+    border-color: var(--midnight-dark);
+}
+
+.card-custom .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
+    background-image: none;
+    color: var(--vanilla-cream);
+}
+
+.card-custom .custom-radio .custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: none;
+}
+
+.card-custom .custom-radio .custom-control-input:focus-visible ~ .custom-control-label {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* =========================
+   PASO 2: CONTADOR Y CÓDIGO
+========================= */
+.card-custom #paso-2 p.text-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .4rem .85rem;
+    background-color: #fff;
+    color: var(--midnight-dark) !important;   /* anula .text-danger */
+    border: 2px dashed var(--color-danger);
+    border-radius: 3px;
+    font-family: var(--seg-font-mono);
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.card-custom #paso-2 p.text-danger::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    flex: none;
+    background-color: var(--color-danger);
+    border-radius: 50%;
+    animation: seg-pulso 1.6s ease-in-out infinite;
+}
+
+@keyframes seg-pulso {
+    0%, 100% { transform: scale(.85); opacity: .7; }
+    50%      { transform: scale(1.25); opacity: 1; }
+}
+
+.card-custom #contador {
+    color: var(--color-danger);
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+/* Campo del código (anula el style inline y .fs-3) */
+.card-custom #paso-2 input[name="codigo"] {
+    width: min(100%, 320px);
+    max-width: 320px !important;
+    height: 76px;
+    padding: 0 0 0 .45em;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--seg-border) solid var(--midnight-dark);
+    border-radius: var(--seg-radius);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+    font-family: var(--seg-font-mono);
+    font-size: 2rem !important;
+    letter-spacing: .45em !important;
+    text-transform: uppercase;
+    transition: transform var(--seg-speed) var(--seg-ease),
+    box-shadow var(--seg-speed) var(--seg-ease);
+}
+
+.card-custom #paso-2 input[name="codigo"]::placeholder {
+    color: #A9A9B8;
+}
+
+.card-custom #paso-2 input[name="codigo"]:focus {
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border-color: var(--midnight-dark);
+    box-shadow: 7px 7px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* Reenviar código */
+.card-custom #paso-2 form.mt-3 {
+    padding-top: 1.25rem;
+    border-top: 2px dashed var(--midnight-muted);
+}
+
+.card-custom #btnReenviar {
+    padding: .35rem .6rem;
+    background-color: transparent;
+    color: var(--midnight-dark) !important;   /* anula .text-muted y .btn-link */
+    border: 0;
+    border-bottom: 3px solid var(--accent-primary);
+    border-radius: 0;
+    font-family: var(--seg-font-mono);
+    font-size: .78rem !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color var(--seg-speed) ease;
+}
+
+.card-custom #btnReenviar:hover:not(:disabled) {
+    background-color: var(--accent-tertiary);
+    text-decoration: none;
+}
+
+.card-custom #btnReenviar:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+    box-shadow: none;
+}
+
+.card-custom #btnReenviar:disabled {
+    color: var(--midnight-muted) !important;
+    border-bottom: 3px dashed var(--midnight-muted);
+    cursor: not-allowed;
+    opacity: .85;
+    pointer-events: auto; /* deja que se vea el cursor not-allowed */
+}
+
+/* =========================
+   PASO 3: CAMPOS DE CONTRASEÑA
+========================= */
+.card-custom .form-group > label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--seg-font-mono);
+    font-size: .74rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.card-custom .input-group {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    background-color: #fff;
+    border: var(--seg-border) solid var(--midnight-dark);
+    border-radius: var(--seg-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    transition: transform var(--seg-speed) var(--seg-ease),
+    box-shadow var(--seg-speed) var(--seg-ease);
+}
+
+.card-custom .input-group:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.card-custom .input-group .form-control {
+    height: 50px;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.card-custom .input-group .form-control:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+.card-custom .input-group-append {
+    margin-left: 0;
+}
+
+.card-custom .toggle-password.btn {
+    min-width: 3.25rem;
+    padding: 0;
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+    border: 0;
+    border-left: var(--seg-border) solid var(--midnight-dark);
+    border-radius: 0;
+    box-shadow: none;
+    transition: background-color var(--seg-speed) ease;
+}
+
+.card-custom .toggle-password.btn:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: none;
+}
+
+.card-custom .toggle-password.btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: -6px;
+}
+
+/* =========================
+   BOTONES
+========================= */
+.card-custom form > .d-flex {
+    flex-wrap: wrap;
+    gap: .9rem;
+}
+
+.card-custom .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    border: 2px solid var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .88rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: transform var(--seg-speed) var(--seg-ease),
+    box-shadow var(--seg-speed) var(--seg-ease),
+    background-color var(--seg-speed) ease;
+}
+
+.card-custom .btn.rounded-pill {
+    border-radius: var(--seg-radius) !important;   /* anula la píldora */
+}
+
+.card-custom .btn:focus {
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+.card-custom .btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+.card-custom .btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+.card-custom .btn:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+/* Principal (amarillo) */
+.card-custom .btn-brand {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+}
+
+.card-custom .btn-brand:hover,
+.card-custom .btn-brand:focus {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+}
+
+/* Confirmación final (verde) */
+.card-custom .btn-success {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+.card-custom .btn-success:hover,
+.card-custom .btn-success:focus {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+/* Cancelar (crema) */
+.card-custom a.btn-outline-secondary {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+.card-custom a.btn-outline-secondary:hover,
+.card-custom a.btn-outline-secondary:focus {
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+}
+
+/* Botón enviando (el onclick reemplaza su contenido) */
+.card-custom .btn i.fa-spin {
+    margin-right: .5rem;
+}
+
+/* =========================
+   OPCIONAL: chip "Paso X de 3" solo con CSS
+   Funciona mientras tu JS oculte los pasos con style="display: none".
+   Si lo cambia con clases, borra este bloque.
+========================= */
+@supports selector(:has(*)) {
+    .card.card-custom::after {
+        content: "Paso 1 de 3";
+        position: absolute;
+        top: -16px;
+        right: 20px;
+        padding: .3rem .75rem;
+        background-color: var(--vanilla-cream);
+        color: var(--midnight-dark);
+        border: 2px solid var(--midnight-dark);
+        border-radius: 3px;
+        box-shadow: 3px 3px 0 var(--midnight-dark);
+        font-family: var(--seg-font-mono);
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        transform: rotate(1.5deg);
+    }
+    .card.card-custom:has(#paso-2:not([style*="none"]))::after { content: "Paso 2 de 3"; }
+    .card.card-custom:has(#paso-3:not([style*="none"]))::after { content: "Paso 3 de 3"; }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 575.98px) {
+    .card.card-custom {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+    .card-custom form > .d-flex > .btn {
+        flex: 1 1 100%;
+    }
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    .card.card-custom,
+    .card-custom #paso-2 p.text-danger::before {
+        animation: none;
+    }
+    .card-custom .btn,
+    .card-custom .input-group,
+    .card-custom .custom-radio .custom-control-label,
+    .card-custom #paso-2 input[name="codigo"] {
+        transition: none;
+    }
+    .card-custom .btn:hover,
+    .card-custom .custom-radio .custom-control-label:hover,
+    .card-custom .custom-radio .custom-control-input:checked ~ .custom-control-label,
+    .card-custom .input-group:focus-within,
+    .card-custom #paso-2 input[name="codigo"]:focus {
+        transform: none;
+    }
+    .card-custom [id^="paso-"] > i.fa-3x {
+        transform: none;
+    }
+}

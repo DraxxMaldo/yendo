@@ -44,6 +44,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/actualizar-foto', [PerfilController::class, 'actualizarFoto'])->name('actualizar_foto');
         Route::put('/actualizar-informacion', [PerfilController::class, 'actualizarInformacion'])->name('actualizar_informacion');
     });
+
+    // Rutas para el cambio de contraseña seguro en formato SPA por pasos
+    Route::middleware(['auth'])->prefix('perfil/seguridad')->name('perfil.seguridad.')->group(function () {
+        Route::get('/cambiar-password', [PerfilController::class, 'vistaCambiarPassword'])->name('index');
+        Route::post('/enviar-codigo', [PerfilController::class, 'enviarCodigoPassword'])->name('enviar_codigo');
+        Route::post('/verificar-codigo', [PerfilController::class, 'verificarCodigoPassword'])->name('verificar_codigo');
+        Route::post('/actualizar-final', [PerfilController::class, 'actualizarPasswordFinal'])->name('actualizar_final');
+    });
 });
 
 
