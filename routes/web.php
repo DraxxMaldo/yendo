@@ -12,6 +12,7 @@ use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\DestinoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudAfiliacionController;
+use App\Http\Controllers\EmpleadoSucursalController;
 
 // Definición de roles del sistema tal como lo maneja tu equipo
 $roles = ["admin", "Afiliado", "Basico"];
@@ -95,5 +96,17 @@ Route::middleware(['auth', "rol:{$roles[0]}"])->group(function () {
 
     Route::get('/admin/solicitudes-afiliacion', [SolicitudAfiliacionController::class, 'indexAdmin'])->name('admin.solicitudes_afiliacion');
     Route::post('/admin/solicitudes-afiliacion/{id}/estado', [SolicitudAfiliacionController::class, 'cambiarEstado'])->name('admin.solicitudes.estado');
+
+});
+
+
+// ==========================================
+// 4. RUTAS EXCLUSIVAS PARA AFILIADOS ($roles[1])
+// ==========================================
+Route::middleware(['auth', "rol:{$roles[1]}"])->group(function () {
+
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/empleados-sucursal', [EmpleadoSucursalController::class, 'index'])->name('empleados.index');
+    });
 
 });

@@ -176,6 +176,18 @@
                         </li>
                     @endif
 
+                    {{-- Gestión de Empleados (Visible para Admin ID 1 y Afiliado ID 2) --}}
+                    @if(Auth::check() && Auth::user()->id_rol == 2)
+                        <li class="nav-item" id="sidebar-item-empleados">
+                            <a href="{{ route('empleados.index') }}" id="sidebar-link-empleados" title="Gestionar Empleados"
+                               class="nav-link {{ request()->routeIs('empleados.*') ? 'active' : '' }}"
+                               aria-current="{{ request()->routeIs('empleados.*') ? 'page' : 'false' }}">
+                                <i class="nav-icon fas fa-user-tie" id="sidebar-icon-empleados" aria-hidden="true"></i>
+                                <p id="sidebar-label-empleados">Gestionar Empleados</p>
+                            </a>
+                        </li>
+                    @endif
+
                 </ul>
             </nav>
         </div>
