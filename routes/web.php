@@ -9,6 +9,7 @@ use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\BitacoraController;
+use App\Http\Controllers\DestinoController;
 use Illuminate\Support\Facades\Route;
 
 // Definición de roles del sistema tal como lo maneja tu equipo
@@ -33,6 +34,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Recuperación de contraseña
 Route::get('/recuperar-contrasena', function () { return view('Auth.recuperar-contrasenha'); })->name('password.request');
 Route::post('/recuperar-contrasena', [AuthController::class, 'enviarNuevaContrasena'])->name('password.email');
+
+// Ruta pública para ver los destinos
+Route::get('/destinos', [DestinoController::class, 'index'])->name('destinos');
 
 
 // ==========================================

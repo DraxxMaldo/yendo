@@ -106,6 +106,16 @@
 
                     <li class="nav-header" id="sidebar-nav-header">Navegación</li>
 
+                    {{-- Destinos (vista pública de sucursales) --}}
+                    <li class="nav-item" id="sidebar-item-destinos">
+                        <a href="{{ route('destinos') }}" id="sidebar-link-destinos" title="Destinos"
+                           class="nav-link {{ request()->routeIs('destinos') ? 'active' : '' }}"
+                           aria-current="{{ request()->routeIs('destinos') ? 'page' : 'false' }}">
+                            <i class="nav-icon fas fa-map-marked-alt" id="sidebar-icon-destinos" aria-hidden="true"></i>
+                            <p id="sidebar-label-destinos">Destinos</p>
+                        </a>
+                    </li>
+
                     {{-- Dashboard --}}
                     <li class="nav-item" id="sidebar-item-dashboard">
                         <a href="{{ route('home') }}" id="sidebar-link-dashboard" title="Dashboard"
