@@ -2,20 +2,27 @@
 
 @section('titulo', 'Gestión de Solicitudes de Afiliación | Yendo')
 
+@push('estilos')
+    {{-- CSS de DataTables --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/solicitudes-afiliacion.css') }}">
+@endpush
+
 @section('contenido')
     @include('layouts.toast')
 
     <div class="container-fluid py-4">
-        <div class="card border-0 shadow-lg p-4" style="background-color: var(--vanilla-cream); border: 2px solid var(--midnight-indigo) !important;">
+        <div class="card border-0 shadow-lg p-4 card-solicitudes-custom">
 
-            <h2 class="fw-bold mb-3" style="color: var(--midnight-indigo);">
+            <h2 class="fw-bold mb-3 titulo-solicitudes">
                 <i class="fas fa-users-cog mr-2"></i> Solicitudes de Afiliación
             </h2>
             <p class="text-muted mb-4">Revisa las solicitudes enviadas por los usuarios y aprueba o rechaza de forma manual.</p>
 
-            <div class="table-responsive bg-white p-3 rounded border border-dark">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="thead-dark" style="background-color: var(--midnight-indigo); color: var(--vanilla-cream);">
+            <div class="table-responsive p-3 rounded table-container-custom">
+                <table id="tbl" class="table table-hover align-middle mb-0 w-100">
+                    <thead class="thead-dark table-solicitudes-header">
                     <tr>
                         <th>ID Usuario</th>
                         <th>Nombre Completo</th>
@@ -64,9 +71,6 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-muted font-weight-bold">No hay solicitudes de afiliación registradas.</td>
-                        </tr>
                     @endforelse
                     </tbody>
                 </table>
@@ -75,3 +79,12 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    {{-- JS de DataTables --}}
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
+
+    {{-- Tu componente reutilizable de DataTable --}}
+    <script src="{{ asset('js/dataTable.js') }}"></script>
+@endpush

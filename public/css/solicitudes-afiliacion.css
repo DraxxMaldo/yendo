@@ -1,0 +1,587 @@
+/* ==========================================================================
+   SOLICITUDES DE AFILIACIÓN - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/solicitudes-afiliacion.css
+
+   - Solo CSS: no toca tu HTML ni dataTable.js.
+   - Todo va acotado a .card-solicitudes-custom (ID/clase de tu vista).
+   - Se carga después de dataTables.bootstrap4.min.css; el prefijo
+     .card-solicitudes-custom sube la especificidad para ganarle sin abusar de !important.
+   - Los !important aparecen solo donde Bootstrap los usa: border-0, shadow-lg,
+     p-3, rounded, mr-2, text-muted, ml-1.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --sol-border: 3px;
+    --sol-radius: 6px;
+    --sol-speed: .18s;
+    --sol-ease: cubic-bezier(.2, .8, .2, 1);
+    --sol-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* =========================
+   TARJETA PRINCIPAL
+========================= */
+.card.card-solicitudes-custom {
+    position: relative;
+    background-color: var(--cream-light);
+    color: var(--midnight-indigo);
+    border: var(--sol-border) solid var(--midnight-dark) !important;     /* anula .border-0 */
+    border-radius: var(--sol-radius);
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;            /* anula .shadow-lg */
+    animation: sol-entrada .5s var(--sol-ease) both;
+}
+
+@keyframes sol-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Etiqueta amarilla sobre la tarjeta (solo CSS) */
+.card.card-solicitudes-custom::before {
+    content: "Afiliaciones";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--sol-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* =========================
+   TÍTULO Y DESCRIPCIÓN
+========================= */
+.card-solicitudes-custom .titulo-solicitudes {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    margin-top: .5rem;
+    color: var(--midnight-indigo);
+    font-size: clamp(1.4rem, 4vw, 2.1rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.card-solicitudes-custom .titulo-solicitudes i {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 46px;
+    height: 46px;
+    margin-right: 0 !important;                 /* anula .mr-2 y usa el gap */
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: var(--sol-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.15rem;
+    transform: rotate(-3deg);
+}
+
+.card-solicitudes-custom > p.text-muted {
+    max-width: 62ch;
+    padding-bottom: 1.25rem;
+    color: var(--midnight-muted) !important;    /* anula .text-muted */
+    border-bottom: var(--sol-border) solid var(--midnight-indigo);
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+/* =========================
+   CONTENEDOR DE LA TABLA (incluye los controles de DataTables)
+========================= */
+.card-solicitudes-custom .table-container-custom {
+    padding: 1.25rem !important;                           /* anula .p-3 */
+    background-color: #fff;
+    border: var(--sol-border) solid var(--midnight-dark);
+    border-radius: var(--sol-radius) !important;           /* anula .rounded */
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+/* =========================
+   CONTROLES DE DATATABLES (mostrar, buscar)
+========================= */
+.card-solicitudes-custom .dataTables_wrapper > .row {
+    align-items: center;
+    row-gap: .75rem;
+}
+
+.card-solicitudes-custom .dataTables_wrapper > .row:first-child {
+    margin-bottom: 1rem;
+}
+
+.card-solicitudes-custom .dataTables_length label,
+.card-solicitudes-custom .dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    color: var(--midnight-indigo);
+    font-family: var(--sol-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.card-solicitudes-custom .dataTables_length select,
+.card-solicitudes-custom .dataTables_filter input {
+    height: 42px;
+    margin: 0;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--sol-border) solid var(--midnight-dark);
+    border-radius: var(--sol-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: transform var(--sol-speed) var(--sol-ease),
+    box-shadow var(--sol-speed) var(--sol-ease);
+}
+
+.card-solicitudes-custom .dataTables_filter input {
+    min-width: min(100%, 240px);
+    padding: 0 1rem;
+}
+
+.card-solicitudes-custom .dataTables_length select {
+    width: auto;
+    padding: 0 2rem 0 .85rem;
+}
+
+.card-solicitudes-custom .dataTables_length select:focus,
+.card-solicitudes-custom .dataTables_filter input:focus {
+    background-color: #fff;
+    border-color: var(--midnight-dark);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* =========================
+   TABLA
+========================= */
+.card-solicitudes-custom #tbl {
+    margin-bottom: 0;
+    border: var(--sol-border) solid var(--midnight-dark);
+    border-radius: var(--sol-radius);
+}
+
+/* Encabezado */
+.card-solicitudes-custom #tbl thead th {
+    padding: 1rem;
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border: 0;
+    border-bottom: var(--sol-border) solid var(--midnight-dark);
+    font-family: var(--sol-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.card-solicitudes-custom #tbl thead th:first-child { border-top-left-radius: 3px; }
+.card-solicitudes-custom #tbl thead th:last-child  { border-top-right-radius: 3px; }
+
+/* Flechas de ordenamiento: la activa en amarillo */
+.card-solicitudes-custom #tbl thead .sorting_asc::before,
+.card-solicitudes-custom #tbl thead .sorting_desc::after {
+    color: var(--accent-tertiary);
+    opacity: 1;
+}
+
+.card-solicitudes-custom #tbl thead .sorting:hover {
+    background-color: var(--midnight-light);
+}
+
+/* Celdas */
+.card-solicitudes-custom #tbl tbody td {
+    padding: .9rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 0;
+    border-top: 2px solid var(--cream-dark);
+    font-size: .92rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.card-solicitudes-custom #tbl tbody tr:first-child td {
+    border-top: 0;
+}
+
+.card-solicitudes-custom #tbl tbody tr:nth-child(even) td {
+    background-color: var(--cream-light);
+}
+
+/* ID de usuario */
+.card-solicitudes-custom #tbl tbody td:first-child {
+    font-family: var(--sol-font-mono);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+/* Nombre completo */
+.card-solicitudes-custom #tbl tbody td.fw-bold {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+}
+
+/* Hover: fila resaltada con marca amarilla a la izquierda */
+.card-solicitudes-custom #tbl.table-hover tbody tr:hover td {
+    background-color: #FBF3D6;
+    color: var(--midnight-dark);
+}
+
+.card-solicitudes-custom #tbl.table-hover tbody tr:hover td:first-child {
+    box-shadow: inset 6px 0 0 var(--accent-tertiary);
+}
+
+/* Sin resultados */
+.card-solicitudes-custom #tbl td.dataTables_empty {
+    padding: 2.5rem 1rem;
+    background-color: var(--cream-light);
+    color: var(--midnight-muted);
+    font-family: var(--sol-font-mono);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Aparición escalonada de filas (se repite al ordenar, buscar o paginar) */
+.card-solicitudes-custom #tbl tbody tr {
+    animation: sol-fila .3s var(--sol-ease) both;
+}
+
+@keyframes sol-fila {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-solicitudes-custom #tbl tbody tr:nth-child(1)  { animation-delay: .02s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(2)  { animation-delay: .05s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(3)  { animation-delay: .08s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(4)  { animation-delay: .11s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(5)  { animation-delay: .14s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(6)  { animation-delay: .17s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(7)  { animation-delay: .20s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(8)  { animation-delay: .23s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(9)  { animation-delay: .26s; }
+.card-solicitudes-custom #tbl tbody tr:nth-child(10) { animation-delay: .29s; }
+
+/* =========================
+   BADGES DE ESTADO
+========================= */
+.card-solicitudes-custom .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 var(--midnight-dark);
+    font-family: var(--sol-font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.card-solicitudes-custom .badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    flex: none;
+    background-color: currentColor;
+    border-radius: 50%;
+}
+
+.card-solicitudes-custom .badge-warning {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+}
+
+.card-solicitudes-custom .badge-success {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+.card-solicitudes-custom .badge-danger {
+    background-color: var(--color-danger);
+    color: var(--vanilla-cream);
+}
+
+/* Pendiente: el punto pulsa para llamar la atención */
+.card-solicitudes-custom .badge-warning::before {
+    animation: sol-pulso 1.6s ease-in-out infinite;
+}
+
+@keyframes sol-pulso {
+    0%, 100% { transform: scale(.85); opacity: .7; }
+    50%      { transform: scale(1.3); opacity: 1; }
+}
+
+/* =========================
+   ACCIONES (aprobar / rechazar / gestionada)
+========================= */
+.card-solicitudes-custom td.text-center {
+    white-space: nowrap;
+}
+
+.card-solicitudes-custom td form.d-inline {
+    display: inline-block;
+    margin-bottom: .25rem;
+}
+
+.card-solicitudes-custom td form.ml-1 {
+    margin-left: .6rem !important;              /* anula .ml-1 */
+}
+
+.card-solicitudes-custom .btn-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    min-height: 36px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .72rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    transition: transform var(--sol-speed) var(--sol-ease),
+    box-shadow var(--sol-speed) var(--sol-ease),
+    background-color var(--sol-speed) ease;
+}
+
+.card-solicitudes-custom .btn-sm i {
+    margin: 0 !important;                       /* anula .mr-1 y usa el gap */
+}
+
+.card-solicitudes-custom .btn-sm:focus {
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .btn-sm:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .btn-sm:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .btn-sm:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+.card-solicitudes-custom .btn-success,
+.card-solicitudes-custom .btn-success:hover,
+.card-solicitudes-custom .btn-success:focus {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+.card-solicitudes-custom .btn-danger,
+.card-solicitudes-custom .btn-danger:hover,
+.card-solicitudes-custom .btn-danger:focus {
+    background-color: var(--color-danger);
+    color: var(--vanilla-cream);
+}
+
+/* "Gestionada" */
+.card-solicitudes-custom td span.text-muted {
+    display: inline-block;
+    padding: .3rem .65rem;
+    color: var(--midnight-muted) !important;    /* anula .text-muted */
+    border: 2px dashed var(--midnight-muted);
+    border-radius: 3px;
+    font-family: var(--sol-font-mono);
+    font-size: .68rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* =========================
+   INFO Y PAGINACIÓN
+========================= */
+.card-solicitudes-custom .dataTables_wrapper > .row:last-child {
+    margin-top: 1rem;
+}
+
+.card-solicitudes-custom .dataTables_info {
+    padding: 0;
+    color: var(--midnight-muted);
+    font-family: var(--sol-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.card-solicitudes-custom .dataTables_paginate {
+    padding: 0;
+}
+
+.card-solicitudes-custom .pagination {
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin: 0;
+}
+
+.card-solicitudes-custom .pagination .page-item .page-link {
+    min-width: 40px;
+    margin: 0;
+    padding: .45rem .8rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: center;
+    transition: transform var(--sol-speed) var(--sol-ease),
+    box-shadow var(--sol-speed) var(--sol-ease),
+    background-color var(--sol-speed) ease;
+}
+
+.card-solicitudes-custom .pagination .page-item .page-link:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .pagination .page-item .page-link:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .pagination .page-item .page-link:focus {
+    outline: 0;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+}
+
+.card-solicitudes-custom .pagination .page-item .page-link:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* Página activa */
+.card-solicitudes-custom .pagination .page-item.active .page-link {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+/* Deshabilitado (Anterior en la primera página, etc.) */
+.card-solicitudes-custom .pagination .page-item.disabled .page-link {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .85;
+    transform: none;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 767.98px) {
+    .card-solicitudes-custom .dataTables_length,
+    .card-solicitudes-custom .dataTables_filter,
+    .card-solicitudes-custom .dataTables_info,
+    .card-solicitudes-custom .dataTables_paginate {
+        float: none;
+        text-align: center;
+    }
+    .card-solicitudes-custom .dataTables_filter label {
+        display: flex;
+        width: 100%;
+    }
+    .card-solicitudes-custom .dataTables_filter input {
+        flex: 1;
+        width: 100%;
+    }
+    .card-solicitudes-custom .pagination {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .card.card-solicitudes-custom {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+    .card-solicitudes-custom .table-container-custom {
+        padding: .75rem !important;
+        box-shadow: 4px 4px 0 var(--midnight-dark);
+    }
+}
+
+/* =========================
+   ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+========================= */
+@media (prefers-reduced-motion: reduce) {
+    .card.card-solicitudes-custom,
+    .card-solicitudes-custom #tbl tbody tr,
+    .card-solicitudes-custom .badge-warning::before {
+        animation: none;
+    }
+    .card-solicitudes-custom .btn-sm,
+    .card-solicitudes-custom .pagination .page-item .page-link,
+    .card-solicitudes-custom .dataTables_length select,
+    .card-solicitudes-custom .dataTables_filter input {
+        transition: none;
+    }
+    .card-solicitudes-custom .btn-sm:hover,
+    .card-solicitudes-custom .pagination .page-item .page-link:hover,
+    .card-solicitudes-custom .dataTables_length select:focus,
+    .card-solicitudes-custom .dataTables_filter input:focus {
+        transform: none;
+    }
+    .card-solicitudes-custom .titulo-solicitudes i {
+        transform: none;
+    }
+}
