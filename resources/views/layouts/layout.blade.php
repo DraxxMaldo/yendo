@@ -182,7 +182,7 @@
                                class="nav-link {{ request()->routeIs('empleados.*') ? 'active' : '' }}"
                                aria-current="{{ request()->routeIs('empleados.*') ? 'page' : 'false' }}">
                                 <i class="nav-icon fas fa-user-tie" id="sidebar-icon-empleados" aria-hidden="true"></i>
-                                <p id="sidebar-label-empleados">Gestionar Empleados</p>
+                                <p id="sidebar-label-empleados">Gestion Empleados</p>
                             </a>
                         </li>
                     @endif
