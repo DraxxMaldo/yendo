@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperación de Contraseña | Yendo</title>
+    <title>Asignación de Contraseña | Yendo</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f4f5f7;">
 
@@ -27,11 +27,11 @@
                 <!-- Cuerpo del Mensaje -->
                 <tr>
                     <td style="padding: 40px 30px;">
-                        <h2 style="margin-top: 0; color: #282b4a; font-size: 24px; font-weight: bold; text-align: center;">Recuperación de Acceso</h2>
+                        <h2 style="margin-top: 0; color: #282b4a; font-size: 24px; font-weight: bold; text-align: center;">Contraseña nueva</h2>
 
                         <p style="font-size: 16px; line-height: 1.6; color: #282b4a; margin-bottom: 20px;">
                             Hola,<br><br>
-                            Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en <strong>Yendo</strong>. Se ha generado una nueva contraseña temporal de forma segura:
+                            Hemos recibido una solicitud para obtener una nueva contraseña en nuestro sistema <strong>Yendo</strong>. Se ha generado una nueva contraseña temporal de forma segura:
                         </p>
 
                         <!-- Caja de Contraseña (Fondo Indigo, Texto Cream) -->
@@ -42,7 +42,7 @@
                         </div>
 
                         <p style="font-size: 16px; line-height: 1.6; color: #282b4a;">
-                            Por motivos de seguridad, te recomendamos encarecidamente que <strong>inicies sesión y cambies esta contraseña</strong> desde tu perfil lo antes posible.
+                            Por motivos de seguridad, te recomendamos encarecidamente que <strong>inicies sesión y cambies esta contraseña temporal</strong> desde tu perfil lo antes posible.
                         </p>
 
                         <!-- Botón de Acción -->

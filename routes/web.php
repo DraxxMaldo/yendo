@@ -81,17 +81,11 @@ Route::middleware(['auth', "rol:{$roles[0]}"])->group(function () {
     // --- Módulo de Auditoría / Bitácora ---
     Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora');
 
-    // --- Módulo de Establecimientos, Departamentos y Municipios ---
-    Route::prefix('establecimientos')->name('establecimientos.')->group(function () {
-        Route::get('/', [EstablecimientoController::class, 'index'])->name('index');
-        Route::put('/{id}', [EstablecimientoController::class, 'update'])->name('update');
-        Route::get('/exportar/excel', [EstablecimientoController::class, 'exportarExcel'])->name('excel');
-        Route::get('/exportar/pdf', [EstablecimientoController::class, 'exportarPdf'])->name('pdf');
-    });
+
 
     Route::post('/departamentos', [DepartamentoController::class, 'store'])->name('departamentos.store');
     Route::post('/municipios', [MunicipioController::class, 'store'])->name('municipios.store');
-    Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');
+
 
 
     Route::get('/admin/solicitudes-afiliacion', [SolicitudAfiliacionController::class, 'indexAdmin'])->name('admin.solicitudes_afiliacion');
@@ -107,6 +101,26 @@ Route::middleware(['auth', "rol:{$roles[1]}"])->group(function () {
 
     Route::middleware(['auth'])->group(function () {
         Route::get('/empleados-sucursal', [EmpleadoSucursalController::class, 'index'])->name('empleados.index');
+        Route::get('/empleados-sucursal', [EmpleadoSucursalController::class, 'index'])->name('empleados.index');
+        Route::post('/empleados-sucursal', [EmpleadoSucursalController::class, 'store'])->name('empleados.store');
+
+
+
     });
+});
+
+// ==========================================
+// 5. RUTAS PARA ADMINISTRADORES Y AFILIADOS ($roles[0] y $roles[1])
+// ==========================================
+Route::middleware(['auth', "rol:{$roles[0]},{$roles[1]}"])->group(function () {
+    // --- Módulo de Establecimientos, Departamentos y Municipios ---
+    Route::prefix('establecimientos')->name('establecimientos.')->group(function () {
+        Route::get('/', [EstablecimientoController::class, 'index'])->name('index');
+        Route::put('/{id}', [EstablecimientoController::class, 'update'])->name('update');
+        Route::get('/exportar/excel', [EstablecimientoController::class, 'exportarExcel'])->name('excel');
+        Route::get('/exportar/pdf', [EstablecimientoController::class, 'exportarPdf'])->name('pdf');
+    });
+
+    Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');
 
 });

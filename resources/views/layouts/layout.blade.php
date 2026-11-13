@@ -153,8 +153,7 @@
                     </li>
                     @endif
 
-                    @if(Auth::check() && Auth::user()->id_rol == 1)
-                    {{-- Establecimientos (activo también en create/edit/show) --}}
+                    @if(Auth::check() && in_array(Auth::user()->id_rol, [1, 2]))                    {{-- Establecimientos (activo también en create/edit/show) --}}
                     <li class="nav-item" id="sidebar-item-establecimientos">
                         <a href="{{ route('establecimientos.index') }}" id="sidebar-link-establecimientos" title="Establecimientos"
                            class="nav-link {{ request()->routeIs('establecimientos.*') ? 'active' : '' }}"
