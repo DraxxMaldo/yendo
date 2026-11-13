@@ -6,6 +6,7 @@
     {{-- CSS de DataTables --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/empleados-sucursales.css') }}">
 @endpush
 
 @section('contenido')
@@ -73,7 +74,7 @@
                     </button>
                 </div>
 
-                <form action="{{ route('empleados.store') }}" method="POST">
+                <form action="{{ route('empleados.store') }}" method="POST" novalidate>
                     @csrf
                     <div class="modal-body p-4">
 

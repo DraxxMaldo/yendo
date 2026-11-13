@@ -1,0 +1,1098 @@
+/* ==========================================================================
+   EMPLEADOS Y SUCURSALES - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/empleados-sucursales.css
+
+   - Solo CSS: no toca tu HTML ni tus JS (dataTable.js, SPA-Seleccionar-Rol.js).
+   - Agrega UNA línea al @push('estilos') de la vista, después de toast.css:
+       <link rel="stylesheet" href="{{ asset('css/empleados-sucursales.css') }}">
+   - La tarjeta de la página no tiene clase propia, así que se apunta con
+     .container-fluid > .card.shadow-lg (este archivo solo se carga en esta vista).
+   - Los !important aparecen solo donde Bootstrap o tus estilos inline ya los usan
+     (border-0, shadow-lg, shadow-sm, rounded-pill, p-3, bg-white, text-*, border-dark...).
+   - Ojo: el style="border: ... !important" del HTML (inline + !important) no se puede
+     sobrescribir desde CSS; por eso el grosor se completa con un outline de 1 px.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --emp-border: 3px;
+    --emp-radius: 6px;
+    --emp-speed: .18s;
+    --emp-ease: cubic-bezier(.2, .8, .2, 1);
+    --emp-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --emp-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%231D2038' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+}
+
+
+/* ==========================================================================
+   1) TARJETA PRINCIPAL DE LA PÁGINA
+   ========================================================================== */
+.container-fluid > .card.shadow-lg {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline (vanilla-cream) */
+    color: var(--midnight-indigo);
+    border-radius: var(--emp-radius);
+    outline: 1px solid var(--midnight-dark);              /* completa el borde de 2 px inline a 3 px */
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;   /* anula .shadow-lg */
+    animation: emp-entrada .5s var(--emp-ease) both;
+}
+
+@keyframes emp-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Etiqueta amarilla (solo CSS) */
+.container-fluid > .card.shadow-lg::before {
+    content: "Personal";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--emp-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Encabezado: título + botón */
+.container-fluid > .card.shadow-lg > .d-flex.justify-content-between {
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-top: .5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: var(--emp-border) solid var(--midnight-indigo);
+}
+
+.container-fluid > .card.shadow-lg > .d-flex h2 {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    margin-bottom: .5rem;
+    font-size: clamp(1.3rem, 3.6vw, 2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.container-fluid > .card.shadow-lg > .d-flex h2 i {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 46px;
+    height: 46px;
+    margin-right: 0 !important;                 /* anula .mr-2 y usa el gap */
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.1rem;
+    transform: rotate(-3deg);
+}
+
+.container-fluid > .card.shadow-lg > .d-flex p.text-muted {
+    color: var(--midnight-muted) !important;    /* anula .text-muted */
+    font-weight: 700;
+}
+
+/* Botón "Nuevo Personal" (y los demás .btn-brand de la vista) */
+.container-fluid > .card.shadow-lg .btn-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    border-radius: var(--emp-radius) !important;          /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+.container-fluid > .card.shadow-lg .btn-brand i {
+    margin: 0 !important;
+}
+
+.container-fluid > .card.shadow-lg .btn-brand:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+.container-fluid > .card.shadow-lg .btn-brand:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.container-fluid > .card.shadow-lg .btn-brand:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   2) CONTENEDOR DE LA TABLA (incluye los controles de DataTables)
+   ========================================================================== */
+.container-fluid > .card.shadow-lg > .table-responsive {
+    padding: 1.25rem !important;                          /* anula .p-3 */
+    background-color: #fff !important;
+    border: var(--emp-border) solid var(--midnight-dark) !important;   /* anula .border y .border-dark */
+    border-radius: var(--emp-radius) !important;          /* anula .rounded */
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+/* Controles: mostrar / buscar (prefijo div.dataTables_wrapper para ganarle a dataTables.bootstrap4.css) */
+div.dataTables_wrapper > .row {
+    align-items: center;
+    row-gap: .75rem;
+}
+
+div.dataTables_wrapper > .row:first-child {
+    margin-bottom: 1rem;
+}
+
+div.dataTables_wrapper > .row:last-child {
+    margin-top: 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length label,
+div.dataTables_wrapper div.dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    color: var(--midnight-indigo);
+    font-family: var(--emp-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_length select,
+div.dataTables_wrapper div.dataTables_filter input {
+    height: 42px;
+    margin: 0;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: var(--emp-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    min-width: min(100%, 240px);
+    padding: 0 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    padding: 0 2rem 0 .85rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select:focus,
+div.dataTables_wrapper div.dataTables_filter input:focus {
+    background-color: #fff;
+    border-color: var(--midnight-dark);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+
+/* ==========================================================================
+   3) TABLA
+   ========================================================================== */
+#tbl {
+    margin-bottom: 0;
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: var(--emp-radius);
+}
+
+/* Encabezado (anula el inline de <thead> y .thead-dark) */
+#tbl thead,
+#tbl thead th {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+}
+
+#tbl thead th {
+    padding: 1rem;
+    border: 0;
+    border-bottom: var(--emp-border) solid var(--midnight-dark);
+    font-family: var(--emp-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+#tbl thead th:first-child { border-top-left-radius: 3px; }
+#tbl thead th:last-child  { border-top-right-radius: 3px; }
+
+#tbl thead .sorting_asc::before,
+#tbl thead .sorting_desc::after {
+    color: var(--accent-tertiary);
+    opacity: 1;
+}
+
+#tbl thead .sorting:hover {
+    background-color: var(--midnight-light) !important;
+}
+
+/* Celdas */
+#tbl tbody td {
+    padding: .9rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 0;
+    border-top: 2px solid var(--cream-dark);
+    font-size: .92rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+#tbl tbody tr:first-child td {
+    border-top: 0;
+}
+
+#tbl tbody tr:nth-child(even) td {
+    background-color: var(--cream-light);
+}
+
+/* ID de usuario */
+#tbl tbody td:first-child {
+    font-family: var(--emp-font-mono);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+/* Nombre del empleado */
+#tbl tbody td.fw-bold {
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+}
+
+/* Ícono del establecimiento */
+#tbl tbody td i.fa-building {
+    color: var(--accent-primary) !important;    /* anula .text-muted */
+}
+
+/* Hover de fila con marca amarilla */
+#tbl.table-hover tbody tr:hover td {
+    background-color: #FBF3D6;
+    color: var(--midnight-dark);
+}
+
+#tbl.table-hover tbody tr:hover td:first-child {
+    box-shadow: inset 6px 0 0 var(--accent-tertiary);
+}
+
+/* Sin resultados */
+#tbl td.dataTables_empty {
+    padding: 2.5rem 1rem;
+    background-color: var(--cream-light);
+    color: var(--midnight-muted);
+    font-family: var(--emp-font-mono);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Chip de rol: conserva el color índigo del inline y le suma borde + sombra */
+#tbl tbody .badge {
+    display: inline-block;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 var(--accent-primary);
+    font-family: var(--emp-font-mono);
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Aparición escalonada de filas */
+#tbl tbody tr {
+    animation: emp-fila .3s var(--emp-ease) both;
+}
+
+@keyframes emp-fila {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+#tbl tbody tr:nth-child(1)  { animation-delay: .02s; }
+#tbl tbody tr:nth-child(2)  { animation-delay: .05s; }
+#tbl tbody tr:nth-child(3)  { animation-delay: .08s; }
+#tbl tbody tr:nth-child(4)  { animation-delay: .11s; }
+#tbl tbody tr:nth-child(5)  { animation-delay: .14s; }
+#tbl tbody tr:nth-child(6)  { animation-delay: .17s; }
+#tbl tbody tr:nth-child(7)  { animation-delay: .20s; }
+#tbl tbody tr:nth-child(8)  { animation-delay: .23s; }
+#tbl tbody tr:nth-child(9)  { animation-delay: .26s; }
+#tbl tbody tr:nth-child(10) { animation-delay: .29s; }
+
+
+/* ==========================================================================
+   4) INFO Y PAGINACIÓN
+   ========================================================================== */
+div.dataTables_wrapper div.dataTables_info {
+    padding: 0;
+    color: var(--midnight-muted);
+    font-family: var(--emp-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+    padding: 0;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin: 0;
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link {
+    min-width: 40px;
+    margin: 0;
+    padding: .45rem .8rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: center;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease),
+    background-color var(--emp-speed) ease;
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:focus {
+    outline: 0;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+div.dataTables_wrapper ul.pagination .page-item.active .page-link {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .85;
+    transform: none;
+}
+
+
+/* ==========================================================================
+   5) MODAL: NUEVO PERSONAL (#modalSpaPersonal)
+   ========================================================================== */
+.modal-backdrop.show {
+    background-color: var(--midnight-dark);
+    opacity: .82;
+}
+
+#modalSpaPersonal.fade .modal-dialog {
+    transform: translateY(28px) scale(.97);
+    transition: transform .28s var(--emp-ease);
+}
+
+#modalSpaPersonal.show .modal-dialog {
+    transform: none;
+}
+
+#modalSpaPersonal .modal-content {
+    position: relative;
+    background-color: var(--cream-light) !important;             /* anula el inline */
+    border-radius: var(--emp-radius) !important;                  /* anula el inline de 8px */
+    outline: 1px solid var(--midnight-dark);                      /* completa el borde de 2 px inline a 3 px */
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;     /* anula .shadow-lg */
+}
+
+#modalSpaPersonal .modal-content::before {
+    content: "Nuevo personal";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--emp-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Cabecera */
+#modalSpaPersonal .modal-header {
+    padding: 1.5rem 1.5rem 1rem !important;                       /* anula .pb-0 */
+    border-bottom: var(--emp-border) solid var(--midnight-indigo) !important;   /* anula .border-0 */
+}
+
+#modalSpaPersonal .modal-title {
+    font-size: clamp(.95rem, 2.5vw, 1.15rem);
+    font-weight: 900;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+#modalSpaPersonal .modal-header .close {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;                        /* anula el inline */
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: 1.2rem;
+    font-weight: 900;
+    line-height: 1;
+    opacity: 1;
+    text-shadow: none;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+#modalSpaPersonal .modal-header .close:hover {
+    opacity: 1;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#modalSpaPersonal .modal-header .close:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#modalSpaPersonal .modal-header .close:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* Títulos y textos de ambos pasos */
+#modalSpaPersonal .modal-body h4 {
+    font-size: clamp(1.05rem, 2.8vw, 1.4rem);
+    font-weight: 900;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+}
+
+#modalSpaPersonal .modal-body p.text-muted {
+    max-width: 58ch;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--midnight-muted) !important;                       /* anula .text-muted */
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+#paso-datos p.text-muted {
+    margin-left: 0;
+}
+
+
+/* ---------- PASO 1: tarjetas de rol ---------- */
+#modalSpaPersonal #paso-rol .row > [class*="col-"] {
+    display: flex;
+}
+
+#modalSpaPersonal .role-card {
+    position: relative;
+    align-items: center;
+    width: 100%;
+    background-color: #fff;
+    border-width: var(--emp-border);
+    border-style: solid;
+    border-color: var(--midnight-dark) !important;                 /* anula .border-dark */
+    border-radius: var(--emp-radius) !important;                   /* anula el inline */
+    box-shadow: 4px 4px 0 var(--midnight-dark) !important;         /* anula .shadow-sm */
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease),
+    background-color var(--emp-speed) ease !important; /* anula el "transition: all" inline */
+}
+
+#modalSpaPersonal .role-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary) !important;
+}
+
+#modalSpaPersonal .role-card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark) !important;
+}
+
+/* Ícono del rol dentro de un cuadro */
+#modalSpaPersonal .role-card > i.fas {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    margin-bottom: .85rem !important;                              /* anula .mb-2 */
+    background-color: var(--cream-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    font-size: 1.4rem;
+    transition: background-color var(--emp-speed) ease;
+}
+
+#modalSpaPersonal .role-card h5 {
+    margin-bottom: .35rem;
+    font-size: .95rem;
+    font-weight: 900;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+#modalSpaPersonal .role-card small.text-muted {
+    color: var(--midnight-muted) !important;                       /* anula .text-muted */
+    font-size: .78rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+/* Rol seleccionado.
+   No vi SPA-Seleccionar-Rol.js: cubro las clases más comunes que suele poner un script
+   (active / selected / seleccionado / border-primary / bg-light / aria-pressed). */
+#modalSpaPersonal .role-card.active,
+#modalSpaPersonal .role-card.selected,
+#modalSpaPersonal .role-card.is-selected,
+#modalSpaPersonal .role-card.seleccionado,
+#modalSpaPersonal .role-card.selected-role,
+#modalSpaPersonal .role-card.role-selected,
+#modalSpaPersonal .role-card.border-primary,
+#modalSpaPersonal .role-card.bg-light,
+#modalSpaPersonal .role-card[aria-pressed="true"] {
+    background-color: var(--accent-tertiary);
+    border-color: var(--midnight-dark) !important;                 /* anula .border-primary */
+    box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    transform: translate(-2px, -2px);
+}
+
+#modalSpaPersonal .role-card.active > i.fas,
+#modalSpaPersonal .role-card.selected > i.fas,
+#modalSpaPersonal .role-card.is-selected > i.fas,
+#modalSpaPersonal .role-card.seleccionado > i.fas,
+#modalSpaPersonal .role-card.selected-role > i.fas,
+#modalSpaPersonal .role-card.role-selected > i.fas,
+#modalSpaPersonal .role-card.border-primary > i.fas,
+#modalSpaPersonal .role-card.bg-light > i.fas,
+#modalSpaPersonal .role-card[aria-pressed="true"] > i.fas {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream) !important;                        /* anula el inline de color */
+}
+
+#modalSpaPersonal .role-card.active small.text-muted,
+#modalSpaPersonal .role-card.selected small.text-muted,
+#modalSpaPersonal .role-card.is-selected small.text-muted,
+#modalSpaPersonal .role-card.seleccionado small.text-muted,
+#modalSpaPersonal .role-card.selected-role small.text-muted,
+#modalSpaPersonal .role-card.role-selected small.text-muted,
+#modalSpaPersonal .role-card.border-primary small.text-muted,
+#modalSpaPersonal .role-card.bg-light small.text-muted,
+#modalSpaPersonal .role-card[aria-pressed="true"] small.text-muted {
+    color: var(--midnight-dark) !important;
+}
+
+/* Marca ✓ en la esquina de la tarjeta elegida */
+#modalSpaPersonal .role-card.active::after,
+#modalSpaPersonal .role-card.selected::after,
+#modalSpaPersonal .role-card.is-selected::after,
+#modalSpaPersonal .role-card.seleccionado::after,
+#modalSpaPersonal .role-card.selected-role::after,
+#modalSpaPersonal .role-card.role-selected::after,
+#modalSpaPersonal .role-card.border-primary::after,
+#modalSpaPersonal .role-card.bg-light::after,
+#modalSpaPersonal .role-card[aria-pressed="true"]::after {
+    content: "\2713";
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 var(--midnight-dark);
+    font-size: .85rem;
+    font-weight: 900;
+}
+
+/* Botón "Siguiente" */
+#modalSpaPersonal #btnSiguientePaso {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 48px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--emp-radius) !important;                   /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-size: .88rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+#modalSpaPersonal #btnSiguientePaso i {
+    margin: 0 !important;
+}
+
+#modalSpaPersonal #btnSiguientePaso:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#modalSpaPersonal #btnSiguientePaso:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--accent-primary);
+}
+
+#modalSpaPersonal #btnSiguientePaso:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+/* Bloqueado hasta elegir un rol */
+#modalSpaPersonal #btnSiguientePaso:disabled {
+    background-color: var(--cream-dark) !important;                /* anula el inline */
+    color: var(--midnight-muted) !important;
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Al habilitarse: pequeño "pop" */
+#modalSpaPersonal #btnSiguientePaso:not(:disabled) {
+    animation: emp-listo .5s var(--emp-ease);
+}
+
+@keyframes emp-listo {
+    0%   { transform: scale(.94); }
+    60%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+
+/* ---------- PASO 2: datos y credenciales ---------- */
+#modalSpaPersonal #paso-datos label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--emp-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Grupo con ícono + correo */
+#modalSpaPersonal #paso-datos .input-group {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    background-color: #fff;
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: var(--emp-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+#modalSpaPersonal #paso-datos .input-group:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#modalSpaPersonal #paso-datos .input-group-text {
+    padding: 0 1rem;
+    background-color: var(--accent-tertiary) !important;           /* anula .bg-white */
+    color: var(--midnight-dark);
+    border: 0;
+    border-right: var(--emp-border) solid var(--midnight-dark);
+    border-radius: 0;
+}
+
+#modalSpaPersonal #paso-datos .input-group .form-control {
+    height: 50px;
+    background-color: #fff;
+    background-image: none;
+    color: var(--midnight-indigo);
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+#modalSpaPersonal #paso-datos .input-group .form-control:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+#modalSpaPersonal #paso-datos .input-group .form-control::placeholder {
+    color: #A9A9B8;
+}
+
+/* Error de validación (Laravel @error -> .is-invalid) */
+#modalSpaPersonal #paso-datos .input-group:has(.is-invalid) {
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+/* Select de establecimiento */
+#modalSpaPersonal #paso-datos select.form-control {
+    height: 50px;
+    padding: 0 2.5rem 0 1rem;
+    background-color: #fff;
+    background-image: var(--emp-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px 8px;
+    color: var(--midnight-indigo);
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: var(--emp-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1rem;
+    font-weight: 700;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+#modalSpaPersonal #paso-datos select.form-control:focus {
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+#modalSpaPersonal #paso-datos select.form-control.is-invalid {
+    background-image: var(--emp-select-arrow);
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+#modalSpaPersonal #paso-datos select.form-control:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Nota bajo el correo */
+#modalSpaPersonal #paso-datos small.text-muted {
+    display: block;
+    margin-top: .6rem;
+    padding: .45rem .75rem;
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark) !important;                        /* anula .text-muted */
+    border-left: 6px solid var(--accent-tertiary);
+    border-radius: 3px;
+    font-size: .76rem;
+    font-weight: 700;
+}
+
+/* Aviso "Necesitas registrar al menos un establecimiento" */
+#modalSpaPersonal #paso-datos small.text-danger {
+    padding: .7rem .9rem;
+    background-color: #fff;
+    color: var(--midnight-dark) !important;                        /* anula .text-danger */
+    border: 2px dashed var(--color-danger);
+    border-radius: var(--emp-radius);
+    font-size: .8rem;
+    line-height: 1.45;
+}
+
+#modalSpaPersonal #paso-datos small.text-danger i {
+    margin-right: .5rem !important;
+    color: var(--color-danger);
+}
+
+#modalSpaPersonal #paso-datos small.text-danger a {
+    color: var(--midnight-dark) !important;                        /* anula .text-dark */
+    border-bottom: 3px solid var(--accent-primary);
+    font-weight: 900;
+    text-decoration: none !important;                              /* anula el inline underline */
+    transition: background-color var(--emp-speed) ease;
+}
+
+#modalSpaPersonal #paso-datos small.text-danger a:hover {
+    background-color: var(--accent-tertiary);
+}
+
+/* Botones de acción del paso 2 */
+#modalSpaPersonal #paso-datos .d-flex.justify-content-between {
+    flex-wrap: wrap;
+    gap: .75rem;
+    padding-top: 1.25rem;
+    border-top: var(--emp-border) solid var(--midnight-indigo);
+}
+
+#modalSpaPersonal #paso-datos .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--emp-radius) !important;                   /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease),
+    background-color var(--emp-speed) ease;
+}
+
+#modalSpaPersonal #paso-datos .btn i {
+    margin: 0 !important;
+}
+
+#modalSpaPersonal #paso-datos .btn:focus {
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#modalSpaPersonal #paso-datos .btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+#modalSpaPersonal #paso-datos .btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#modalSpaPersonal #paso-datos .btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+#modalSpaPersonal #btnAnteriorPaso {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+#modalSpaPersonal #btnAnteriorPaso:hover,
+#modalSpaPersonal #btnAnteriorPaso:focus {
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+}
+
+#modalSpaPersonal #paso-datos .btn-success,
+#modalSpaPersonal #paso-datos .btn-success:hover,
+#modalSpaPersonal #paso-datos .btn-success:focus {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+#modalSpaPersonal #paso-datos .btn-success:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   6) OPCIONAL: chip "Paso X de 2" solo con CSS
+   Funciona mientras tu JS oculte #paso-datos con style="display: none".
+   Si lo cambia con clases, borra este bloque.
+   ========================================================================== */
+@supports selector(:has(*)) {
+    #modalSpaPersonal .modal-content::after {
+        content: "Paso 1 de 2";
+        position: absolute;
+        top: -16px;
+        right: 20px;
+        padding: .3rem .75rem;
+        background-color: var(--vanilla-cream);
+        color: var(--midnight-dark);
+        border: 2px solid var(--midnight-dark);
+        border-radius: 3px;
+        box-shadow: 3px 3px 0 var(--midnight-dark);
+        font-family: var(--emp-font-mono);
+        font-size: .7rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        transform: rotate(1.5deg);
+    }
+    #modalSpaPersonal .modal-content:has(#paso-datos:not([style*="none"]))::after {
+        content: "Paso 2 de 2";
+    }
+}
+
+
+/* ==========================================================================
+   7) RESPONSIVE
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    div.dataTables_wrapper div.dataTables_length,
+    div.dataTables_wrapper div.dataTables_filter,
+    div.dataTables_wrapper div.dataTables_info,
+    div.dataTables_wrapper div.dataTables_paginate {
+        float: none;
+        text-align: center;
+    }
+    div.dataTables_wrapper div.dataTables_filter label {
+        display: flex;
+        width: 100%;
+    }
+    div.dataTables_wrapper div.dataTables_filter input {
+        flex: 1;
+        width: 100%;
+    }
+    div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container-fluid > .card.shadow-lg,
+    #modalSpaPersonal .modal-content {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+    .container-fluid > .card.shadow-lg > .table-responsive {
+        padding: .75rem !important;
+        box-shadow: 4px 4px 0 var(--midnight-dark);
+    }
+    .container-fluid > .card.shadow-lg > .d-flex.justify-content-between > .btn {
+        width: 100%;
+    }
+    #modalSpaPersonal #paso-datos .d-flex.justify-content-between {
+        flex-direction: column-reverse;
+        align-items: stretch !important;
+    }
+    #modalSpaPersonal #paso-datos .d-flex.justify-content-between > .btn {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   8) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .container-fluid > .card.shadow-lg,
+    #tbl tbody tr,
+    #modalSpaPersonal #btnSiguientePaso:not(:disabled) {
+        animation: none;
+    }
+    #modalSpaPersonal.fade .modal-dialog {
+        transform: none;
+        transition: none;
+    }
+    .container-fluid > .card.shadow-lg .btn-brand,
+    #modalSpaPersonal .role-card,
+    #modalSpaPersonal #paso-datos .btn,
+    #modalSpaPersonal #paso-datos .input-group,
+    #modalSpaPersonal #paso-datos select.form-control,
+    div.dataTables_wrapper ul.pagination .page-item .page-link,
+    div.dataTables_wrapper div.dataTables_length select,
+    div.dataTables_wrapper div.dataTables_filter input {
+        transition: none !important;
+    }
+    .container-fluid > .card.shadow-lg .btn-brand:hover,
+    #modalSpaPersonal .role-card:hover,
+    #modalSpaPersonal #paso-datos .btn:hover:not(:disabled),
+    #modalSpaPersonal #paso-datos select.form-control:focus,
+    div.dataTables_wrapper ul.pagination .page-item .page-link:hover,
+    div.dataTables_wrapper div.dataTables_length select:focus,
+    div.dataTables_wrapper div.dataTables_filter input:focus {
+        transform: none;
+    }
+    .container-fluid > .card.shadow-lg > .d-flex h2 i {
+        transform: none;
+    }
+}
