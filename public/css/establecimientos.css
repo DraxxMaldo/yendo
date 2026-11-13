@@ -1,142 +1,744 @@
 /* ==========================================================================
-   BOTONES DOBLES (Agregar Nuevo)
+   GESTIÓN DE ESTABLECIMIENTOS - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/establecimientos.css
+
+- Solo CSS: no modifica la estructura HTML ni JS de la vista blade.
+- Cubre: tarjeta principal contenedora, cabecera de acciones, botones dobles y desplegables,
+  tabla de DataTables integrada, modales modernos (creación y edición), inputs, selectores,
+  textareas, subida de archivos y estados interactivos.
    ========================================================================== */
-.btn-agregar-doble {
-    background-color: var(--midnight-indigo);
-    color: rgb(255 255 255 / 0.8);
-    border-radius: 10px;
-    padding: 0.6rem 1.2rem;
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --est-border: 3px;
+    --est-radius: 6px;
+    --est-speed: .18s;
+    --est-ease: cubic-bezier(.2, .8, .2, 1);
+    --est-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --est-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%231D2038' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+}
+
+
+/* ==========================================================================
+   1) TARJETA PRINCIPAL DE LA VISTA
+   ========================================================================== */
+.card.card-custom.mt-4 {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    color: var(--midnight-indigo);
+    border: var(--est-border) solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;          /* anula los bordes redondos por defecto */
+    outline: 1px solid var(--midnight-dark);
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;
+    animation: est-entrada .5s var(--est-ease) both;
+}
+
+@keyframes est-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Sello decorativo superior (Estilo neobrutalista) */
+.card.card-custom.mt-4::before {
+    content: "Red y Sucursales";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Cabecera de la tarjeta principal */
+.card.card-custom.mt-4 > .card-header {
+    background-color: transparent !important;
+    border-bottom: var(--est-border) solid var(--midnight-indigo) !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+}
+
+.card.card-custom.mt-4 h3.card-title {
+    display: flex;
+    align-items: center;
+    font-size: clamp(1.2rem, 3.2vw, 1.6rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+.card.card-custom.mt-4 h3.card-title i {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: .75rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: var(--est-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.1rem;
+    transform: rotate(-3deg);
+}
+
+
+/* ==========================================================================
+   2) BOTONES SUPERIORES (Compartir y Botones Dobles de Agregar)
+   ========================================================================== */
+/* Botón Desplegable "Compartir" */
+#dropdownCompartir.btn {
     display: inline-flex;
     align-items: center;
-    gap: 15px;
-    border: none;
-    transition: all 0.2s ease-in-out;
-    text-align: left;
-    text-decoration: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    justify-content: center;
+    min-height: 46px;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 4px 4px 0 var(--midnight-dark) !important;
+    font-family: var(--est-font-mono);
+    font-size: .8rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
 }
 
-.btn-agregar-doble:hover {
-    background-color: #1f223a;
-    color: rgb(255 255 255 / 0.8);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+#dropdownCompartir.btn:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary) !important;
 }
 
-.btn-agregar-doble i {
-    font-size: 1.8rem;
-    font-weight: 300;
+#dropdownCompartir.btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark) !important;
+}
+
+/* Menú Desplegable */
+.dropdown-menu.shadow-sm {
+    background-color: var(--cream-light) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 5px 5px 0 var(--midnight-dark) !important;
+    padding: .5rem 0;
+}
+
+.dropdown-item {
+    color: var(--midnight-indigo) !important;
+    font-family: var(--est-font-mono);
+    font-size: .78rem;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    transition: background-color var(--est-speed) ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+.dropdown-divider {
+    border-top: 2px dashed var(--cream-dark) !important;
+}
+
+/* Botones dobles "Agregar nuevo..." (.btn-agregar-doble) */
+.btn-agregar-doble {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    min-height: 46px;
+    padding: 0 1rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--est-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-size: .75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease),
+    background-color var(--est-speed) ease;
+}
+
+.btn-agregar-doble > i {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 1.5px solid var(--midnight-dark);
+    border-radius: 3px;
+    font-size: .8rem;
 }
 
 .btn-agregar-doble .texto-btn {
     display: flex;
     flex-direction: column;
-    line-height: 1.1;
+    text-align: left;
+    line-height: 1.15;
 }
 
 .btn-agregar-doble .texto-btn span:first-child {
-    font-size: 0.8rem;
-    font-weight: 500;
-    opacity: 0.9;
-}
-
-.btn-agregar-doble .texto-btn span:last-child {
-    font-size: 1.05rem;
+    font-size: .65rem;
+    color: var(--midnight-muted);
     font-weight: 700;
 }
 
-/* ==========================================================================
-   ESTILOS GENERALES Y DATATABLES (Corporativo)
-   ========================================================================== */
-.card-custom {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border-radius: 0.5rem;
+.btn-agregar-doble .texto-btn span:last-child {
+    font-size: .78rem;
+    color: var(--midnight-indigo);
+    font-weight: 900;
 }
 
-.table-brand thead th {
-    background-color: var(--midnight-indigo);
-    color: var(--vanilla-cream);
-    border-bottom: none;
+.btn-agregar-doble:hover {
+    background-color: var(--accent-tertiary);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
 }
 
-.table-brand tbody tr:hover {
-    background-color: rgba(26, 26, 28, 0.03);
+.btn-agregar-doble:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
 }
 
-.btn-brand {
-    background-color: var(--midnight-indigo);
-    color: var(--vanilla-cream);
-    transition: all 0.2s ease;
-}
-
-.btn-brand:hover {
-    background-color: #151517;
-    color: #fff;
-}
 
 /* ==========================================================================
-   ESTILOS MODERNOS PARA MODALES
+   3) CONTENEDOR DE LA TABLA Y DATATABLES
    ========================================================================== */
+.card-body.px-4.pb-4 {
+    background-color: #fff !important;
+    border: var(--est-border) solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    padding: 1.25rem !important;
+}
+
+#tbl.table.table-brand {
+    margin-bottom: 0;
+    border: var(--est-border) solid var(--midnight-dark);
+    border-radius: var(--est-radius);
+}
+
+/* Encabezado de la tabla */
+#tbl thead,
+#tbl thead th {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+}
+
+#tbl thead th {
+    padding: 1rem;
+    border: 0;
+    border-bottom: var(--est-border) solid var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+#tbl thead th:first-child { border-top-left-radius: 3px; }
+#tbl thead th:last-child  { border-top-right-radius: 3px; }
+
+/* Celdas de la tabla */
+#tbl tbody td {
+    padding: .9rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 0;
+    border-top: 2px solid var(--cream-dark);
+    font-size: .9rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+#tbl tbody tr:first-child td {
+    border-top: 0;
+}
+
+#tbl tbody tr:nth-child(even) td {
+    background-color: var(--cream-light);
+}
+
+/* ID de establecimiento */
+#tbl tbody td:first-child {
+    font-family: var(--est-font-mono);
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+/* Hover de filas */
+#tbl.table-hover tbody tr:hover td {
+    background-color: #FBF3D6;
+    color: var(--midnight-dark);
+}
+
+#tbl.table-hover tbody tr:hover td:first-child {
+    box-shadow: inset 6px 0 0 var(--accent-tertiary);
+}
+
+/* Botón Editar en la tabla (.btn-editar) */
+#tbl .btn-sm.btn-outline-primary.btn-editar {
+    display: inline-grid;
+    place-items: center;
+    min-width: 38px;
+    min-height: 38px;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .9rem;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
+}
+
+#tbl .btn-sm.btn-outline-primary.btn-editar:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+#tbl .btn-sm.btn-outline-primary.btn-editar:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+
+/* ==========================================================================
+   4) CONTROLES DE DATATABLES (Búsqueda y Paginación)
+   ========================================================================== */
+div.dataTables_wrapper > .row {
+    align-items: center;
+    row-gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length label,
+div.dataTables_wrapper div.dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    color: var(--midnight-indigo);
+    font-family: var(--est-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_length select,
+div.dataTables_wrapper div.dataTables_filter input {
+    height: 42px;
+    margin: 0;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--est-border) solid var(--midnight-dark);
+    border-radius: var(--est-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 700;
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    min-width: min(100%, 240px);
+    padding: 0 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    padding: 0 2rem 0 .85rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select:focus,
+div.dataTables_wrapper div.dataTables_filter input:focus {
+    border-color: var(--midnight-dark);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* Paginación de DataTables */
+div.dataTables_wrapper div.dataTables_info {
+    color: var(--midnight-muted);
+    font-family: var(--est-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin: 0;
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link {
+    min-width: 40px;
+    margin: 0;
+    padding: .45rem .8rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: center;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+div.dataTables_wrapper ul.pagination .page-item.active .page-link {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .85;
+}
+
+
+/* ==========================================================================
+   5) MODALES MODERNOS (Crear y Editar Establecimientos, Departamentos, Municipios)
+   ========================================================================== */
+.modal-backdrop.show {
+    background-color: var(--midnight-dark);
+    opacity: .82;
+}
+
+.modal-modern.fade .modal-dialog {
+    transform: translateY(28px) scale(.97);
+    transition: transform .28s var(--est-ease);
+}
+
+.modal-modern.show .modal-dialog {
+    transform: none;
+}
+
 .modal-modern .modal-content {
-    border-radius: 16px;
-    border: none;
+    position: relative;
+    background-color: var(--cream-light) !important;
+    border: var(--est-border) solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;
+}
+
+/* Cabecera del modal */
+.modal-modern .modal-header.modal-header-brand {
+    background-color: var(--cream-light) !important;
+    border-bottom: var(--est-border) solid var(--midnight-indigo) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.modal-modern .modal-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+/* Círculo de icono en el título del modal */
+.modal-modern .icon-circle {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-right: .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    transform: rotate(-3deg);
+}
+
+.modal-modern .close {
+    color: var(--midnight-indigo) !important;
+    opacity: 1;
+    text-shadow: none;
+}
+
+/* Etiquetas y formularios dentro de los modales */
+.modal-modern label.form-label-modern {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--est-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+/* Inputs, textareas y selectores modernos (.input-modern) */
+.modal-modern .input-modern {
+    height: 48px;
+    background-color: #fff !important;
+    color: var(--midnight-indigo) !important;
+    border: var(--est-border) solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark) !important;
+    font-size: .95rem;
+    font-weight: 700;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
+}
+
+.modal-modern select.input-modern {
+    padding-right: 2.5rem;
+    background-image: var(--est-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px 8px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.modal-modern textarea.input-modern {
+    height: auto !important;
+    padding: .75rem 1rem !important;
+}
+
+.modal-modern .input-modern:focus {
+    border-color: var(--midnight-dark) !important;
+    box-shadow: 5px 5px 0 var(--accent-primary) !important;
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* Input Groups modernos */
+.modal-modern .input-group-modern {
+    background-color: #fff;
+    border: var(--est-border) solid var(--midnight-dark);
+    border-radius: var(--est-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
     overflow: hidden;
 }
 
-.modal-modern .modal-body {
-    background-color: #fafbfe;
+.modal-modern .input-group-modern:focus-within {
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
 }
 
+.modal-modern .input-group-modern .input-group-text {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark);
+    border: 0 !important;
+    border-right: var(--est-border) solid var(--midnight-dark) !important;
+    border-radius: 0 !important;
+    font-family: var(--est-font-mono);
+    font-weight: 900;
+}
+
+.modal-modern .input-group-modern input.form-control {
+    border: 0 !important;
+    box-shadow: none !important;
+    height: 46px;
+}
+
+/* Custom File Input */
+.modal-modern .custom-file.input-modern {
+    height: 48px;
+    overflow: hidden;
+}
+
+.modal-modern .custom-file-input {
+    cursor: pointer;
+}
+
+.modal-modern .custom-file-label.input-modern {
+    height: 48px;
+    line-height: 2.2rem;
+    background-color: #fff;
+    border: var(--est-border) solid var(--midnight-dark);
+    border-radius: var(--est-radius);
+    color: var(--midnight-muted);
+    font-weight: 700;
+}
+
+.modal-modern .custom-file-label::after {
+    height: 44px;
+    line-height: 2rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border-left: var(--est-border) solid var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Pie del modal (.modal-footer) */
 .modal-modern .modal-footer {
-    border-top: 1px solid rgba(0,0,0,0.05);
+    background-color: var(--cream-light) !important;
+    border-top: var(--est-border) solid var(--midnight-indigo) !important;
+    padding: 1rem 1.5rem !important;
+    gap: .75rem;
 }
 
-/* Encabezados y Círculos de Iconos */
-.modal-header-brand {
-    background-color: var(--vanilla-cream);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-.icon-circle {
-    background-color: rgba(26, 26, 28, 0.05);
-    width: 38px;
-    height: 38px;
-    display: flex;
+/* Botón de acción principal en modales (.btn-action-brand) */
+.modal-modern .btn-action-brand {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    margin-right: 0.5rem;
-}
-
-/* Estilos de Formulario y Campos */
-.form-label-modern {
-    font-size: 0.875em;
+    gap: .5rem;
+    min-height: 44px;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-family: var(--est-font-mono);
+    font-size: .82rem;
+    letter-spacing: .04em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
 }
 
-.input-modern {
-    border-radius: 8px;
-    box-shadow: none !important;
+.modal-modern .btn-action-brand:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
 }
 
-.input-group-modern {
-    border-radius: 8px;
-    overflow: hidden;
+.modal-modern .btn-action-brand:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
 }
 
-.btn-modern {
-    border-radius: 8px;
-    transition: all 0.2s ease;
+/* Botón cancelar en modales (.btn-modern) */
+.modal-modern .btn-modern.btn-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    background-color: var(--vanilla-cream) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--est-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--est-font-mono);
+    font-size: .82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    transition: transform var(--est-speed) var(--est-ease),
+    box-shadow var(--est-speed) var(--est-ease);
 }
 
-.btn-action-brand {
-    background-color: var(--midnight-indigo);
-    color: var(--vanilla-cream);
+.modal-modern .btn-modern.btn-light:hover {
+    background-color: var(--cream-dark) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
 }
 
-.btn-action-brand:hover {
-    background-color: #151517;
-    color: #fff;
+
+/* ==========================================================================
+   6) RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .card.card-custom.mt-4 > .card-header {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    .card.card-custom.mt-4 > .card-header > .d-flex {
+        flex-direction: column;
+        width: 100%;
+    }
+    .btn-agregar-doble, #dropdownCompartir.btn {
+        width: 100%;
+    }
+    .card-body.px-4.pb-4 {
+        margin: 0 1rem 1rem 1rem;
+        padding: .75rem !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .card.card-custom.mt-4,
+    .modal-modern .modal-content {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+}
+
+
+/* ==========================================================================
+   7) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .card.card-custom.mt-4,
+    .modal-modern.fade .modal-dialog {
+        animation: none;
+        transform: none;
+        transition: none;
+    }
+    .btn-agregar-doble,
+    #dropdownCompartir.btn,
+    #tbl .btn-sm.btn-outline-primary.btn-editar,
+    .modal-modern .btn-action-brand,
+    .modal-modern .btn-modern.btn-light,
+    div.dataTables_wrapper ul.pagination .page-item .page-link {
+        transition: none !important;
+    }
+    .btn-agregar-doble:hover,
+    #dropdownCompartir.btn:hover,
+    #tbl .btn-sm.btn-outline-primary.btn-editar:hover,
+    .modal-modern .btn-action-brand:hover {
+        transform: none;
+    }
+    .card.card-custom.mt-4 h3.card-title i,
+    .modal-modern .icon-circle {
+        transform: none;
+    }
 }
