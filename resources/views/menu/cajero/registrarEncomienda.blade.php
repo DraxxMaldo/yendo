@@ -4,6 +4,7 @@
 
 @push('estilos')
     <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/registrar-encomienda.css') }}">
 @endpush
 
 @section('contenido')

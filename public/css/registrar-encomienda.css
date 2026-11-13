@@ -1,0 +1,475 @@
+/* ==========================================================================
+   REGISTRAR ENCOMIENDA - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/registrar-encomienda.css
+
+- Solo CSS: no modifica la estructura HTML ni JS de la vista blade.
+- Cubre: tarjeta principal de operaciones, cabecera con etiqueta decorativa,
+  campos de formulario, inputs con iconos, selectores personalizados, filas dinámicas
+  de tarifas, radios de pago contraentrega y tarjeta flotante de resumen y vuelto en vivo.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --enc-border: 3px;
+    --enc-radius: 6px;
+    --enc-speed: .18s;
+    --enc-ease: cubic-bezier(.2, .8, .2, 1);
+    --enc-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --enc-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%231D2038' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+}
+
+
+/* ==========================================================================
+   1) TARJETA PRINCIPAL DE LA PÁGINA
+   ========================================================================== */
+.container-fluid > .card.shadow-lg {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    color: var(--midnight-indigo);
+    border-radius: var(--enc-radius) !important;          /* anula los 10px inline */
+    outline: 1px solid var(--midnight-dark);              /* completa el borde inline de 2px a 3px */
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;   /* anula .shadow-lg */
+    animation: enc-entrada .5s var(--enc-ease) both;
+}
+
+@keyframes enc-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Sello decorativo superior (Estilo neobrutalista) */
+.container-fluid > .card.shadow-lg::before {
+    content: "Operación de Caja";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--enc-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Encabezado: Título y descripción */
+.container-fluid > .card.shadow-lg > .d-flex.justify-content-between {
+    padding-bottom: 1.25rem;
+    border-bottom: var(--enc-border) solid var(--midnight-indigo);
+}
+
+.container-fluid > .card.shadow-lg h2.fw-bold {
+    display: flex;
+    align-items: center;
+    font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+    font-weight: 900 !important;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+.container-fluid > .card.shadow-lg h2.fw-bold i {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: .75rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: var(--enc-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.1rem;
+    transform: rotate(-3deg);
+}
+
+.container-fluid > .card.shadow-lg p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   2) ETIQUETAS, INPUTS Y SELECTORES DEL FORMULARIO
+   ========================================================================== */
+.container-fluid > .card.shadow-lg form label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--enc-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo);
+}
+
+/* Inputs de texto, número y correo */
+.container-fluid > .card.shadow-lg form input.form-control,
+.container-fluid > .card.shadow-lg form select.form-control {
+    height: 50px;
+    padding: 0 1rem;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--enc-border) solid var(--midnight-dark);
+    border-radius: var(--enc-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .95rem;
+    font-weight: 700;
+    transition: transform var(--enc-speed) var(--enc-ease),
+    box-shadow var(--enc-speed) var(--enc-ease);
+}
+
+/* Selectores con flecha personalizada */
+.container-fluid > .card.shadow-lg form select.form-control {
+    padding-right: 2.5rem;
+    background-image: var(--enc-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px 8px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.container-fluid > .card.shadow-lg form input.form-control:focus,
+.container-fluid > .card.shadow-lg form select.form-control:focus {
+    background-color: #fff;
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+.container-fluid > .card.shadow-lg form input.form-control.is-invalid,
+.container-fluid > .card.shadow-lg form select.form-control.is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+/* Inputs de solo lectura / deshabilitados (Código de rastreo, Origen) */
+.container-fluid > .card.shadow-lg form input.form-control[readonly],
+.container-fluid > .card.shadow-lg form input.form-control:disabled {
+    background-color: var(--cream-dark) !important;
+    color: var(--midnight-dark);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* Input Groups (Icono + Input o Moneda + Input) */
+.container-fluid > .card.shadow-lg form .input-group {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    background-color: #fff;
+    border: var(--enc-border) solid var(--midnight-dark);
+    border-radius: var(--enc-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    transition: transform var(--enc-speed) var(--enc-ease),
+    box-shadow var(--enc-speed) var(--enc-ease);
+}
+
+.container-fluid > .card.shadow-lg form .input-group:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.container-fluid > .card.shadow-lg form .input-group .input-group-prepend .input-group-text {
+    padding: 0 1.1rem;
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark);
+    border: 0;
+    border-right: var(--enc-border) solid var(--midnight-dark);
+    border-radius: 0;
+    font-family: var(--enc-font-mono);
+    font-weight: 900;
+}
+
+.container-fluid > .card.shadow-lg form .input-group input.form-control {
+    height: 48px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.container-fluid > .card.shadow-lg form .input-group input.form-control:focus {
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* ==========================================================================
+   3) CONTENEDOR DINÁMICO DE TARIFAS (Múltiples prendas)
+   ========================================================================== */
+#contenedor-tarifas .tarifa-row {
+    background-color: #fff;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--enc-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    overflow: hidden;
+    margin-bottom: .75rem !important;
+}
+
+#contenedor-tarifas .tarifa-row select.form-control {
+    border: 0 !important;
+    box-shadow: none !important;
+    height: 46px;
+}
+
+#contenedor-tarifas .tarifa-row select.form-control:focus {
+    transform: none !important;
+}
+
+#contenedor-tarifas .tarifa-row .input-group-append .btn-danger {
+    background-color: var(--color-danger);
+    color: #fff;
+    border: 0;
+    border-left: 2px solid var(--midnight-dark);
+    border-radius: 0;
+    padding: 0 1.25rem;
+    font-weight: 900;
+    transition: background-color var(--enc-speed) ease;
+}
+
+#contenedor-tarifas .tarifa-row .input-group-append .btn-danger:hover:not(:disabled) {
+    background-color: #a84747;
+}
+
+#contenedor-tarifas .tarifa-row .input-group-append .btn-danger:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    cursor: not-allowed;
+    opacity: .8;
+}
+
+/* Botón "Agregar otra prenda/servicio" */
+#agregar-tarifa.btn-outline-primary {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--enc-font-mono);
+    font-size: .75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    transition: transform var(--enc-speed) var(--enc-ease),
+    box-shadow var(--enc-speed) var(--enc-ease);
+}
+
+#agregar-tarifa.btn-outline-primary:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#agregar-tarifa.btn-outline-primary:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+
+/* ==========================================================================
+   4) SECCIÓN DE PAGO CONTRAENTREGA (Radios)
+   ========================================================================== */
+.custom-control.custom-radio {
+    padding-left: 1.8rem;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    background-color: var(--midnight-indigo) !important;
+    border-color: var(--midnight-dark) !important;
+    box-shadow: 2px 2px 0 var(--accent-primary);
+}
+
+.custom-control-label::before {
+    background-color: #fff;
+    border: 2px solid var(--midnight-dark);
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.custom-control-label::after {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.custom-control-label {
+    color: var(--midnight-indigo);
+    font-family: var(--enc-font-mono);
+    font-size: .8rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+/* ==========================================================================
+   5) TARJETA DE RESUMEN DE COBRO Y VUELTO EN VIVO
+   ========================================================================== */
+.col-md-12 .p-3.rounded.shadow-sm.bg-white.border {
+    background-color: var(--cream-light) !important;
+    border: var(--enc-border) solid var(--midnight-dark) !important;
+    border-radius: var(--enc-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark) !important;
+}
+
+.col-md-12 .p-3 .border-right {
+    border-right: 2px dashed var(--cream-dark) !important;
+}
+
+#total-cobrar-visual {
+    color: var(--midnight-dark) !important;
+    font-family: var(--enc-font-mono);
+    font-size: 1.8rem !important;
+    font-weight: 900;
+}
+
+#vuelto-visual {
+    color: var(--accent-primary) !important;
+    font-family: var(--enc-font-mono);
+    font-weight: 900;
+}
+
+/* Input de efectivo recibido dentro del resumen */
+#efectivo_recibido.form-control {
+    height: 42px;
+    background-color: #fff;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+#efectivo_recibido.form-control:focus {
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+    outline: 0;
+}
+
+
+/* ==========================================================================
+   6) MENSAJES DE ERROR DE VALIDACIÓN
+   ========================================================================== */
+.container-fluid > .card.shadow-lg form small.text-danger {
+    display: block;
+    margin-top: .4rem;
+    padding: .4rem .7rem;
+    background-color: #fff;
+    color: var(--midnight-dark) !important;
+    border: 2px dashed var(--color-danger);
+    border-radius: 4px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   7) BOTÓN DE ENVÍO PRINCIPAL ("Guardar y Registrar Encomienda")
+   ========================================================================== */
+.container-fluid > .card.shadow-lg form button[type="submit"].btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 50px;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--enc-radius) !important;          /* anula .rounded-pill */
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    font-family: var(--enc-font-mono);
+    font-size: .9rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--enc-speed) var(--enc-ease),
+    box-shadow var(--enc-speed) var(--enc-ease),
+    background-color var(--enc-speed) ease;
+}
+
+.container-fluid > .card.shadow-lg form button[type="submit"].btn i {
+    margin: 0 !important;
+}
+
+.container-fluid > .card.shadow-lg form button[type="submit"].btn:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--accent-primary);
+}
+
+.container-fluid > .card.shadow-lg form button[type="submit"].btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.container-fluid > .card.shadow-lg form button[type="submit"].btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   8) RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .col-md-12 .p-3 .border-right {
+        border-right: 0 !important;
+        border-bottom: 2px dashed var(--cream-dark) !important;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container-fluid > .card.shadow-lg {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+        padding: 1rem !important;
+    }
+    .container-fluid > .card.shadow-lg form button[type="submit"].btn {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   9) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .container-fluid > .card.shadow-lg {
+        animation: none;
+    }
+    .container-fluid > .card.shadow-lg form input.form-control,
+    .container-fluid > .card.shadow-lg form select.form-control,
+    .container-fluid > .card.shadow-lg form .input-group,
+    .container-fluid > .card.shadow-lg form button[type="submit"].btn,
+    #agregar-tarifa.btn-outline-primary {
+        transition: none !important;
+    }
+    .container-fluid > .card.shadow-lg form input.form-control:focus,
+    .container-fluid > .card.shadow-lg form select.form-control:focus,
+    .container-fluid > .card.shadow-lg form button[type="submit"].btn:hover {
+        transform: none;
+    }
+    .container-fluid > .card.shadow-lg h2.fw-bold i {
+        transform: none;
+    }
+}
