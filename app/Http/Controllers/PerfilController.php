@@ -21,6 +21,10 @@ class PerfilController extends Controller
     public function index()
     {
         $usuarioCredencial = Auth::user();
+
+        // Cargamos la relación del rol directamente desde el modelo de credenciales
+        $usuarioCredencial->load('rol');
+
         $perfilPersona = PerfilPersona::where('id_usuario', $usuarioCredencial->id_usuario)->first();
 
         // Consultar la última solicitud de afiliación del usuario
@@ -30,14 +34,8 @@ class PerfilController extends Controller
 
         $estadoSolicitud = $solicitudAfiliacion ? $solicitudAfiliacion->estado : null; // 'pendiente', 'aprobada', 'rechazada' o null
 
-        $nombreRol = 'Usuario';
-        if ($usuarioCredencial->id_rol == 1) {
-            $nombreRol = 'Administrador';
-        } elseif ($usuarioCredencial->id_rol == 2) {
-            $nombreRol = 'Afiliado';
-        } elseif ($usuarioCredencial->id_rol == 3) {
-            $nombreRol = 'Básico';
-        }
+        // Obtenemos el nombre del rol dinámicamente de la base de datos (con respaldo por si acaso)
+        $nombreRol = $usuarioCredencial->rol ? $usuarioCredencial->rol->nombre_rol : 'Usuario';
 
         $urlImagen = $perfilPersona && $perfilPersona->imagen
             ? asset('storage/' . $perfilPersona->imagen)
@@ -51,7 +49,7 @@ class PerfilController extends Controller
             'telefono'         => $perfilPersona ? $perfilPersona->telefono : '',
             'nombre_negocio'   => $perfilPersona ? $perfilPersona->nombre_negocio : '',
             'imagen'           => $urlImagen,
-            'rol'              => $nombreRol,
+            'rol'              => $nombreRol, // <--- Aquí se inyecta el nombre real del rol
             'estado_solicitud' => $estadoSolicitud,
         ];
 
