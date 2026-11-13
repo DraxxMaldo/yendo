@@ -129,7 +129,7 @@
                                     </div>
                                     <input type="email" name="correo_electronico" class="form-control @error('correo_electronico') is-invalid @enderror" value="{{ old('correo_electronico') }}" placeholder="correo@ejemplo.com" required>
                                 </div>
-                                <small class="text-muted">Se le enviará un correo electrónico para que configure su contraseña.</small>
+                                <small class="text-muted">Se le enviará un correo electrónico con sus credenciales de acceso.</small>
                             </div>
 
                             <div class="mb-3">
@@ -157,7 +157,7 @@
                             <div class="d-flex justify-content-between align-items-center mt-4">
                                 <button type="button" id="btnAnteriorPaso" class="btn btn-outline-secondary fw-bold rounded-pill px-4">Anterior</button>
                                 <button type="submit" class="btn btn-success fw-bold rounded-pill px-4" {{ $establecimientos->isEmpty() ? 'disabled' : '' }}>
-                                    <i class="fas fa-paper-plane mr-1"></i> Enviar Invitación y Crear
+                                    <i class="fas fa-paper-plane mr-1"></i> Enviar Credenciales y Crear
                                 </button>
                             </div>
                         </div>
@@ -169,63 +169,22 @@
         </div>
     </div>
 @endsection
-
 @push('scripts')
     {{-- JS de DataTables --}}
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
     <script src="{{ asset('js/dataTable.js') }}"></script>
 
+    {{-- Script independiente para la gestión del modal de personal (verifica que el nombre coincida exactamente con tu carpeta public/js/Afiliado/) --}}
+    <script src="{{ asset('js/Afiliado/SPA-Seleccionar-Rol.js') }}"></script>
+
     <script>
+        // Invocamos la función de errores pasando los parámetros con directivas JSON seguras de Blade
         document.addEventListener('DOMContentLoaded', function () {
-            const roleCards = document.querySelectorAll('.role-card');
-            const inputRol = document.getElementById('inputRolSeleccionado');
-            const btnSiguiente = document.getElementById('btnSiguientePaso');
-            const pasoRol = document.getElementById('paso-rol');
-            const pasoDatos = document.getElementById('paso-datos');
-            const btnAnterior = document.getElementById('btnAnteriorPaso');
-
-            // Si ya hay un rol seleccionado previamente, mantenerlo activo
-            if (inputRol.value) {
-                roleCards.forEach(c => {
-                    if (c.getAttribute('data-role') === inputRol.value) {
-                        c.style.backgroundColor = '#e9ecef';
-                        btnSiguiente.disabled = false;
-                    }
-                });
-            }
-
-            // Selección interactiva de tarjetas de rol
-            roleCards.forEach(card => {
-                card.addEventListener('click', function () {
-                    roleCards.forEach(c => c.style.backgroundColor = '#fff');
-                    this.style.backgroundColor = '#e9ecef';
-                    inputRol.value = this.getAttribute('data-role');
-                    btnSiguiente.disabled = false;
-                });
-            });
-
-            // Avanzar al paso 2
-            btnSiguiente.addEventListener('click', function () {
-                if (!inputRol.value) return;
-                pasoRol.style.display = 'none';
-                pasoDatos.style.display = 'block';
-            });
-
-            // Volver al paso 1
-            btnAnterior.addEventListener('click', function () {
-                pasoDatos.style.display = 'none';
-                pasoRol.style.display = 'block';
-            });
-
-            // Reabrir el modal automáticamente si ocurren errores de validación
-            @if($errors->any())
-            $('#modalSpaPersonal').modal('show');
-            @if($errors->has('correo_electronico') || $errors->has('id_establecimiento'))
-                pasoRol.style.display = 'none';
-            pasoDatos.style.display = 'block';
-            @endif
-            @endif
+            inicializarModalErrores(
+                @json($errors->any()),
+                @json($errors->has('correo_electronico') || $errors->has('id_establecimiento'))
+            );
         });
     </script>
 @endpush
