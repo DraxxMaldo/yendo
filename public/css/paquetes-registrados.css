@@ -1,11 +1,10 @@
 /* ==========================================================================
-   AUDITORÍA DE PAQUETES - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   MIS PAQUETES REGISTRADOS - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
    Archivo: public/css/paquetes-registrados.css
 
 - Solo CSS: no modifica la estructura HTML ni JS de la vista blade.
-- Cubre: contenedor general, título superior, tarjetas de transacciones (grid de columnas),
-  badges de códigos y estados, contenedores internos de cajeros, listas de detalles,
-  pie de tarjetas y diseño responsivo adaptado.
+- Cubre: encabezado superior, tarjeta de filtros avanzados, tarjeta resumen dinámica
+  (totales y acumulados), grid de tarjetas de paquetes, badges, listas, estados vacíos y paginación.
    ========================================================================== */
 
 /* =========================
@@ -24,20 +23,21 @@
     --accent-tertiary: #D8B45A;
     --color-danger: #C65B5B;
 
-    --aud-border: 3px;
-    --aud-radius: 6px;
-    --aud-speed: .18s;
-    --aud-ease: cubic-bezier(.2, .8, .2, 1);
-    --aud-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --mis-border: 3px;
+    --mis-radius: 6px;
+    --mis-speed: .18s;
+    --mis-ease: cubic-bezier(.2, .8, .2, 1);
+    --mis-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --mis-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%231D2038' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
 }
 
 
 /* ==========================================================================
    1) ENCABEZADO DE LA VISTA
    ========================================================================== */
-.container-fluid > .d-flex.justify-content-between.align-items-center.mb-4 {
+.container-fluid > .d-flex.flex-column.mb-4 {
     padding-bottom: 1rem;
-    border-bottom: var(--aud-border) solid var(--midnight-indigo);
+    border-bottom: var(--mis-border) solid var(--midnight-indigo);
     margin-bottom: 2rem !important;
 }
 
@@ -59,7 +59,7 @@
     margin-right: .75rem !important;
     background-color: var(--accent-tertiary);
     color: var(--midnight-dark) !important;
-    border: var(--aud-border) solid var(--midnight-dark);
+    border: var(--mis-border) solid var(--midnight-dark);
     border-radius: 4px;
     box-shadow: 4px 4px 0 var(--midnight-dark);
     font-size: 1.1rem;
@@ -73,19 +73,193 @@
 
 
 /* ==========================================================================
-   2) TARJETAS DE TRANSACCIONES / AUDITORÍA (GRID)
+   2) TARJETA DE FILTROS PERSONALES
+   ========================================================================== */
+.container-fluid > .card.border-0.shadow-sm.mb-4.p-4 {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    border: var(--mis-border) solid var(--midnight-dark) !important;
+    border-radius: var(--mis-radius) !important;          /* anula los 10px inline */
+    box-shadow: 8px 8px 0 var(--accent-primary) !important;
+    animation: mis-entrada .5s var(--mis-ease) both;
+}
+
+@keyframes mis-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Sello decorativo superior de la tarjeta de filtros */
+.container-fluid > .card.border-0.shadow-sm.mb-4.p-4::before {
+    content: "Filtros de Búsqueda";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--mis-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Etiquetas del formulario de filtros */
+.container-fluid > .card form label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--mis-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+/* Inputs de texto, fechas y selectores del filtro */
+.container-fluid > .card form input.form-control,
+.container-fluid > .card form select.form-control {
+    height: 48px;
+    padding: 0 1rem;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--mis-border) solid var(--midnight-dark);
+    border-radius: var(--mis-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .9rem;
+    font-weight: 700;
+    transition: transform var(--mis-speed) var(--mis-ease),
+    box-shadow var(--mis-speed) var(--mis-ease);
+}
+
+/* Selectores con flecha personalizada */
+.container-fluid > .card form select.form-control {
+    padding-right: 2.5rem;
+    background-image: var(--mis-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px 8px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.container-fluid > .card form input.form-control:focus,
+.container-fluid > .card form select.form-control:focus {
+    background-color: #fff;
+    border-color: var(--midnight-dark);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+/* Botón "Filtrar Mis Registros" */
+.container-fluid > .card form button[type="submit"].btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 44px;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--mis-radius) !important;
+    box-shadow: 3px 3px 0 var(--accent-primary);
+    font-family: var(--mis-font-mono);
+    font-size: .8rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--mis-speed) var(--mis-ease),
+    box-shadow var(--mis-speed) var(--mis-ease);
+}
+
+.container-fluid > .card form button[type="submit"].btn:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+}
+
+.container-fluid > .card form button[type="submit"].btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+/* Botón "Limpiar Filtros" */
+.container-fluid > .card form a.btn-outline-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    min-height: 44px;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--mis-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--mis-font-mono);
+    font-size: .8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    transition: transform var(--mis-speed) var(--mis-ease),
+    box-shadow var(--mis-speed) var(--mis-ease);
+}
+
+.container-fluid > .card form a.btn-outline-secondary:hover {
+    background-color: var(--cream-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+
+/* ==========================================================================
+   3) TARJETA RESUMEN DINÁMICA
+   ========================================================================== */
+.container-fluid > .row.mb-4 .card.border-0.shadow-sm.p-3 {
+    background-color: var(--cream-light) !important;
+    border: var(--mis-border) solid var(--midnight-dark) !important;
+    border-left: var(--mis-border) solid var(--midnight-indigo) !important;
+    border-radius: var(--mis-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark) !important;
+}
+
+.container-fluid > .row.mb-4 .card .p-3.rounded.text-white {
+    background-color: var(--midnight-indigo) !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--accent-primary);
+}
+
+.container-fluid > .row.mb-4 .card h3.fw-bold.text-dark {
+    color: var(--midnight-indigo) !important;
+    font-family: var(--mis-font-mono);
+    font-weight: 900 !important;
+}
+
+.container-fluid > .row.mb-4 .card h3.fw-bold.text-success {
+    color: var(--midnight-dark) !important;
+    font-family: var(--mis-font-mono);
+    font-weight: 900 !important;
+}
+
+
+/* ==========================================================================
+   4) LISTADO DE TARJETAS DE PAQUETES (GRID)
    ========================================================================== */
 .container-fluid > .row > [class*="col-"] {
     display: flex;
-    animation: aud-entrada .4s var(--aud-ease) both;
+    animation: mis-card .4s var(--mis-ease) both;
 }
 
-@keyframes aud-entrada {
+@keyframes mis-card {
     from { opacity: 0; transform: translateY(15px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Retraso escalonado para las tarjetas */
+/* Retraso escalonado de las tarjetas */
 .container-fluid > .row > [class*="col-"]:nth-child(1)  { animation-delay: .03s; }
 .container-fluid > .row > [class*="col-"]:nth-child(2)  { animation-delay: .06s; }
 .container-fluid > .row > [class*="col-"]:nth-child(3)  { animation-delay: .09s; }
@@ -97,29 +271,28 @@
     position: relative;
     width: 100%;
     background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
-    border: var(--aud-border) solid var(--midnight-dark) !important;
-    border-radius: var(--aud-radius) !important;          /* anula los 10px inline */
+    border: var(--mis-border) solid var(--midnight-dark) !important;
+    border-radius: var(--mis-radius) !important;          /* anula los 10px inline */
     box-shadow: 6px 6px 0 var(--midnight-dark) !important;
-    transition: transform var(--aud-speed) var(--aud-ease),
-    box-shadow var(--aud-speed) var(--aud-ease);
+    transition: transform var(--mis-speed) var(--mis-ease),
+    box-shadow var(--mis-speed) var(--mis-ease);
 }
 
-/* Efecto hover interactivo en tarjetas de auditoría */
+/* Efecto hover interactivo en las cards de paquetes */
 .container-fluid > .row .card.border-0.shadow-sm.h-100:hover {
     transform: translate(-3px, -3px);
     box-shadow: 9px 9px 0 var(--accent-primary) !important;
 }
 
-/* Cuerpo interno de la tarjeta */
 .container-fluid > .row .card-body {
     padding: 1.25rem !important;
 }
 
 
 /* ==========================================================================
-   3) ELEMENTOS INTERNOS DE LA TARJETA
+   5) ELEMENTOS INTERNOS DE LAS TARJETAS DE PAQUETES
    ========================================================================== */
-/* Badge del Código de Rastreo */
+/* Badge de Código de Rastreo */
 .container-fluid > .row .badge.badge-primary {
     display: inline-block;
     background-color: var(--midnight-indigo) !important;
@@ -127,62 +300,36 @@
     border: 2px solid var(--midnight-dark);
     border-radius: 4px;
     box-shadow: 2px 2px 0 var(--accent-primary);
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-size: .75rem !important;
     font-weight: 700;
     letter-spacing: .08em;
     text-transform: uppercase;
 }
 
-/* Monto de la transacción destacado */
+/* Monto de transacción destacado */
 .container-fluid > .row span.text-success.h5 {
     color: var(--midnight-dark) !important;
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-weight: 900 !important;
 }
 
-/* Caja de Información del Cajero Responsable */
-.container-fluid > .row .mb-3.p-2.rounded.bg-white.border {
-    background-color: #fff !important;
-    border: 2px solid var(--midnight-dark) !important;
-    border-radius: 4px !important;
-    box-shadow: 3px 3px 0 var(--cream-dark);
-}
-
-.container-fluid > .row .mb-3.p-2 small.text-muted.text-uppercase {
-    color: var(--midnight-muted) !important;
-    font-family: var(--aud-font-mono);
-    letter-spacing: .06em;
-}
-
-.container-fluid > .row .mb-3.p-2 span.fw-bold.text-dark {
-    color: var(--midnight-indigo) !important;
-    font-weight: 800 !important;
-    text-transform: uppercase;
-    font-size: .9rem;
-}
-
-.container-fluid > .row .mb-3.p-2 .text-muted.small {
-    color: var(--midnight-muted) !important;
-    font-weight: 700;
-}
-
-/* Lista de Detalles de la Encomienda */
+/* Lista de detalles de la encomienda */
 .container-fluid > .row ul.list-unstyled.small.text-secondary {
     color: var(--midnight-indigo) !important;
     font-weight: 600;
 }
 
 .container-fluid > .row ul.list-unstyled li {
-    margin-bottom: .4rem !important;
+    margin-bottom: .5rem !important;
 }
 
-/* Badges de Pago Contraentrega (Sí / No) */
+/* Badges de contraentrega (Sí / No) */
 .container-fluid > .row ul.list-unstyled .badge-warning.text-dark {
     background-color: var(--accent-tertiary) !important;
     color: var(--midnight-dark) !important;
     border: 1.5px solid var(--midnight-dark);
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-weight: 800;
 }
 
@@ -190,15 +337,15 @@
     background-color: var(--accent-secondary) !important;
     color: var(--midnight-dark) !important;
     border: 1.5px solid var(--midnight-dark);
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-weight: 800;
 }
 
-/* Pie de la tarjeta (Fecha y ID de Transacción) */
+/* Pie de tarjeta (Fecha y número de transacción) */
 .container-fluid > .row .border-top.pt-2.mt-2 {
     border-top: 2px solid var(--cream-dark) !important;
     color: var(--midnight-muted) !important;
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-weight: 700;
 }
 
@@ -211,12 +358,12 @@
 
 
 /* ==========================================================================
-   4) ESTADO VACÍO (EMPTY STATE)
+   6) ESTADO VACÍO (EMPTY STATE)
    ========================================================================== */
 .container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 {
     background-color: var(--cream-light) !important;
-    border: var(--aud-border) solid var(--midnight-dark) !important;
-    border-radius: var(--aud-radius) !important;
+    border: var(--mis-border) solid var(--midnight-dark) !important;
+    border-radius: var(--mis-radius) !important;
     box-shadow: 6px 6px 0 var(--midnight-dark) !important;
 }
 
@@ -233,7 +380,7 @@
 
 .container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 p.text-muted {
     color: var(--midnight-muted) !important;
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-size: .8rem !important;
     letter-spacing: .05em;
     text-transform: uppercase;
@@ -241,7 +388,7 @@
 
 
 /* ==========================================================================
-   5) PAGINACIÓN
+   7) PAGINACIÓN
    ========================================================================== */
 .container-fluid > .d-flex.justify-content-center.mt-4 nav ul.pagination,
 .container-fluid > .d-flex.justify-content-center.mt-4 .pagination {
@@ -262,13 +409,13 @@
     border: 2px solid var(--midnight-dark);
     border-radius: 4px;
     box-shadow: 3px 3px 0 var(--midnight-dark);
-    font-family: var(--aud-font-mono);
+    font-family: var(--mis-font-mono);
     font-size: .82rem;
     font-weight: 800;
     text-align: center;
-    transition: transform var(--aud-speed) var(--aud-ease),
-    box-shadow var(--aud-speed) var(--aud-ease),
-    background-color var(--aud-speed) ease;
+    transition: transform var(--mis-speed) var(--mis-ease),
+    box-shadow var(--mis-speed) var(--mis-ease),
+    background-color var(--mis-speed) ease;
 }
 
 .container-fluid > .d-flex.justify-content-center.mt-4 .page-item .page-link:hover {
@@ -298,19 +445,39 @@
 
 
 /* ==========================================================================
-   6) RESPONSIVE DESIGN
+   8) RESPONSIVE DESIGN
    ========================================================================== */
+@media (max-width: 767.98px) {
+    .container-fluid > .row.mb-4 .card.border-0.shadow-sm.p-3 {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+    .container-fluid > .row.mb-4 .card .text-right {
+        text-align: left !important;
+        padding-right: 0 !important;
+    }
+}
+
 @media (max-width: 575.98px) {
-    .container-fluid > .row .card.border-0.shadow-sm.h-100 {
+    .container-fluid > .card.border-0.shadow-sm.mb-4.p-4,
+    .container-fluid > .row .card.border-0.shadow-sm.h-100,
+    .container-fluid > .row.mb-4 .card.border-0.shadow-sm.p-3 {
         box-shadow: 5px 5px 0 var(--accent-primary) !important;
+    }
+    .container-fluid > .card form button[type="submit"].btn,
+    .container-fluid > .card form a.btn-outline-secondary {
+        width: 100%;
+        margin-bottom: .5rem;
     }
 }
 
 
 /* ==========================================================================
-   7) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   9) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+    .container-fluid > .card.border-0.shadow-sm.mb-4.p-4,
     .container-fluid > .row > [class*="col-"] {
         animation: none;
     }
