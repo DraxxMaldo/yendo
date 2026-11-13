@@ -164,17 +164,32 @@
                         @error('es_pago_contraentrega') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
-                    <!-- TARJETA DE RESUMEN DE COBRO EN VIVO -->
+                    <!-- TARJETA DE RESUMEN DE COBRO Y VUELTO EN VIVO -->
                     <div class="col-md-12 mt-3">
-                        <div class="p-3 rounded shadow-sm bg-white border border-primary d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="fw-bold text-uppercase mb-0 text-secondary" style="font-size: 0.9rem;">
-                                    <i class="fas fa-calculator mr-2 text-primary"></i> Total a Cobrar en Caja:
-                                </h5>
-                                <small class="text-muted" id="detalle-calculo">Tarifas: $0.00 | Valor Declarado: $0.00</small>
-                            </div>
-                            <div>
-                                <h3 class="fw-bold text-success mb-0" id="total-cobrar-visual">$0.00</h3>
+                        <div class="p-3 rounded shadow-sm bg-white border border-primary">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 border-right">
+                                    <h5 class="fw-bold text-uppercase mb-0 text-secondary" style="font-size: 0.9rem;">
+                                        <i class="fas fa-calculator mr-2 text-primary"></i> Total a Cobrar en Caja:
+                                    </h5>
+                                    <small class="text-muted" id="detalle-calculo">Tarifas: $0.00 | Valor Declarado: $0.00</small>
+                                    <h3 class="fw-bold text-success mb-0 mt-1" id="total-cobrar-visual">$0.00</h3>
+                                </div>
+                                <div class="col-md-6 mt-3 mt-md-0">
+                                    <label class="fw-bold small text-uppercase text-dark mb-1">
+                                        <i class="fas fa-money-bill-wave text-success mr-1"></i> Efectivo Recibido ($)
+                                    </label>
+                                    <div class="input-group input-group-sm mb-2">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text bg-white">$</span>
+                                        </div>
+                                        <input type="number" step="0.01" min="0" id="efectivo_recibido" class="form-control fw-bold" placeholder="0.00">
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="fw-bold small text-uppercase text-secondary">Vuelto / Cambio:</span>
+                                        <span class="fw-bold text-primary h5 mb-0" id="vuelto-visual">$0.00</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
