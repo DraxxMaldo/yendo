@@ -1,0 +1,295 @@
+/* ==========================================================================
+   DESTINOS Y SUCURSALES - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/destinos.css
+
+- Solo CSS: no modifica la estructura HTML de la vista blade.
+- Cubre: tarjeta contenedora principal, grid de tarjetas de sucursales,
+  imágenes, badges e интерактивность (hover y animaciones).
+- Mantiene la consistencia con el diseño estandarizado del sistema Yendo.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --dest-border: 3px;
+    --dest-radius: 6px;
+    --dest-speed: .18s;
+    --dest-ease: cubic-bezier(.2, .8, .2, 1);
+    --dest-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+
+/* ==========================================================================
+   1) TARJETA PRINCIPAL DE LA PÁGINA
+   ========================================================================== */
+.container.py-4 .card.shadow-lg {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    color: var(--midnight-indigo);
+    border-radius: 8px;
+    outline: 1px solid var(--midnight-dark);              /* completa el borde inline a 3 px visuales */
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;   /* anula .shadow-lg */
+    animation: dest-entrada .5s var(--dest-ease) both;
+}
+
+@keyframes dest-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Etiqueta decorativa superior (sello neobrutalista) */
+.container.py-4 .card.shadow-lg::before {
+    content: "Red Yendo";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--dest-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Encabezado principal (Icono, Título y Descripción) */
+.container.py-4 .card.shadow-lg > .text-center.mb-4 {
+    padding-bottom: 1.5rem;
+    border-bottom: var(--dest-border) solid var(--midnight-indigo);
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mb-4 i.fa-map-marked-alt {
+    display: inline-grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: var(--dest-border) solid var(--midnight-dark);
+    border-radius: 6px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.8rem;
+    transform: rotate(-3deg);
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mb-4 h2.fw-bold {
+    font-size: clamp(1.4rem, 3.8vw, 2.1rem);
+    font-weight: 900 !important;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mb-4 p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   2) TARJETAS DE SUCURSALES / DESTINOS (GRID)
+   ========================================================================== */
+.container.py-4 .card.shadow-lg .row .col-md-4 {
+    display: flex;
+}
+
+.container.py-4 .card.shadow-lg .row .col-md-4 > .card.border-dark {
+    position: relative;
+    width: 100%;
+    background-color: #fff !important;
+    border: var(--dest-border) solid var(--midnight-dark) !important;
+    border-radius: var(--dest-radius) !important;
+    box-shadow: 4px 4px 0 var(--midnight-dark) !important;
+    transition: transform var(--dest-speed) var(--dest-ease),
+    box-shadow var(--dest-speed) var(--dest-ease);
+}
+
+/* Efecto Hover en las tarjetas de sucursales */
+.container.py-4 .card.shadow-lg .row .col-md-4 > .card.border-dark:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 var(--accent-primary) !important;
+}
+
+/* Imagen del establecimiento dentro de la tarjeta */
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-img-top {
+    height: 180px;
+    object-fit: cover;
+    border-bottom: var(--dest-border) solid var(--midnight-dark) !important;
+}
+
+/* Cuerpo de la tarjeta de sucursal */
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-body {
+    padding: 1.25rem !important;
+}
+
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-body h5.fw-bold {
+    font-size: 1.05rem;
+    font-weight: 900 !important;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-body h5.fw-bold i.fa-building {
+    color: var(--accent-primary) !important;
+}
+
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-body p.small.text-muted {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+/* Divisor interno del footer de la tarjeta */
+.container.py-4 .card.shadow-lg .row .col-md-4 .card-body .mt-auto {
+    border-top: 2px solid var(--cream-dark) !important;
+    padding-top: .75rem !important;
+}
+
+/* Badge de "Sucursal Activa" */
+.container.py-4 .card.shadow-lg .row .col-md-4 .badge-primary {
+    display: inline-block;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 2px 2px 0 var(--accent-primary);
+    font-family: var(--dest-font-mono);
+    font-size: .7rem !important;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Estado sin resultados (Empty State) */
+.container.py-4 .card.shadow-lg .row .col-12.text-center.py-5 i.fa-folder-open {
+    color: var(--accent-tertiary) !important;
+    text-shadow: 2px 2px 0 var(--midnight-dark);
+}
+
+.container.py-4 .card.shadow-lg .row .col-12.text-center.py-5 p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-family: var(--dest-font-mono);
+    font-size: .85rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   3) BOTÓN INFERIOR "VOLVER AL INICIO"
+   ========================================================================== */
+.container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    padding: .6rem 1.5rem !important;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--dest-radius) !important;      /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-family: var(--dest-font-mono);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--dest-speed) var(--dest-ease),
+    box-shadow var(--dest-speed) var(--dest-ease),
+    background-color var(--dest-speed) ease;
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn i {
+    margin: 0 !important;
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   4) ANIMACIÓN ESCALONADA DE LAS TARJETAS (GRID)
+   ========================================================================== */
+.container.py-4 .card.shadow-lg .row > .col-md-4 {
+    animation: dest-card .3s var(--dest-ease) both;
+}
+
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(1) { animation-delay: .03s; }
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(2) { animation-delay: .07s; }
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(3) { animation-delay: .11s; }
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(4) { animation-delay: .15s; }
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(5) { animation-delay: .19s; }
+.container.py-4 .card.shadow-lg .row > .col-md-4:nth-child(6) { animation-delay: .23s; }
+
+@keyframes dest-card {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ==========================================================================
+   5) RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 575.98px) {
+    .container.py-4 .card.shadow-lg {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+        padding: 1rem !important;
+    }
+    .container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   6) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .container.py-4 .card.shadow-lg,
+    .container.py-4 .card.shadow-lg .row > .col-md-4 {
+        animation: none;
+    }
+    .container.py-4 .card.shadow-lg .row .col-md-4 > .card.border-dark,
+    .container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn {
+        transition: none !important;
+    }
+    .container.py-4 .card.shadow-lg .row .col-md-4 > .card.border-dark:hover,
+    .container.py-4 .card.shadow-lg > .text-center.mt-4 a.btn:hover {
+        transform: none;
+    }
+    .container.py-4 .card.shadow-lg > .text-center.mb-4 i.fa-map-marked-alt {
+        transform: none;
+    }
+}

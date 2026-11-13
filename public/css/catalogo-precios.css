@@ -1,0 +1,458 @@
+/* ==========================================================================
+   CATÁLOGO DE PRECIOS - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/catalogo-precios.css
+
+- Solo CSS: no modifica la estructura HTML ni JS de la vista blade.
+- Cubre: tarjetas principales del layout (formulario de registro y tabla de catálogo),
+  inputs personalizados, grupos de moneda, botones y tabla de datos con badges.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --cat-border: 3px;
+    --cat-radius: 6px;
+    --cat-speed: .18s;
+    --cat-ease: cubic-bezier(.2, .8, .2, 1);
+    --cat-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+
+/* ==========================================================================
+   1) TARJETAS PRINCIPALES (Formulario y Tabla)
+   ========================================================================== */
+.container-fluid > .row > .col-md-4 .card.shadow-lg,
+.container-fluid > .row > .col-md-8 .card.shadow-lg {
+    position: relative;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    color: var(--midnight-indigo);
+    border-radius: var(--cat-radius) !important;          /* anula los 10px inline */
+    outline: 1px solid var(--midnight-dark);              /* completa el borde inline de 2px a 3px */
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;   /* anula .shadow-lg */
+    animation: cat-entrada .5s var(--cat-ease) both;
+}
+
+@keyframes cat-entrada {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Tarjeta izquierda: Sello decorativo superior */
+.container-fluid > .row > .col-md-4 .card.shadow-lg::before {
+    content: "Nuevo Registro";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--cat-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Tarjeta derecha: Sello decorativo superior */
+.container-fluid > .row > .col-md-8 .card.shadow-lg::before {
+    content: "Gestión de Tarifas";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--cat-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+}
+
+/* Encabezados h4 y párrafos explicativos */
+.container-fluid > .row .card.shadow-lg h4.fw-bold {
+    display: flex;
+    align-items: center;
+    font-size: clamp(1.1rem, 2.8vw, 1.35rem);
+    font-weight: 900 !important;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+.container-fluid > .row .card.shadow-lg h4.fw-bold i {
+    display: inline-grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    margin-right: .65rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .95rem;
+    transform: rotate(-3deg);
+}
+
+.container-fluid > .row .card.shadow-lg p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   2) FORMULARIO E INPUTS (Columna Izquierda)
+   ========================================================================== */
+.container-fluid > .row .card.shadow-lg form label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--cat-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo);
+}
+
+/* Campos de texto y números base */
+.container-fluid > .row .card.shadow-lg form input.form-control {
+    height: 50px;
+    padding: 0 1rem;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--cat-border) solid var(--midnight-dark);
+    border-radius: var(--cat-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform var(--cat-speed) var(--cat-ease),
+    box-shadow var(--cat-speed) var(--cat-ease);
+}
+
+.container-fluid > .row .card.shadow-lg form input.form-control:focus {
+    background-color: #fff;
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+.container-fluid > .row .card.shadow-lg form input.form-control.is-invalid {
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+/* Grupo del input de precio (Símbolo de Dólar + Input) */
+.container-fluid > .row .card.shadow-lg form .input-group {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    background-color: #fff;
+    border: var(--cat-border) solid var(--midnight-dark);
+    border-radius: var(--cat-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    transition: transform var(--cat-speed) var(--cat-ease),
+    box-shadow var(--cat-speed) var(--cat-ease);
+}
+
+.container-fluid > .row .card.shadow-lg form .input-group:focus-within {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.container-fluid > .row .card.shadow-lg form .input-group .input-group-prepend .input-group-text {
+    padding: 0 1.1rem;
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark);
+    border: 0;
+    border-right: var(--cat-border) solid var(--midnight-dark);
+    border-radius: 0;
+    font-family: var(--cat-font-mono);
+    font-weight: 900;
+}
+
+.container-fluid > .row .card.shadow-lg form .input-group input.form-control {
+    height: 50px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.container-fluid > .row .card.shadow-lg form .input-group input.form-control:focus {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Mensajes de error de validación */
+.container-fluid > .row .card.shadow-lg form small.text-danger {
+    display: block;
+    margin-top: .4rem;
+    padding: .4rem .7rem;
+    background-color: #fff;
+    color: var(--midnight-dark) !important;
+    border: 2px dashed var(--color-danger);
+    border-radius: 4px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+/* Botón de envío ("Guardar en el Catálogo") */
+.container-fluid > .row .card.shadow-lg form button[type="submit"].btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 48px;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--cat-radius) !important;          /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    font-family: var(--cat-font-mono);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--cat-speed) var(--cat-ease),
+    box-shadow var(--cat-speed) var(--cat-ease),
+    background-color var(--cat-speed) ease;
+}
+
+.container-fluid > .row .card.shadow-lg form button[type="submit"].btn i {
+    margin: 0 !important;
+}
+
+.container-fluid > .row .card.shadow-lg form button[type="submit"].btn:hover {
+    background-color: var(--midnight-light) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+.container-fluid > .row .card.shadow-lg form button[type="submit"].btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+.container-fluid > .row .card.shadow-lg form button[type="submit"].btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   3) CONTENEDOR DE LA TABLA Y TABLA DE PRECIOS (Columna Derecha)
+   ========================================================================== */
+.container-fluid > .row .card.shadow-lg .table-responsive {
+    padding: 1.25rem !important;
+    background-color: #fff !important;
+    border: var(--cat-border) solid var(--midnight-dark) !important;
+    border-radius: var(--cat-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+.container-fluid > .row .card.shadow-lg table.table {
+    margin-bottom: 0;
+    border: var(--cat-border) solid var(--midnight-dark);
+    border-radius: var(--cat-radius);
+}
+
+/* Encabezado de la tabla */
+.container-fluid > .row .card.shadow-lg table.table thead,
+.container-fluid > .row .card.shadow-lg table.table thead th {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+}
+
+.container-fluid > .row .card.shadow-lg table.table thead th {
+    padding: 1rem;
+    border: 0;
+    border-bottom: var(--cat-border) solid var(--midnight-dark);
+    font-family: var(--cat-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.container-fluid > .row .card.shadow-lg table.table thead th:first-child { border-top-left-radius: 3px; }
+.container-fluid > .row .card.shadow-lg table.table thead th:last-child  { border-top-right-radius: 3px; }
+
+/* Celdas de la tabla */
+.container-fluid > .row .card.shadow-lg table.table tbody td {
+    padding: .9rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 0;
+    border-top: 2px solid var(--cream-dark);
+    font-size: .92rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.container-fluid > .row .card.shadow-lg table.table tbody tr:first-child td {
+    border-top: 0;
+}
+
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(even) td {
+    background-color: var(--cream-light);
+}
+
+/* Columna ID (#) */
+.container-fluid > .row .card.shadow-lg table.table tbody td:first-child {
+    font-family: var(--cat-font-mono);
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+/* Precio estándar destacado */
+.container-fluid > .row .card.shadow-lg table.table tbody td.text-success {
+    color: var(--midnight-dark) !important;
+    font-weight: 900;
+    font-family: var(--cat-font-mono);
+}
+
+/* Hover interactivo de filas */
+.container-fluid > .row .card.shadow-lg table.table.table-hover tbody tr:hover td {
+    background-color: #FBF3D6;
+    color: var(--midnight-dark);
+}
+
+.container-fluid > .row .card.shadow-lg table.table.table-hover tbody tr:hover td:first-child {
+    box-shadow: inset 6px 0 0 var(--accent-tertiary);
+}
+
+/* Estado Vacío (Empty State) */
+.container-fluid > .row .card.shadow-lg table.table td.text-center.py-4 {
+    background-color: var(--cream-light);
+    color: var(--midnight-muted) !important;
+    font-family: var(--cat-font-mono);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   4) BADGES (Estado Activo / Inactivo)
+   ========================================================================= */
+.container-fluid > .row .card.shadow-lg table.table tbody .badge {
+    display: inline-block;
+    padding: .35rem .75rem !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    font-family: var(--cat-font-mono);
+    font-size: .68rem !important;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Badge Activo */
+.container-fluid > .row .card.shadow-lg table.table tbody .badge-success {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+    box-shadow: 2px 2px 0 var(--midnight-dark);
+}
+
+/* Badge Inactivo / Secondary */
+.container-fluid > .row .card.shadow-lg table.table tbody .badge-secondary {
+    background-color: var(--cream-dark) !important;
+    color: var(--midnight-muted) !important;
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+}
+
+
+/* ==========================================================================
+   5) ANIMACIÓN ESCALONADA DE FILAS DE LA TABLA
+   ========================================================================== */
+.container-fluid > .row .card.shadow-lg table.table tbody tr {
+    animation: cat-fila .3s var(--cat-ease) both;
+}
+
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(1)  { animation-delay: .03s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(2)  { animation-delay: .07s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(3)  { animation-delay: .11s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(4)  { animation-delay: .15s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(5)  { animation-delay: .19s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(6)  { animation-delay: .23s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(7)  { animation-delay: .27s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(8)  { animation-delay: .31s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(9)  { animation-delay: .35s; }
+.container-fluid > .row .card.shadow-lg table.table tbody tr:nth-child(10) { animation-delay: .39s; }
+
+@keyframes cat-fila {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ==========================================================================
+   6) RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .container-fluid > .row > .col-md-4 {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .container-fluid > .row .card.shadow-lg {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+        padding: 1rem !important;
+    }
+    .container-fluid > .row .card.shadow-lg .table-responsive {
+        padding: .75rem !important;
+        box-shadow: 4px 4px 0 var(--midnight-dark);
+    }
+    .container-fluid > .row .card.shadow-lg form button[type="submit"].btn {
+        width: 100%;
+    }
+}
+
+
+/* ==========================================================================
+   7) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .container-fluid > .row .card.shadow-lg,
+    .container-fluid > .row .card.shadow-lg table.table tbody tr {
+        animation: none;
+    }
+    .container-fluid > .row .card.shadow-lg form input.form-control,
+    .container-fluid > .row .card.shadow-lg form .input-group,
+    .container-fluid > .row .card.shadow-lg form button[type="submit"].btn {
+        transition: none !important;
+    }
+    .container-fluid > .row .card.shadow-lg form input.form-control:focus,
+    .container-fluid > .row .card.shadow-lg form button[type="submit"].btn:hover {
+        transform: none;
+    }
+    .container-fluid > .row .card.shadow-lg h4.fw-bold i {
+        transform: none;
+    }
+}

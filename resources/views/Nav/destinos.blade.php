@@ -3,7 +3,7 @@
 @section('titulo', 'Nuestros Destinos | Yendo')
 
 @push('estilos')
-    <link rel="stylesheet" href="{{ asset('css/perfil.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/destinos.css') }}">
 @endpush
 
 @section('contenido')

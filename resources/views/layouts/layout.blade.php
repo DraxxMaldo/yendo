@@ -175,7 +175,7 @@
                         </li>
                     @endif
 
-                    {{-- Gestión de Empleados (Visible para Admin ID 1 y Afiliado ID 2) --}}
+                    {{-- Gestión de Empleados (Visible para y Afiliado ID 2) --}}
                     @if(Auth::check() && Auth::user()->id_rol == 2)
                         <li class="nav-item" id="sidebar-item-empleados">
                             <a href="{{ route('empleados.index') }}" id="sidebar-link-empleados" title="Gestionar Empleados"
@@ -183,6 +183,30 @@
                                aria-current="{{ request()->routeIs('empleados.*') ? 'page' : 'false' }}">
                                 <i class="nav-icon fas fa-user-tie" id="sidebar-icon-empleados" aria-hidden="true"></i>
                                 <p id="sidebar-label-empleados">Gestion Empleados</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Menú Registrar Encomienda (Visible para rol Cajero) --}}
+                    @if(Auth::check() && Auth::user()->id_rol == 4)
+                        <li class="nav-item" id="sidebar-item-encomiendas">
+                            <a href="{{ route('encomiendas.create') }}" id="sidebar-link-encomiendas" title="Registrar Encomienda"
+                               class="nav-link {{ request()->routeIs('encomiendas.*') ? 'active' : '' }}"
+                               aria-current="{{ request()->routeIs('encomiendas.*') ? 'page' : 'false' }}">
+                                <i class="nav-icon fas fa-boxes" id="sidebar-icon-encomiendas" aria-hidden="true"></i>
+                                <p id="sidebar-label-encomiendas">Registrar Encomienda</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Menú Catálogo de Precios (Visible para usuarios afiliados / rol 2 o admin) --}}
+                    @if(Auth::check() && Auth::user()->id_rol == 2)
+                        <li class="nav-item" id="sidebar-item-catalogo-precios">
+                            <a href="{{ route('catalogo.precios.index') }}" id="sidebar-link-catalogo-precios" title="Catálogo de Precios"
+                               class="nav-link {{ request()->routeIs('catalogo.precios.*') ? 'active' : '' }}"
+                               aria-current="{{ request()->routeIs('catalogo.precios.*') ? 'page' : 'false' }}">
+                                <i class="nav-icon fas fa-tags" id="sidebar-icon-catalogo-precios" aria-hidden="true"></i>
+                                <p id="sidebar-label-catalogo-precios">Catálogo de Precios</p>
                             </a>
                         </li>
                     @endif

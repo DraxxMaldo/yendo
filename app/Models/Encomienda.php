@@ -19,6 +19,7 @@ class Encomienda extends Model
         'id_establecimiento_origen',
         'id_establecimiento_destino',
         'id_tipo_envio',
+        'id_precio',
         'es_pago_contraentrega',
         'valor_declarado_producto',
         'fecha_ingreso',
@@ -29,6 +30,7 @@ class Encomienda extends Model
         'id_establecimiento_origen' => 'integer',
         'id_establecimiento_destino' => 'integer',
         'id_tipo_envio' => 'integer',
+        'id_precio' => 'integer',
         'es_pago_contraentrega' => 'boolean',
         'valor_declarado_producto' => 'decimal:2', // Casting a decimal[cite: 3]
         'fecha_ingreso' => 'datetime',
@@ -62,6 +64,11 @@ class Encomienda extends Model
     public function remitente()
     {
         return $this->belongsTo(UsuarioCredencial::class, 'id_usuario_remitente', 'id_usuario');
+    }
+
+    public function catalogoPrecio()
+    {
+        return $this->belongsTo(CatalogoPrecio::class, 'id_precio', 'id_precio');
     }
 
     public function origen()

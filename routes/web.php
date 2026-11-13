@@ -13,9 +13,12 @@ use App\Http\Controllers\DestinoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudAfiliacionController;
 use App\Http\Controllers\EmpleadoSucursalController;
+use App\Http\Controllers\EncomiendaController;
+use App\Http\Controllers\CatalogoPrecioController;
+
 
 // Definición de roles del sistema tal como lo maneja tu equipo
-$roles = ["admin", "Afiliado", "Basico"];
+$roles = ["admin", "Afiliado", "Basico", "Cajero", "Logistica", "Repartidor"];
 
 // ==========================================
 // 1. RUTAS PÚBLICAS (Accesibles para todos)
@@ -105,6 +108,10 @@ Route::middleware(['auth', "rol:{$roles[1]}"])->group(function () {
         Route::post('/empleados-sucursal', [EmpleadoSucursalController::class, 'store'])->name('empleados.store');
         Route::put('/empleados-sucursal/{id}', [EmpleadoSucursalController::class, 'update'])->name('empleados.update');
 
+        //Gestionar su catalogo
+        Route::get('/catalogo-precios', [CatalogoPrecioController::class, 'index'])->name('catalogo.precios.index');
+        Route::post('/catalogo-precios', [CatalogoPrecioController::class, 'store'])->name('catalogo.precios.store');
+
 
 
     });
@@ -124,4 +131,14 @@ Route::middleware(['auth', "rol:{$roles[0]},{$roles[1]}"])->group(function () {
 
     Route::post('/establecimientos', [EstablecimientoController::class, 'store'])->name('establecimientos.store');
 
+});
+
+
+
+// ==========================================
+// 6. RUTAS PARA ROLES CAJERO
+// ==========================================
+Route::middleware(['auth', "rol:Cajero"])->group(function () {
+    Route::get('/encomiendas/registrar', [EncomiendaController::class, 'create'])->name('encomiendas.create');
+    Route::post('/encomiendas/registrar', [EncomiendaController::class, 'store'])->name('encomiendas.store');
 });
