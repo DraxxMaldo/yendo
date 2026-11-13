@@ -17,7 +17,12 @@
                     <h2 class="fw-bold" style="color: var(--midnight-indigo);">
                         <i class="fas fa-box-open mr-2" style="color: var(--accent-primary);"></i> Registrar Nueva Encomienda
                     </h2>
-                    <p class="text-muted mb-0">Módulo de operaciones de caja para el ingreso y despacho de paquetes.</p>
+                    <p class="text-muted mb-0">
+                        Módulo de operaciones de caja para el ingreso y despacho de paquetes.
+                        @if(isset($nombreNegocio) && $nombreNegocio)
+                            — Empresa / Negocio: <span class="fw-bold text-dark">{{ $nombreNegocio }}</span>
+                        @endif
+                    </p>
                 </div>
             </div>
 
@@ -87,7 +92,7 @@
                     </div>
 
                     <!-- Tipo de Envío -->
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label class="fw-bold small text-uppercase">Tipo de Envío</label>
                         <select name="id_tipo_envio" class="form-control @error('id_tipo_envio') is-invalid @enderror" required>
                             <option value="" disabled>Seleccione tipo...</option>
@@ -101,49 +106,80 @@
                         @error('id_tipo_envio') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
-                    <!-- Catálogo de Precios (Prenda / Servicio) -->
-                    <div class="col-md-4 mb-3">
-                        <label class="fw-bold small text-uppercase">Prenda / Servicio (Catálogo)</label>
-                        <select name="id_precio" class="form-control @error('id_precio') is-invalid @enderror" required>
-                            <option value="" disabled selected>Seleccione tarifa...</option>
-                            @foreach($preciosCatalogo as $precioItem)
-                                <option value="{{ $precioItem->id_precio }}" {{ old('id_precio') == $precioItem->id_precio ? 'selected' : '' }}>
-                                    {{ $precioItem->nombre_prenda }} (${{ number_format($precioItem->precio, 2) }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_precio') <small class="text-danger">{{ $message }}</small> @enderror
+                    <!-- CONTENEDOR DINÁMICO DE CATÁLOGO DE PRECIOS (MÚLTIPLES PRENDAS/TARIFAS) -->
+                    <div class="col-md-12 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="fw-bold small text-uppercase mb-0">Prendas / Servicios del Paquete (Catálogo)</label>
+                            <button type="button" id="agregar-tarifa" class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3">
+                                <i class="fas fa-plus mr-1"></i> Agregar otra prenda/servicio
+                            </button>
+                        </div>
+
+                        <div id="contenedor-tarifas">
+                            <div class="input-group mb-2 tarifa-row">
+                                <select name="id_precios[]" class="form-control select-tarifa @error('id_precios') is-invalid @enderror @error('id_precios.*') is-invalid @enderror" required>
+                                    <option value="" disabled selected data-precio="0">Seleccione tarifa...</option>
+                                    @foreach($preciosCatalogo as $precioItem)
+                                        <option value="{{ $precioItem->id_precio }}" data-precio="{{ $precioItem->precio }}">
+                                            {{ $precioItem->nombre_prenda }} (${{ number_format($precioItem->precio, 2) }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-danger eliminar-tarifa" disabled>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        @error('id_precios') <small class="text-danger d-block">{{ $message }}</small> @enderror
+                        @error('id_precios.*') <small class="text-danger d-block">{{ $message }}</small> @enderror
                     </div>
 
                     <!-- Valor Declarado -->
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="fw-bold small text-uppercase">Valor Declarado del Producto ($)</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text bg-white">$</span>
                             </div>
-                            <input type="number" step="0.01" min="0" name="valor_declarado_producto" class="form-control @error('valor_declarado_producto') is-invalid @enderror" value="{{ old('valor_declarado_producto', '0.00') }}" required>
+                            <input type="number" step="0.01" min="0" name="valor_declarado_producto" id="valor_declarado_producto" class="form-control @error('valor_declarado_producto') is-invalid @enderror" value="{{ old('valor_declarado_producto', '0.00') }}" required>
                         </div>
                         @error('valor_declarado_producto') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
                     <!-- Pago Contraentrega -->
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="fw-bold small text-uppercase d-block">¿Es Pago Contraentrega?</label>
                         <div class="mt-2">
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="contraentrega_si" name="es_pago_contraentrega" value="1" class="custom-control-input" {{ old('es_pago_contraentrega') == '1' ? 'checked' : '' }}>
-                                <label class="custom-control-label fw-bold" for="contraentrega_si">Sí (Se suma la tarifa + el valor declarado al cobro)</label>
+                                <input type="radio" id="contraentrega_si" name="es_pago_contraentrega" value="1" class="custom-control-input radio-contraentrega" {{ old('es_pago_contraentrega') == '1' ? 'checked' : '' }}>
+                                <label class="custom-control-label fw-bold" for="contraentrega_si">Sí (Suma tarifas + valor declarado)</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="contraentrega_no" name="es_pago_contraentrega" value="0" class="custom-control-input" {{ old('es_pago_contraentrega', '0') == '0' ? 'checked' : '' }}>
-                                <label class="custom-control-label fw-bold" for="contraentrega_no">No (Pagado previamente, solo se cobra la tarifa)</label>
+                                <input type="radio" id="contraentrega_no" name="es_pago_contraentrega" value="0" class="custom-control-input radio-contraentrega" {{ old('es_pago_contraentrega', '0') == '0' ? 'checked' : '' }}>
+                                <label class="custom-control-label fw-bold" for="contraentrega_no">No (Solo cobra tarifas)</label>
                             </div>
                         </div>
                         @error('es_pago_contraentrega') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
-                    <!-- Fecha de Ingreso (Oculta o visible según prefieras, la ponemos por defecto con la fecha actual) -->
+                    <!-- TARJETA DE RESUMEN DE COBRO EN VIVO -->
+                    <div class="col-md-12 mt-3">
+                        <div class="p-3 rounded shadow-sm bg-white border border-primary d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="fw-bold text-uppercase mb-0 text-secondary" style="font-size: 0.9rem;">
+                                    <i class="fas fa-calculator mr-2 text-primary"></i> Total a Cobrar en Caja:
+                                </h5>
+                                <small class="text-muted" id="detalle-calculo">Tarifas: $0.00 | Valor Declarado: $0.00</small>
+                            </div>
+                            <div>
+                                <h3 class="fw-bold text-success mb-0" id="total-cobrar-visual">$0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fecha de Ingreso (Oculta) -->
                     <input type="hidden" name="fecha_ingreso" value="{{ now() }}">
 
                 </div>
@@ -158,4 +194,8 @@
 
         </div>
     </div>
+
+    @push('scripts')
+        <script src="{{ asset('js/Cajero/precio-dinamico.js') }}"></script>
+    @endpush
 @endsection

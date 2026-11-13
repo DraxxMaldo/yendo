@@ -25,18 +25,22 @@ class EncomiendaController extends Controller
         $establecimientoOrigen = $empleadoSucursal ? $empleadoSucursal->establecimiento : null;
 
         // 2. Identificar al Afiliado (Dueño de la empresa) a través del establecimiento de origen
-        // En tu diagrama, la tabla establecimientos tiene la columna id_usuario que define al dueño/afiliado
         $idAfiliadoDueño = $establecimientoOrigen ? $establecimientoOrigen->id_usuario : null;
 
-        // 3. Filtrar el catálogo de precios estrictamente por el dueño de la empresa (Afiliado)
-        // Si por alguna razón el establecimiento no tuviera usuario, por seguridad se trae vacio o general
+        // 3. Recuperar el nombre del negocio desde la tabla perfiles_personas del afiliado dueño
+        $nombreNegocio = null;
+        if ($idAfiliadoDueño) {
+            $perfilPersona = DB::table('perfiles_personas')->where('id_usuario', $idAfiliadoDueño)->first();
+            $nombreNegocio = $perfilPersona ? $perfilPersona->nombre_negocio : null;
+        }
+
+        // 4. Filtrar el catálogo de precios estrictamente por el dueño de la empresa (Afiliado)
         $preciosCatalogo = collect();
         if ($idAfiliadoDueño) {
             $preciosCatalogo = CatalogoPrecio::where('estado', true)
                 ->where('id_usuario', $idAfiliadoDueño)
                 ->get();
         } else {
-            // Fallback por si el admin global o un usuario sin sucursal entra
             $preciosCatalogo = CatalogoPrecio::where('estado', true)->get();
         }
 
@@ -56,7 +60,8 @@ class EncomiendaController extends Controller
             'codigoSugerido',
             'establecimientoOrigen',
             'idTipoSucursalXSucursal',
-            'preciosCatalogo'
+            'preciosCatalogo',
+            'nombreNegocio'
         ));
     }
 
@@ -71,41 +76,46 @@ class EncomiendaController extends Controller
                 return back()->with('error', 'No tienes ningún establecimiento asignado como personal. Contacta al administrador.');
             }
 
-            // Validar que se haya seleccionado un precio del catálogo
+            // Validar que se reciban múltiples precios del catálogo
             $request->validate([
-                'id_precio' => ['required', 'integer', 'exists:catalogo_precios,id_precio'],
+                'id_precios'   => ['required', 'array', 'min:1'],
+                'id_precios.*' => ['required', 'integer', 'exists:catalogo_precios,id_precio'],
                 'valor_declarado_producto' => ['required', 'numeric', 'min:0'],
-                'es_pago_contraentrega' => ['required', 'boolean'],
+                'es_pago_contraentrega'    => ['required', 'boolean'],
             ]);
 
-            // Obtener el precio seleccionado del catálogo para hacer el cálculo
-            $catalogoPrecio = CatalogoPrecio::findOrFail($request->id_precio);
-            $costoTarifa = $catalogoPrecio->precio;
+            // Sumar las tarifas de todos los elementos seleccionados en el catálogo
+            $sumaTarifas = 0;
+            foreach ($request->id_precios as $idPrecioItem) {
+                $itemCatalogo = CatalogoPrecio::findOrFail($idPrecioItem);
+                $sumaTarifas += floatval($itemCatalogo->precio);
+            }
+
             $valorDeclarado = floatval($request->valor_declarado_producto);
             $esContraentrega = boolval($request->es_pago_contraentrega);
 
-            // Cálculo financiero:
-            // - Si es contraentrega: Costo de tarifa del catálogo + Valor declarado del producto.
-            // - Si NO es contraentrega: Solo se cobra la tarifa del precio del catálogo.
-            $montoTotalTransaccion = $esContraentrega ? ($costoTarifa + $valorDeclarado) : $costoTarifa;
+            // CÁLCULO FINANCIERO:
+            // - Si es contraentrega: Suma total de tarifas + Valor declarado.
+            // - Si NO es contraentrega: Únicamente la suma total de las tarifas.
+            $montoTotalTransaccion = $esContraentrega ? ($sumaTarifas + $valorDeclarado) : $sumaTarifas;
 
             // BUSCAR UN CONCEPTO FINANCIERO VÁLIDO DE MANERA DINÁMICA
-            // Buscamos el primer concepto disponible en la tabla para evitar errores de llave foránea
             $conceptoFinanciero = DB::table('conceptos_financieros')->first();
 
             if (!$conceptoFinanciero) {
-                return back()->with('error', 'No existen conceptos financieros registrados en el sistema. Contacta al administrador para configurar la tabla conceptos_financieros.');
+                return back()->with('error', 'No existen conceptos financieros registrados en el sistema. Contacta al administrador.');
             }
 
             DB::beginTransaction();
 
-            // Generar código único y armar datos
+            // Generar código único y armar datos (asignamos el primer id_precio al campo principal de encomienda)
             $codigoUnicoSeguro = self::generarCodigoUnico();
 
             $request->merge([
-                'codigo_rastreo' => $codigoUnicoSeguro,
+                'codigo_rastreo'            => $codigoUnicoSeguro,
                 'id_establecimiento_origen' => $empleadoSucursal->id_establecimiento,
-                'fecha_ingreso' => Carbon::now()
+                'id_precio'                 => $request->id_precios[0],
+                'fecha_ingreso'             => Carbon::now()
             ]);
 
             $datosValidados = Encomienda::rules($request->all());
@@ -113,26 +123,26 @@ class EncomiendaController extends Controller
             // Insertar encomienda
             $encomienda = Encomienda::insertar($datosValidados);
 
-            // Registrar automáticamente en transacciones_paquetes usando el concepto financiero dinámico
+            // Registrar automáticamente en transacciones_paquetes
             DB::table('transacciones_paquetes')->insert([
-                'id_encomienda'        => $encomienda->id_encomienda,
-                'id_concepto'          => $conceptoFinanciero->id_concepto, // <--- Dinámico obtenido de la BD
-                'monto'                => $montoTotalTransaccion,
-                'fecha_transaccion'    => Carbon::now(),
-                'id_usuario_cajero'    => $usuario->id_usuario,
+                'id_encomienda'     => $encomienda->id_encomienda,
+                'id_concepto'       => $conceptoFinanciero->id_concepto,
+                'monto'             => $montoTotalTransaccion,
+                'fecha_transaccion' => Carbon::now(),
+                'id_usuario_cajero' => $usuario->id_usuario,
             ]);
 
             Bitacora::registrar(
                 Bitacora::CREADO,
                 'Encomiendas y Transacciones',
                 $usuario->id_usuario,
-                "Se registró la encomienda {$encomienda->codigo_rastreo} con transacción financiera por un monto de \${$montoTotalTransaccion}."
+                "Se registró la encomienda {$encomienda->codigo_rastreo} con transacción financiera múltiple por un monto de \${$montoTotalTransaccion}."
             );
 
             DB::commit();
 
             return redirect()->route('encomiendas.create')
-                ->with('success', '¡Encomienda y transacción registrada con éxito! Monto cobrado: $' . number_format($montoTotalTransaccion, 2));
+                ->with('success', '¡Encomienda y transacción registrada con éxito! Monto total cobrado: $' . number_format($montoTotalTransaccion, 2));
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
