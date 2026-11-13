@@ -146,21 +146,27 @@
                                 <div class="perfil-campo--completo">
                                     <label class="perfil-label" for="perfil-input-negocio">
                                         Nombre del negocio / emprendimiento
-                                        @if(Auth::user()->id_rol == 3)
-                                            <span class="badge badge-warning ml-2" style="font-size: 0.65rem; background-color: var(--accent-tertiary); color: var(--midnight-dark);">Función para usuarios afiliados</span>
+                                        @if(in_array(Auth::user()->id_rol, [3, 4, 5, 6]))
+                                            <span class="badge badge-warning ml-2" style="font-size: 0.65rem; background-color: var(--accent-tertiary); color: var(--midnight-dark);">
+                                                {{ Auth::user()->id_rol == 3 ? 'Disponible al afiliarse' : 'Exclusivo para afiliados' }}
+                                            </span>
                                         @endif
                                     </label>
-                                    <div class="input-group-brutalist" @if(Auth::user()->id_rol == 3) style="opacity: 0.65; background-color: #e9ecef;" @endif>
+                                    <div class="input-group-brutalist" @if(in_array(Auth::user()->id_rol, [3, 4, 5, 6])) style="opacity: 0.65; background-color: #e9ecef;" @endif>
                                         <span class="input-icon"><i class="fas fa-store" aria-hidden="true"></i></span>
                                         <input type="text" id="perfil-input-negocio" name="nombre_negocio"
                                                class="form-control perfil-input"
-                                               value="{{ Auth::user()->id_rol == 3 ? 'No disponible para cuentas básicas' : old('nombre_negocio', $datosUsuario['nombre_negocio']) }}"
+                                               value="{{ in_array(Auth::user()->id_rol, [3, 4, 5, 6]) ? (Auth::user()->id_rol == 3 ? 'Se habilitará al afiliarse' : 'No disponible para personal operativo') : old('nombre_negocio', $datosUsuario['nombre_negocio']) }}"
                                                autocomplete="organization"
-                                               @if(Auth::user()->id_rol == 3) disabled title="Actualiza tu cuenta a afiliado para gestionar tu negocio" @else readonly @endif>
+                                               @if(in_array(Auth::user()->id_rol, [3, 4, 5, 6])) disabled title="Campo no editable para este tipo de cuenta" @else readonly @endif>
                                     </div>
                                     @if(Auth::user()->id_rol == 3)
                                         <small class="text-muted mt-1 d-block" style="font-size: 0.8rem;">
-                                            <i class="fas fa-info-circle mr-1"></i> Esta opción se habilitará al afiliarse.
+                                            <i class="fas fa-info-circle mr-1"></i> Esta opción se habilitará y guardará al completar tu solicitud de afiliación.
+                                        </small>
+                                    @elseif(in_array(Auth::user()->id_rol, [4, 5, 6]))
+                                        <small class="text-muted mt-1 d-block" style="font-size: 0.8rem;">
+                                            <i class="fas fa-info-circle mr-1"></i> Como personal de sucursal, no gestionas un negocio independiente aquí.
                                         </small>
                                     @endif
                                 </div>

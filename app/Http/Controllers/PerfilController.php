@@ -96,22 +96,21 @@ class PerfilController extends Controller
     public function actualizarInformacion(ActualizarPerfilPropioRequest $request)
     {
         $datos = $request->validated();
-
         $usuarioCredencial = Auth::user();
-
-        // Si el usuario es rol básico (3), evitamos que modifique el nombre del negocio
-        if ($usuarioCredencial->id_rol == 3) {
-            $datos['nombre_negocio'] = null; // O mantenemos el valor actual que tenga
-        }
 
         $perfilPersona = PerfilPersona::where('id_usuario', $usuarioCredencial->id_usuario)->first();
 
         if ($perfilPersona) {
+
+            $nombreNegocioFinal = in_array($usuarioCredencial->id_rol, [4, 5, 6])
+                ? $perfilPersona->nombre_negocio
+                : ($datos['nombre_negocio'] ?? $perfilPersona->nombre_negocio);
+
             $perfilPersona->update([
                 'nombres'        => $datos['nombres'],
                 'apellidos'      => $datos['apellidos'],
                 'telefono'       => $datos['telefono'],
-                'nombre_negocio' => $usuarioCredencial->id_rol == 3 ? $perfilPersona->nombre_negocio : $datos['nombre_negocio'],
+                'nombre_negocio' => $nombreNegocioFinal,
             ]);
 
             Bitacora::registrar(Bitacora::ACTUALIZADO, 'Perfil de Usuario', $usuarioCredencial->id_usuario, "El usuario actualizó su información personal.");
