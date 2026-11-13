@@ -211,6 +211,19 @@
                         </li>
                     @endif
 
+
+                    {{-- Menú Auditoría de Paquetes (Visible para cajeros --}}
+                    @if(Auth::check() && Auth::user()->id_rol == 4)
+                        <li class="nav-item" id="sidebar-item-auditoria-paquetes">
+                            <a href="{{ route('auditoria.paquetes') }}" id="sidebar-link-auditoria-paquetes" title="Auditoría de Paquetes"
+                               class="nav-link {{ request()->routeIs('auditoria.paquetes*') ? 'active' : '' }}"
+                               aria-current="{{ request()->routeIs('auditoria.paquetes*') ? 'page' : 'false' }}">
+                                <i class="nav-icon fas fa-clipboard-list" id="sidebar-icon-auditoria-paquetes" aria-hidden="true"></i>
+                                <p id="sidebar-label-auditoria-paquetes">Paquetes Registrados</p>
+                            </a>
+                        </li>
+                    @endif
+
                 </ul>
             </nav>
         </div>

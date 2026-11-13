@@ -15,6 +15,7 @@ use App\Http\Controllers\SolicitudAfiliacionController;
 use App\Http\Controllers\EmpleadoSucursalController;
 use App\Http\Controllers\EncomiendaController;
 use App\Http\Controllers\CatalogoPrecioController;
+use App\Http\Controllers\AuditoriaCajaController;
 
 
 // Definición de roles del sistema tal como lo maneja tu equipo
@@ -141,4 +142,5 @@ Route::middleware(['auth', "rol:{$roles[0]},{$roles[1]}"])->group(function () {
 Route::middleware(['auth', "rol:Cajero"])->group(function () {
     Route::get('/encomiendas/registrar', [EncomiendaController::class, 'create'])->name('encomiendas.create');
     Route::post('/encomiendas/registrar', [EncomiendaController::class, 'store'])->name('encomiendas.store');
+    Route::get('/auditoria/paquetes', [AuditoriaCajaController::class, 'index'])->name('auditoria.paquetes');
 });

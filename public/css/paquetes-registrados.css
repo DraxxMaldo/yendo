@@ -1,0 +1,328 @@
+/* ==========================================================================
+   AUDITORÍA DE PAQUETES - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/paquetes-registrados.css
+
+- Solo CSS: no modifica la estructura HTML ni JS de la vista blade.
+- Cubre: contenedor general, título superior, tarjetas de transacciones (grid de columnas),
+  badges de códigos y estados, contenedores internos de cajeros, listas de detalles,
+  pie de tarjetas y diseño responsivo adaptado.
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --aud-border: 3px;
+    --aud-radius: 6px;
+    --aud-speed: .18s;
+    --aud-ease: cubic-bezier(.2, .8, .2, 1);
+    --aud-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+
+/* ==========================================================================
+   1) ENCABEZADO DE LA VISTA
+   ========================================================================== */
+.container-fluid > .d-flex.justify-content-between.align-items-center.mb-4 {
+    padding-bottom: 1rem;
+    border-bottom: var(--aud-border) solid var(--midnight-indigo);
+    margin-bottom: 2rem !important;
+}
+
+.container-fluid h2.fw-bold {
+    display: flex;
+    align-items: center;
+    font-size: clamp(1.2rem, 3.2vw, 1.8rem);
+    font-weight: 900 !important;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    color: var(--midnight-indigo) !important;
+}
+
+.container-fluid h2.fw-bold i {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: .75rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: var(--aud-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.1rem;
+    transform: rotate(-3deg);
+}
+
+.container-fluid p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   2) TARJETAS DE TRANSACCIONES / AUDITORÍA (GRID)
+   ========================================================================== */
+.container-fluid > .row > [class*="col-"] {
+    display: flex;
+    animation: aud-entrada .4s var(--aud-ease) both;
+}
+
+@keyframes aud-entrada {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Retraso escalonado para las tarjetas */
+.container-fluid > .row > [class*="col-"]:nth-child(1)  { animation-delay: .03s; }
+.container-fluid > .row > [class*="col-"]:nth-child(2)  { animation-delay: .06s; }
+.container-fluid > .row > [class*="col-"]:nth-child(3)  { animation-delay: .09s; }
+.container-fluid > .row > [class*="col-"]:nth-child(4)  { animation-delay: .12s; }
+.container-fluid > .row > [class*="col-"]:nth-child(5)  { animation-delay: .15s; }
+.container-fluid > .row > [class*="col-"]:nth-child(6)  { animation-delay: .18s; }
+
+.container-fluid > .row .card.border-0.shadow-sm.h-100 {
+    position: relative;
+    width: 100%;
+    background-color: var(--cream-light) !important;      /* anula el inline de vanilla-cream */
+    border: var(--aud-border) solid var(--midnight-dark) !important;
+    border-radius: var(--aud-radius) !important;          /* anula los 10px inline */
+    box-shadow: 6px 6px 0 var(--midnight-dark) !important;
+    transition: transform var(--aud-speed) var(--aud-ease),
+    box-shadow var(--aud-speed) var(--aud-ease);
+}
+
+/* Efecto hover interactivo en tarjetas de auditoría */
+.container-fluid > .row .card.border-0.shadow-sm.h-100:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--accent-primary) !important;
+}
+
+/* Cuerpo interno de la tarjeta */
+.container-fluid > .row .card-body {
+    padding: 1.25rem !important;
+}
+
+
+/* ==========================================================================
+   3) ELEMENTOS INTERNOS DE LA TARJETA
+   ========================================================================== */
+/* Badge del Código de Rastreo */
+.container-fluid > .row .badge.badge-primary {
+    display: inline-block;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 2px 2px 0 var(--accent-primary);
+    font-family: var(--aud-font-mono);
+    font-size: .75rem !important;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Monto de la transacción destacado */
+.container-fluid > .row span.text-success.h5 {
+    color: var(--midnight-dark) !important;
+    font-family: var(--aud-font-mono);
+    font-weight: 900 !important;
+}
+
+/* Caja de Información del Cajero Responsable */
+.container-fluid > .row .mb-3.p-2.rounded.bg-white.border {
+    background-color: #fff !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: 4px !important;
+    box-shadow: 3px 3px 0 var(--cream-dark);
+}
+
+.container-fluid > .row .mb-3.p-2 small.text-muted.text-uppercase {
+    color: var(--midnight-muted) !important;
+    font-family: var(--aud-font-mono);
+    letter-spacing: .06em;
+}
+
+.container-fluid > .row .mb-3.p-2 span.fw-bold.text-dark {
+    color: var(--midnight-indigo) !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    font-size: .9rem;
+}
+
+.container-fluid > .row .mb-3.p-2 .text-muted.small {
+    color: var(--midnight-muted) !important;
+    font-weight: 700;
+}
+
+/* Lista de Detalles de la Encomienda */
+.container-fluid > .row ul.list-unstyled.small.text-secondary {
+    color: var(--midnight-indigo) !important;
+    font-weight: 600;
+}
+
+.container-fluid > .row ul.list-unstyled li {
+    margin-bottom: .4rem !important;
+}
+
+/* Badges de Pago Contraentrega (Sí / No) */
+.container-fluid > .row ul.list-unstyled .badge-warning.text-dark {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+    border: 1.5px solid var(--midnight-dark);
+    font-family: var(--aud-font-mono);
+    font-weight: 800;
+}
+
+.container-fluid > .row ul.list-unstyled .badge-success {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+    border: 1.5px solid var(--midnight-dark);
+    font-family: var(--aud-font-mono);
+    font-weight: 800;
+}
+
+/* Pie de la tarjeta (Fecha y ID de Transacción) */
+.container-fluid > .row .border-top.pt-2.mt-2 {
+    border-top: 2px solid var(--cream-dark) !important;
+    color: var(--midnight-muted) !important;
+    font-family: var(--aud-font-mono);
+    font-weight: 700;
+}
+
+.container-fluid > .row .badge.badge-secondary {
+    background-color: var(--cream-dark) !important;
+    color: var(--midnight-dark) !important;
+    border: 1.5px solid var(--midnight-dark);
+    font-weight: 700;
+}
+
+
+/* ==========================================================================
+   4) ESTADO VACÍO (EMPTY STATE)
+   ========================================================================== */
+.container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 {
+    background-color: var(--cream-light) !important;
+    border: var(--aud-border) solid var(--midnight-dark) !important;
+    border-radius: var(--aud-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark) !important;
+}
+
+.container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 i.fa-folder-open {
+    color: var(--accent-tertiary) !important;
+    text-shadow: 3px 3px 0 var(--midnight-dark);
+}
+
+.container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 h5.fw-bold {
+    color: var(--midnight-indigo) !important;
+    font-weight: 900 !important;
+    text-transform: uppercase;
+}
+
+.container-fluid > .row .col-12 .card.border-0.shadow-sm.p-5 p.text-muted {
+    color: var(--midnight-muted) !important;
+    font-family: var(--aud-font-mono);
+    font-size: .8rem !important;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   5) PAGINACIÓN
+   ========================================================================== */
+.container-fluid > .d-flex.justify-content-center.mt-4 nav ul.pagination,
+.container-fluid > .d-flex.justify-content-center.mt-4 .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.container-fluid > .d-flex.justify-content-center.mt-4 .page-item .page-link {
+    min-width: 40px;
+    margin: 0;
+    padding: .45rem .8rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--aud-font-mono);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: center;
+    transition: transform var(--aud-speed) var(--aud-ease),
+    box-shadow var(--aud-speed) var(--aud-ease),
+    background-color var(--aud-speed) ease;
+}
+
+.container-fluid > .d-flex.justify-content-center.mt-4 .page-item .page-link:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+.container-fluid > .d-flex.justify-content-center.mt-4 .page-item.active .page-link {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+.container-fluid > .d-flex.justify-content-center.mt-4 .page-item.disabled .page-link {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .85;
+}
+
+
+/* ==========================================================================
+   6) RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 575.98px) {
+    .container-fluid > .row .card.border-0.shadow-sm.h-100 {
+        box-shadow: 5px 5px 0 var(--accent-primary) !important;
+    }
+}
+
+
+/* ==========================================================================
+   7) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .container-fluid > .row > [class*="col-"] {
+        animation: none;
+    }
+    .container-fluid > .row .card.border-0.shadow-sm.h-100,
+    .container-fluid > .d-flex.justify-content-center.mt-4 .page-item .page-link {
+        transition: none !important;
+    }
+    .container-fluid > .row .card.border-0.shadow-sm.h-100:hover,
+    .container-fluid > .d-flex.justify-content-center.mt-4 .page-item .page-link:hover {
+        transform: none;
+    }
+    .container-fluid h2.fw-bold i {
+        transform: none;
+    }
+}
