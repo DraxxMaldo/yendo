@@ -3,13 +3,13 @@
    Archivo: public/css/empleados-sucursales.css
 
    - Solo CSS: no toca tu HTML ni tus JS (dataTable.js, SPA-Seleccionar-Rol.js).
-   - Agrega UNA línea al @push('estilos') de la vista, después de toast.css:
-       <link rel="stylesheet" href="{{ asset('css/empleados-sucursales.css') }}">
-   - La tarjeta de la página no tiene clase propia, así que se apunta con
+   - Ya lo enlazas en @push('estilos') después de toast.css.
+   - Cubre: tarjeta de la página, tabla (con columna Acciones), modal "Nuevo personal"
+     (#modalSpaPersonal) y modal "Modificar establecimiento" (#modalEditarPersonal).
+   - La tarjeta de la página no tiene clase propia: se apunta con
      .container-fluid > .card.shadow-lg (este archivo solo se carga en esta vista).
-   - Los !important aparecen solo donde Bootstrap o tus estilos inline ya los usan
-     (border-0, shadow-lg, shadow-sm, rounded-pill, p-3, bg-white, text-*, border-dark...).
-   - Ojo: el style="border: ... !important" del HTML (inline + !important) no se puede
+   - Los !important aparecen solo donde Bootstrap o tus estilos inline ya los usan.
+   - El style="border: ... !important" del HTML (inline + !important) no se puede
      sobrescribir desde CSS; por eso el grosor se completa con un outline de 1 px.
    ========================================================================== */
 
@@ -118,8 +118,8 @@
     font-weight: 700;
 }
 
-/* Botón "Nuevo Personal" (y los demás .btn-brand de la vista) */
-.container-fluid > .card.shadow-lg .btn-brand {
+/* Botón "Nuevo Personal" */
+.container-fluid > .card.shadow-lg > .d-flex > .btn-brand {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -134,21 +134,21 @@
     box-shadow var(--emp-speed) var(--emp-ease);
 }
 
-.container-fluid > .card.shadow-lg .btn-brand i {
+.container-fluid > .card.shadow-lg > .d-flex > .btn-brand i {
     margin: 0 !important;
 }
 
-.container-fluid > .card.shadow-lg .btn-brand:hover {
+.container-fluid > .card.shadow-lg > .d-flex > .btn-brand:hover {
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0 var(--midnight-dark);
 }
 
-.container-fluid > .card.shadow-lg .btn-brand:active {
+.container-fluid > .card.shadow-lg > .d-flex > .btn-brand:active {
     transform: translate(3px, 3px);
     box-shadow: 0 0 0 var(--midnight-dark);
 }
 
-.container-fluid > .card.shadow-lg .btn-brand:focus-visible {
+.container-fluid > .card.shadow-lg > .d-flex > .btn-brand:focus-visible {
     outline: 3px solid var(--accent-primary);
     outline-offset: 3px;
 }
@@ -349,6 +349,51 @@ div.dataTables_wrapper div.dataTables_filter input:focus {
     text-transform: uppercase;
 }
 
+/* ---------- Columna Acciones: botón editar ---------- */
+#tbl tbody td.text-center {
+    white-space: nowrap;
+}
+
+#tbl .btn-sm.btn-outline-primary {
+    display: inline-grid;
+    place-items: center;
+    min-width: 38px;
+    min-height: 38px;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .9rem;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease),
+    background-color var(--emp-speed) ease;
+}
+
+#tbl .btn-sm.btn-outline-primary:hover,
+#tbl .btn-sm.btn-outline-primary:focus {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+}
+
+#tbl .btn-sm.btn-outline-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+#tbl .btn-sm.btn-outline-primary:active {
+    background-color: var(--accent-primary);
+    color: var(--midnight-dark);
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+#tbl .btn-sm.btn-outline-primary:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
 /* Aparición escalonada de filas */
 #tbl tbody tr {
     animation: emp-fila .3s var(--emp-ease) both;
@@ -454,23 +499,23 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
 
 
 /* ==========================================================================
-   5) MODAL: NUEVO PERSONAL (#modalSpaPersonal)
+   5) MODALES: BASE COMPARTIDA (#modalSpaPersonal y #modalEditarPersonal)
    ========================================================================== */
 .modal-backdrop.show {
     background-color: var(--midnight-dark);
     opacity: .82;
 }
 
-#modalSpaPersonal.fade .modal-dialog {
+:is(#modalSpaPersonal, #modalEditarPersonal).fade .modal-dialog {
     transform: translateY(28px) scale(.97);
     transition: transform .28s var(--emp-ease);
 }
 
-#modalSpaPersonal.show .modal-dialog {
+:is(#modalSpaPersonal, #modalEditarPersonal).show .modal-dialog {
     transform: none;
 }
 
-#modalSpaPersonal .modal-content {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-content {
     position: relative;
     background-color: var(--cream-light) !important;             /* anula el inline */
     border-radius: var(--emp-radius) !important;                  /* anula el inline de 8px */
@@ -478,8 +523,8 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     box-shadow: 10px 10px 0 var(--accent-primary) !important;     /* anula .shadow-lg */
 }
 
-#modalSpaPersonal .modal-content::before {
-    content: "Nuevo personal";
+/* Etiqueta amarilla de cada modal */
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-content::before {
     position: absolute;
     top: -16px;
     left: 20px;
@@ -497,20 +542,23 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     transform: rotate(-2deg);
 }
 
+#modalSpaPersonal .modal-content::before     { content: "Nuevo personal"; }
+#modalEditarPersonal .modal-content::before  { content: "Editar asignación"; }
+
 /* Cabecera */
-#modalSpaPersonal .modal-header {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-header {
     padding: 1.5rem 1.5rem 1rem !important;                       /* anula .pb-0 */
     border-bottom: var(--emp-border) solid var(--midnight-indigo) !important;   /* anula .border-0 */
 }
 
-#modalSpaPersonal .modal-title {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-title {
     font-size: clamp(.95rem, 2.5vw, 1.15rem);
     font-weight: 900;
     letter-spacing: .02em;
     text-transform: uppercase;
 }
 
-#modalSpaPersonal .modal-header .close {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-header .close {
     display: grid;
     place-items: center;
     flex: none;
@@ -532,23 +580,150 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     box-shadow var(--emp-speed) var(--emp-ease);
 }
 
-#modalSpaPersonal .modal-header .close:hover {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-header .close:hover {
     opacity: 1;
     transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0 var(--midnight-dark);
 }
 
-#modalSpaPersonal .modal-header .close:active {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-header .close:active {
     transform: translate(2px, 2px);
     box-shadow: 0 0 0 var(--midnight-dark);
 }
 
-#modalSpaPersonal .modal-header .close:focus-visible {
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-header .close:focus-visible {
     outline: 3px solid var(--accent-primary);
     outline-offset: 3px;
 }
 
-/* Títulos y textos de ambos pasos */
+/* Etiquetas de campo */
+:is(#modalSpaPersonal, #modalEditarPersonal) .modal-body label {
+    display: block;
+    margin-bottom: .4rem;
+    font-family: var(--emp-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+/* Select (paso 2 del asistente y modal de edición) */
+:is(#modalSpaPersonal, #modalEditarPersonal) select.form-control {
+    height: 50px;
+    padding: 0 2.5rem 0 1rem;
+    background-color: #fff;
+    background-image: var(--emp-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px 8px;
+    color: var(--midnight-indigo);
+    border: var(--emp-border) solid var(--midnight-dark);
+    border-radius: var(--emp-radius);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1rem;
+    font-weight: 700;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) select.form-control:focus {
+    border-color: var(--midnight-dark);
+    box-shadow: 6px 6px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) select.form-control.is-invalid {
+    background-image: var(--emp-select-arrow);
+    border-color: var(--color-danger);
+    box-shadow: 4px 4px 0 var(--color-danger);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) select.form-control:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* Botones de los modales (forma, sombra, estados) */
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    min-height: 46px;
+    border: 2px solid var(--midnight-dark);
+    border-radius: var(--emp-radius) !important;                   /* anula .rounded-pill */
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: .85rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    transition: transform var(--emp-speed) var(--emp-ease),
+    box-shadow var(--emp-speed) var(--emp-ease),
+    background-color var(--emp-speed) ease;
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn i {
+    margin: 0 !important;
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn:focus {
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn:focus-visible {
+    outline: 3px solid var(--accent-primary);
+    outline-offset: 3px;
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-outline-secondary {
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-outline-secondary:hover,
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-outline-secondary:focus {
+    background-color: var(--cream-dark);
+    color: var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-success,
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-success:hover,
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-success:focus {
+    background-color: var(--accent-secondary);
+    color: var(--midnight-dark);
+}
+
+:is(#modalSpaPersonal, #modalEditarPersonal) .btn-success:disabled {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+
+/* ==========================================================================
+   6) MODAL: NUEVO PERSONAL (#modalSpaPersonal)
+   ========================================================================== */
 #modalSpaPersonal .modal-body h4 {
     font-size: clamp(1.05rem, 2.8vw, 1.4rem);
     font-weight: 900;
@@ -568,7 +743,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
 #paso-datos p.text-muted {
     margin-left: 0;
 }
-
 
 /* ---------- PASO 1: tarjetas de rol ---------- */
 #modalSpaPersonal #paso-rol .row > [class*="col-"] {
@@ -600,7 +774,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     box-shadow: 0 0 0 var(--midnight-dark) !important;
 }
 
-/* Ícono del rol dentro de un cuadro */
 #modalSpaPersonal .role-card > i.fas {
     display: grid;
     place-items: center;
@@ -672,7 +845,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     color: var(--midnight-dark) !important;
 }
 
-/* Marca ✓ en la esquina de la tarjeta elegida */
 #modalSpaPersonal .role-card.active::after,
 #modalSpaPersonal .role-card.selected::after,
 #modalSpaPersonal .role-card.is-selected::after,
@@ -701,41 +873,18 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
 
 /* Botón "Siguiente" */
 #modalSpaPersonal #btnSiguientePaso {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
     min-height: 48px;
-    border: 2px solid var(--midnight-dark);
-    border-radius: var(--emp-radius) !important;                   /* anula .rounded-pill */
     box-shadow: 4px 4px 0 var(--accent-primary);
-    font-size: .88rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    transition: transform var(--emp-speed) var(--emp-ease),
-    box-shadow var(--emp-speed) var(--emp-ease);
-}
-
-#modalSpaPersonal #btnSiguientePaso i {
-    margin: 0 !important;
 }
 
 #modalSpaPersonal #btnSiguientePaso:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0 var(--accent-primary);
 }
 
 #modalSpaPersonal #btnSiguientePaso:active:not(:disabled) {
-    transform: translate(3px, 3px);
     box-shadow: 0 0 0 var(--accent-primary);
 }
 
-#modalSpaPersonal #btnSiguientePaso:focus-visible {
-    outline: 3px solid var(--accent-primary);
-    outline-offset: 3px;
-}
-
-/* Bloqueado hasta elegir un rol */
 #modalSpaPersonal #btnSiguientePaso:disabled {
     background-color: var(--cream-dark) !important;                /* anula el inline */
     color: var(--midnight-muted) !important;
@@ -746,7 +895,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     opacity: 1;
 }
 
-/* Al habilitarse: pequeño "pop" */
 #modalSpaPersonal #btnSiguientePaso:not(:disabled) {
     animation: emp-listo .5s var(--emp-ease);
 }
@@ -757,19 +905,7 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     100% { transform: scale(1); }
 }
 
-
 /* ---------- PASO 2: datos y credenciales ---------- */
-#modalSpaPersonal #paso-datos label {
-    display: block;
-    margin-bottom: .4rem;
-    font-family: var(--emp-font-mono);
-    font-size: .72rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-}
-
-/* Grupo con ícono + correo */
 #modalSpaPersonal #paso-datos .input-group {
     flex-wrap: nowrap;
     overflow: hidden;
@@ -816,57 +952,11 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     color: #A9A9B8;
 }
 
-/* Error de validación (Laravel @error -> .is-invalid) */
 #modalSpaPersonal #paso-datos .input-group:has(.is-invalid) {
     border-color: var(--color-danger);
     box-shadow: 4px 4px 0 var(--color-danger);
 }
 
-/* Select de establecimiento */
-#modalSpaPersonal #paso-datos select.form-control {
-    height: 50px;
-    padding: 0 2.5rem 0 1rem;
-    background-color: #fff;
-    background-image: var(--emp-select-arrow);
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 12px 8px;
-    color: var(--midnight-indigo);
-    border: var(--emp-border) solid var(--midnight-dark);
-    border-radius: var(--emp-radius);
-    box-shadow: 4px 4px 0 var(--midnight-dark);
-    font-size: 1rem;
-    font-weight: 700;
-    -webkit-appearance: none;
-    appearance: none;
-    transition: transform var(--emp-speed) var(--emp-ease),
-    box-shadow var(--emp-speed) var(--emp-ease);
-}
-
-#modalSpaPersonal #paso-datos select.form-control:focus {
-    border-color: var(--midnight-dark);
-    box-shadow: 6px 6px 0 var(--accent-primary);
-    transform: translate(-2px, -2px);
-    outline: 0;
-}
-
-#modalSpaPersonal #paso-datos select.form-control.is-invalid {
-    background-image: var(--emp-select-arrow);
-    border-color: var(--color-danger);
-    box-shadow: 4px 4px 0 var(--color-danger);
-}
-
-#modalSpaPersonal #paso-datos select.form-control:disabled {
-    background-color: var(--cream-dark);
-    color: var(--midnight-muted);
-    border-style: dashed;
-    border-color: var(--midnight-muted);
-    box-shadow: none;
-    cursor: not-allowed;
-    opacity: 1;
-}
-
-/* Nota bajo el correo */
 #modalSpaPersonal #paso-datos small.text-muted {
     display: block;
     margin-top: .6rem;
@@ -879,7 +969,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     font-weight: 700;
 }
 
-/* Aviso "Necesitas registrar al menos un establecimiento" */
 #modalSpaPersonal #paso-datos small.text-danger {
     padding: .7rem .9rem;
     background-color: #fff;
@@ -907,7 +996,6 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     background-color: var(--accent-tertiary);
 }
 
-/* Botones de acción del paso 2 */
 #modalSpaPersonal #paso-datos .d-flex.justify-content-between {
     flex-wrap: wrap;
     gap: .75rem;
@@ -915,77 +1003,60 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     border-top: var(--emp-border) solid var(--midnight-indigo);
 }
 
-#modalSpaPersonal #paso-datos .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
-    min-height: 46px;
-    border: 2px solid var(--midnight-dark);
-    border-radius: var(--emp-radius) !important;                   /* anula .rounded-pill */
-    box-shadow: 4px 4px 0 var(--midnight-dark);
-    font-size: .85rem;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    transition: transform var(--emp-speed) var(--emp-ease),
-    box-shadow var(--emp-speed) var(--emp-ease),
-    background-color var(--emp-speed) ease;
-}
 
-#modalSpaPersonal #paso-datos .btn i {
-    margin: 0 !important;
-}
+/* ==========================================================================
+   7) MODAL: MODIFICAR ESTABLECIMIENTO (#modalEditarPersonal)
+   ========================================================================== */
 
-#modalSpaPersonal #paso-datos .btn:focus {
-    box-shadow: 4px 4px 0 var(--midnight-dark);
-}
-
-#modalSpaPersonal #paso-datos .btn:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--midnight-dark);
-}
-
-#modalSpaPersonal #paso-datos .btn:active:not(:disabled) {
-    transform: translate(3px, 3px);
-    box-shadow: 0 0 0 var(--midnight-dark);
-}
-
-#modalSpaPersonal #paso-datos .btn:focus-visible {
-    outline: 3px solid var(--accent-primary);
-    outline-offset: 3px;
-}
-
-#modalSpaPersonal #btnAnteriorPaso {
-    background-color: var(--vanilla-cream);
+/* Nombre del empleado (solo lectura, deshabilitado) */
+#modalEditarPersonal #edit_nombre_empleado {
+    height: 50px;
+    padding: 0 1rem;
+    background-color: var(--cream-dark) !important;                /* anula .bg-white */
     color: var(--midnight-dark);
-}
-
-#modalSpaPersonal #btnAnteriorPaso:hover,
-#modalSpaPersonal #btnAnteriorPaso:focus {
-    background-color: var(--cream-dark);
-    color: var(--midnight-dark);
-}
-
-#modalSpaPersonal #paso-datos .btn-success,
-#modalSpaPersonal #paso-datos .btn-success:hover,
-#modalSpaPersonal #paso-datos .btn-success:focus {
-    background-color: var(--accent-secondary);
-    color: var(--midnight-dark);
-}
-
-#modalSpaPersonal #paso-datos .btn-success:disabled {
-    background-color: var(--cream-dark);
-    color: var(--midnight-muted);
-    border-style: dashed;
-    border-color: var(--midnight-muted);
+    border: 2px dashed var(--midnight-muted);
+    border-radius: var(--emp-radius);
     box-shadow: none;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
     cursor: not-allowed;
     opacity: 1;
 }
 
+/* Etiqueta "Nombre del Empleado" (usa .text-muted) */
+#modalEditarPersonal .modal-body label.text-muted {
+    color: var(--midnight-muted) !important;                       /* anula .text-muted */
+}
+
+/* Pie: acciones */
+#modalEditarPersonal .modal-footer {
+    gap: .75rem;
+    flex-wrap: wrap;
+    padding-top: 1.25rem !important;
+    border-top: var(--emp-border) solid var(--midnight-indigo) !important;   /* anula .border-0 */
+}
+
+/* "Actualizar asignación" conserva su color índigo inline; solo suma sombra terracota */
+#modalEditarPersonal .modal-footer .btn-brand {
+    box-shadow: 4px 4px 0 var(--accent-primary);
+}
+
+#modalEditarPersonal .modal-footer .btn-brand:hover:not(:disabled) {
+    box-shadow: 6px 6px 0 var(--accent-primary);
+}
+
+#modalEditarPersonal .modal-footer .btn-brand:active:not(:disabled) {
+    box-shadow: 0 0 0 var(--accent-primary);
+}
+
+#modalEditarPersonal .modal-footer .btn-brand:focus {
+    box-shadow: 4px 4px 0 var(--accent-primary);
+}
+
 
 /* ==========================================================================
-   6) OPCIONAL: chip "Paso X de 2" solo con CSS
+   8) OPCIONAL: chip "Paso X de 2" solo con CSS (modal Nuevo personal)
    Funciona mientras tu JS oculte #paso-datos con style="display: none".
    Si lo cambia con clases, borra este bloque.
    ========================================================================== */
@@ -1015,7 +1086,7 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
 
 
 /* ==========================================================================
-   7) RESPONSIVE
+   9) RESPONSIVE
    ========================================================================== */
 @media (max-width: 767.98px) {
     div.dataTables_wrapper div.dataTables_length,
@@ -1040,7 +1111,7 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
 
 @media (max-width: 575.98px) {
     .container-fluid > .card.shadow-lg,
-    #modalSpaPersonal .modal-content {
+    :is(#modalSpaPersonal, #modalEditarPersonal) .modal-content {
         box-shadow: 6px 6px 0 var(--accent-primary) !important;
     }
     .container-fluid > .card.shadow-lg > .table-responsive {
@@ -1050,18 +1121,21 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     .container-fluid > .card.shadow-lg > .d-flex.justify-content-between > .btn {
         width: 100%;
     }
-    #modalSpaPersonal #paso-datos .d-flex.justify-content-between {
+    #modalSpaPersonal #paso-datos .d-flex.justify-content-between,
+    #modalEditarPersonal .modal-footer {
         flex-direction: column-reverse;
         align-items: stretch !important;
     }
-    #modalSpaPersonal #paso-datos .d-flex.justify-content-between > .btn {
+    #modalSpaPersonal #paso-datos .d-flex.justify-content-between > .btn,
+    #modalEditarPersonal .modal-footer > .btn {
         width: 100%;
+        margin: 0;
     }
 }
 
 
 /* ==========================================================================
-   8) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   10) ACCESIBILIDAD: MOVIMIENTO REDUCIDO
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
     .container-fluid > .card.shadow-lg,
@@ -1069,24 +1143,26 @@ div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
     #modalSpaPersonal #btnSiguientePaso:not(:disabled) {
         animation: none;
     }
-    #modalSpaPersonal.fade .modal-dialog {
+    :is(#modalSpaPersonal, #modalEditarPersonal).fade .modal-dialog {
         transform: none;
         transition: none;
     }
-    .container-fluid > .card.shadow-lg .btn-brand,
+    .container-fluid > .card.shadow-lg > .d-flex > .btn-brand,
+    #tbl .btn-sm.btn-outline-primary,
     #modalSpaPersonal .role-card,
-    #modalSpaPersonal #paso-datos .btn,
+    :is(#modalSpaPersonal, #modalEditarPersonal) .btn,
+    :is(#modalSpaPersonal, #modalEditarPersonal) select.form-control,
     #modalSpaPersonal #paso-datos .input-group,
-    #modalSpaPersonal #paso-datos select.form-control,
     div.dataTables_wrapper ul.pagination .page-item .page-link,
     div.dataTables_wrapper div.dataTables_length select,
     div.dataTables_wrapper div.dataTables_filter input {
         transition: none !important;
     }
-    .container-fluid > .card.shadow-lg .btn-brand:hover,
+    .container-fluid > .card.shadow-lg > .d-flex > .btn-brand:hover,
+    #tbl .btn-sm.btn-outline-primary:hover,
     #modalSpaPersonal .role-card:hover,
-    #modalSpaPersonal #paso-datos .btn:hover:not(:disabled),
-    #modalSpaPersonal #paso-datos select.form-control:focus,
+    :is(#modalSpaPersonal, #modalEditarPersonal) .btn:hover:not(:disabled),
+    :is(#modalSpaPersonal, #modalEditarPersonal) select.form-control:focus,
     div.dataTables_wrapper ul.pagination .page-item .page-link:hover,
     div.dataTables_wrapper div.dataTables_length select:focus,
     div.dataTables_wrapper div.dataTables_filter input:focus {

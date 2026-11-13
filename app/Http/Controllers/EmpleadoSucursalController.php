@@ -89,4 +89,43 @@ class EmpleadoSucursalController extends Controller
             return back()->with('error', 'Error al registrar el personal: ' . $e->getMessage());
         }
     }
+
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_establecimiento' => ['required', 'integer', 'exists:establecimientos,id_establecimiento'],
+        ], [
+            'id_establecimiento.required' => 'Debe seleccionar un establecimiento.',
+            'id_establecimiento.exists' => 'El establecimiento seleccionado no es válido.',
+        ]);
+
+        try {
+            $usuarioActual = Auth::user();
+
+            // Seguridad: Validar que el nuevo establecimiento pertenezca al usuario autenticado
+            $establecimientoValido = Establecimiento::where('id_establecimiento', $request->id_establecimiento)
+                ->where('id_usuario', $usuarioActual->id_usuario)
+                ->exists();
+
+            if (!$establecimientoValido) {
+                return back()->with('error', 'El establecimiento seleccionado no te pertenece o no es válido.');
+            }
+
+            // Buscar la relación en empleado_sucursal
+            $empleadoSucursal = EmpleadoSucursal::where('id_usuario', $id)->firstOrFail();
+
+            // Actualizar únicamente el establecimiento asignado
+            $empleadoSucursal->update([
+                'id_establecimiento' => $request->id_establecimiento
+            ]);
+
+            Bitacora::registrar(Bitacora::ACTUALIZADO, 'Personal de Sucursal', $usuarioActual->id_usuario, "Se actualizó el establecimiento asignado para el usuario ID {$id}.");
+
+            return back()->with('success', '¡Establecimiento asignado actualizado correctamente!');
+
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Error al actualizar: ' . $e->getMessage());
+        }
+    }
 }

@@ -59,4 +59,20 @@ function inicializarModalErrores(tieneErrores, errorDatos) {
     }
 }
 
+// Lógica para el modal de edición de personal
+$(document).ready(function () {
+    $('#modalEditarPersonal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que abrió el modal
+        var idUsuario = button.data('id');
+        var nombreEmpleado = button.data('nombre');
+        var idEstablecimiento = button.data('establecimiento');
 
+        var modal = $(this);
+        modal.find('#edit_nombre_empleado').val(nombreEmpleado);
+        modal.find('#edit_id_establecimiento').val(idEstablecimiento);
+
+        // Construir dinámicamente la ruta de actualización
+        var actionUrl = '/empleados-sucursal/' + idUsuario;
+        modal.find('#formEditarPersonal').attr('action', actionUrl);
+    });
+});

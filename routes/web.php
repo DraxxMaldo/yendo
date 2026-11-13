@@ -103,6 +103,7 @@ Route::middleware(['auth', "rol:{$roles[1]}"])->group(function () {
         Route::get('/empleados-sucursal', [EmpleadoSucursalController::class, 'index'])->name('empleados.index');
         Route::get('/empleados-sucursal', [EmpleadoSucursalController::class, 'index'])->name('empleados.index');
         Route::post('/empleados-sucursal', [EmpleadoSucursalController::class, 'store'])->name('empleados.store');
+        Route::put('/empleados-sucursal/{id}', [EmpleadoSucursalController::class, 'update'])->name('empleados.update');
 
 
 
