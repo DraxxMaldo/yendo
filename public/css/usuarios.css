@@ -1,37 +1,595 @@
-/* Botones principales de la marca */
-.btn-brand {
-    background-color: var(--midnight-indigo) !important;
-    color: var(--vanilla-cream) !important;
-    border: none;
-    transition: all 0.3s ease;
-}
-.btn-brand:hover {
-    background-color: #1a1c33 !important; /* Un tono más oscuro para el hover */
-    color: #ffffff !important;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+/* ==========================================================================
+   GESTIÓN DE USUARIOS - NEOBRUTALISTA | MIDNIGHT INDIGO + VANILLA CREAM
+   Archivo: public/css/usuarios.css
+   - Solo CSS: no modifica la estructura HTML ni JS de la vista Blade.
+   - Cubre: tarjeta principal, sello decorativo, botón nuevo usuario, tabla
+     DataTables, insignias de rol/estado y modales (crear, editar, desactivar,
+     reactivar).
+   ========================================================================== */
+
+/* =========================
+   GLOBAL VARIABLES
+========================= */
+:root {
+    --midnight-indigo: #282B4A;
+    --midnight-light: #414568;
+    --midnight-dark: #1D2038;
+    --midnight-muted: #4A4E73;
+    --vanilla-cream: #EEEBDA;
+    --cream-light: #F7F5E9;
+    --cream-dark: #DCD8C5;
+    --accent-primary: #D9825B;
+    --accent-secondary: #8DAA91;
+    --accent-tertiary: #D8B45A;
+    --color-danger: #C65B5B;
+
+    --usr-border: 3px;
+    --usr-radius: 6px;
+    --usr-speed: .18s;
+    --usr-ease: cubic-bezier(.2, .8, .2, 1);
+    --usr-font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --usr-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%231D2038' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
 }
 
-/* Cabecera de tabla de la marca */
-.table-brand thead th {
-    background-color: var(--midnight-indigo) !important;
-    color: var(--vanilla-cream) !important;
-    border-bottom: none;
-    font-weight: 600;
+
+/* ==========================================================================
+   1) TARJETA PRINCIPAL DE LA VISTA
+   ========================================================================== */
+.card.card-custom.mt-4 {
+    position: relative;
+    background-color: var(--cream-light) !important;
+    color: var(--midnight-indigo);
+    border: var(--usr-border) solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    outline: 1px solid var(--midnight-dark);
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;
+    animation: usr-entrada .45s var(--usr-ease) both;
 }
 
-/* Personalización de la paginación de DataTables para usar Midnight Indigo */
-.page-item.active .page-link {
-    background-color: var(--midnight-indigo) !important;
-    border-color: var(--midnight-indigo) !important;
-    color: var(--vanilla-cream) !important;
+@keyframes usr-entrada {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
-.page-link {
+
+/* Sello decorativo superior */
+.card.card-custom.mt-4::before {
+    content: "Control de Acceso";
+    position: absolute;
+    top: -16px;
+    left: 20px;
+    padding: .3rem .75rem;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 3px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+    z-index: 2;
+}
+
+/* Cabecera de la tarjeta principal */
+.card.card-custom.mt-4 > .card-header {
+    background-color: transparent !important;
+    border-bottom: var(--usr-border) solid var(--midnight-indigo) !important;
+    padding: 1.35rem 1.5rem 1rem 1.5rem !important;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.card.card-custom.mt-4 h3.card-title {
+    display: inline-flex;
+    align-items: center;
+    float: none;
+    margin: 0;
+    font-size: clamp(1.2rem, 3vw, 1.55rem) !important;
+    font-weight: 900 !important;
+    letter-spacing: -.02em;
+    text-transform: uppercase;
     color: var(--midnight-indigo) !important;
 }
 
-/* Ajuste estético de la tarjeta */
-.card-custom {
-    border-radius: 0.5rem;
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(40, 43, 74, 0.1);
+.card.card-custom.mt-4 h3.card-title i {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: .75rem !important;
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark) !important;
+    border: var(--usr-border) solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+    font-size: 1.1rem;
+    transform: rotate(-3deg);
+}
+
+
+/* ==========================================================================
+   2) BOTÓN PRINCIPAL "NUEVO USUARIO" (.btn-brand)
+   ========================================================================== */
+.card.card-custom.mt-4 .btn-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 1.25rem;
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 4px 4px 0 var(--midnight-dark) !important;
+    font-family: var(--usr-font-mono);
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    transition: transform var(--usr-speed) var(--usr-ease),
+    box-shadow var(--usr-speed) var(--usr-ease),
+    background-color var(--usr-speed) ease;
+}
+
+.card.card-custom.mt-4 .btn-brand:hover {
+    background-color: var(--midnight-light) !important;
+    color: var(--vanilla-cream) !important;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--accent-primary) !important;
+}
+
+.card.card-custom.mt-4 .btn-brand:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark) !important;
+}
+
+
+/* ==========================================================================
+   3) CONTENEDOR DE TABLA, FILAS E INSIGNIAS
+   ========================================================================== */
+.card.card-custom.mt-4 > .card-body {
+    background-color: #fff !important;
+    border: var(--usr-border) solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 6px 6px 0 var(--midnight-dark);
+    margin: 1.25rem 1.5rem 1.5rem 1.5rem;
+    padding: 1.25rem !important;
+}
+
+#tbl.table.table-brand {
+    margin-bottom: 0;
+    border: var(--usr-border) solid var(--midnight-dark);
+    border-radius: var(--usr-radius);
+}
+
+#tbl thead,
+#tbl thead th {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 0;
+    border-bottom: var(--usr-border) solid var(--midnight-dark);
+    padding: .95rem 1rem;
+    font-family: var(--usr-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+#tbl tbody td {
+    padding: .9rem 1rem;
+    background-color: #fff;
+    color: var(--midnight-dark);
+    border: 0;
+    border-top: 2px solid var(--cream-dark);
+    font-size: .9rem;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+#tbl tbody tr:first-child td {
+    border-top: 0;
+}
+
+#tbl tbody tr:nth-child(even) td {
+    background-color: var(--cream-light);
+}
+
+#tbl tbody td:first-child {
+    font-family: var(--usr-font-mono);
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+#tbl.table-hover tbody tr:hover td {
+    background-color: #FBF3D6;
+    color: var(--midnight-dark);
+}
+
+#tbl.table-hover tbody tr:hover td:first-child {
+    box-shadow: inset 6px 0 0 var(--accent-tertiary);
+}
+
+/* Insignias de Rol y Estado */
+#tbl tbody .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: 4px;
+    box-shadow: 2px 2px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+#tbl tbody .badge-success {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+#tbl tbody .badge-secondary {
+    background-color: var(--cream-dark) !important;
+    color: var(--midnight-dark) !important;
+}
+
+/* Botones de acción en tabla */
+#tbl .btn-sm {
+    display: inline-grid;
+    place-items: center;
+    min-width: 36px;
+    min-height: 36px;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .85rem;
+    transition: transform var(--usr-speed) var(--usr-ease),
+    box-shadow var(--usr-speed) var(--usr-ease);
+}
+
+#tbl .btn-sm.btn-outline-primary {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+#tbl .btn-sm.btn-outline-danger {
+    background-color: var(--color-danger) !important;
+    color: #fff !important;
+}
+
+#tbl .btn-sm.btn-outline-success {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+#tbl .btn-sm:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--midnight-dark);
+}
+
+#tbl .btn-sm:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 var(--midnight-dark);
+}
+
+
+/* ==========================================================================
+   4) CONTROLES DE DATATABLES
+   ========================================================================== */
+div.dataTables_wrapper > .row {
+    align-items: center;
+    row-gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length label,
+div.dataTables_wrapper div.dataTables_filter label {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0;
+    color: var(--midnight-indigo);
+    font-family: var(--usr-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_length select,
+div.dataTables_wrapper div.dataTables_filter input {
+    height: 42px;
+    margin: 0;
+    background-color: #fff;
+    color: var(--midnight-indigo);
+    border: var(--usr-border) solid var(--midnight-dark);
+    border-radius: var(--usr-radius);
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-size: .9rem;
+    font-weight: 700;
+    transition: transform var(--usr-speed) var(--usr-ease),
+    box-shadow var(--usr-speed) var(--usr-ease);
+}
+
+div.dataTables_wrapper div.dataTables_filter input {
+    min-width: min(100%, 240px);
+    padding: 0 1rem;
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    padding: 0 2rem 0 .85rem;
+    background-image: var(--usr-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right .85rem center;
+    background-size: 12px 8px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+div.dataTables_wrapper div.dataTables_length select:focus,
+div.dataTables_wrapper div.dataTables_filter input:focus {
+    border-color: var(--midnight-dark);
+    box-shadow: 5px 5px 0 var(--accent-primary);
+    transform: translate(-2px, -2px);
+    outline: 0;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    color: var(--midnight-muted);
+    font-family: var(--usr-font-mono);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+    margin: 0;
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link {
+    min-width: 40px;
+    margin: 0;
+    padding: .45rem .8rem;
+    background-color: var(--vanilla-cream);
+    color: var(--midnight-dark);
+    border: 2px solid var(--midnight-dark);
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .82rem;
+    font-weight: 800;
+    text-align: center;
+    transition: transform var(--usr-speed) var(--usr-ease),
+    box-shadow var(--usr-speed) var(--usr-ease);
+}
+
+div.dataTables_wrapper ul.pagination .page-item .page-link:hover {
+    background-color: var(--accent-tertiary);
+    color: var(--midnight-dark);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--midnight-dark);
+}
+
+div.dataTables_wrapper ul.pagination .page-item.active .page-link {
+    background-color: var(--midnight-indigo);
+    color: var(--vanilla-cream);
+    border-color: var(--midnight-dark);
+    box-shadow: 4px 4px 0 var(--accent-primary);
+    transform: translate(-1px, -1px);
+}
+
+div.dataTables_wrapper ul.pagination .page-item.disabled .page-link {
+    background-color: var(--cream-dark);
+    color: var(--midnight-muted);
+    border-style: dashed;
+    border-color: var(--midnight-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: .85;
+}
+
+
+/* ==========================================================================
+   5) MODALES (Crear, Editar, Desactivar y Reactivar Usuario)
+   ========================================================================== */
+.modal-backdrop.show {
+    background-color: var(--midnight-dark);
+    opacity: .82;
+}
+
+.modal .modal-content {
+    background-color: var(--cream-light) !important;
+    color: var(--midnight-dark);
+    border: var(--usr-border) solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 10px 10px 0 var(--accent-primary) !important;
+}
+
+.modal .modal-header {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border-bottom: var(--usr-border) solid var(--midnight-dark) !important;
+    padding: 1.15rem 1.5rem !important;
+}
+
+/* Cabeceras de confirmación en modales de estado */
+#modalEliminarUsuario .modal-header {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+#modalReactivarUsuario .modal-header {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+}
+
+.modal .modal-title {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .02em;
+}
+
+.modal label.form-label {
+    display: block;
+    margin-bottom: .4rem;
+    color: var(--midnight-indigo) !important;
+    font-family: var(--usr-font-mono);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.modal .form-control {
+    height: 44px;
+    background-color: #fff !important;
+    color: var(--midnight-indigo) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark) !important;
+    font-size: .92rem;
+    font-weight: 700;
+}
+
+.modal select.form-control {
+    padding-right: 2.25rem;
+    background-image: var(--usr-select-arrow);
+    background-repeat: no-repeat;
+    background-position: right .85rem center;
+    background-size: 12px 8px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.modal .form-control:focus {
+    box-shadow: 4px 4px 0 var(--accent-primary) !important;
+    outline: 0;
+}
+
+.modal .input-group-text {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-right: 0 !important;
+    border-radius: var(--usr-radius) 0 0 var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-weight: 800;
+}
+
+.modal .input-group .form-control.border-left-0 {
+    border-radius: 0 var(--usr-radius) var(--usr-radius) 0 !important;
+}
+
+.modal .modal-footer {
+    background-color: var(--cream-light) !important;
+    border-top: var(--usr-border) solid var(--midnight-indigo) !important;
+    padding: 1rem 1.5rem !important;
+    gap: .5rem;
+}
+
+.modal .btn-brand {
+    background-color: var(--midnight-indigo) !important;
+    color: var(--vanilla-cream) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--accent-primary);
+    font-family: var(--usr-font-mono);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.modal .btn-outline-secondary {
+    background-color: var(--vanilla-cream) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.modal .btn-warning {
+    background-color: var(--accent-tertiary) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.modal .btn-success {
+    background-color: var(--accent-secondary) !important;
+    color: var(--midnight-dark) !important;
+    border: 2px solid var(--midnight-dark) !important;
+    border-radius: var(--usr-radius) !important;
+    box-shadow: 3px 3px 0 var(--midnight-dark);
+    font-family: var(--usr-font-mono);
+    font-size: .78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   6) RESPONSIVE & MOVIMIENTO REDUCIDO
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .card.card-custom.mt-4 > .card-header {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    .card.card-custom.mt-4 .btn-brand {
+        width: 100%;
+    }
+
+    .card.card-custom.mt-4 > .card-body {
+        margin: 1rem;
+        padding: .85rem !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .card.card-custom.mt-4,
+    .modal .modal-content {
+        box-shadow: 6px 6px 0 var(--accent-primary) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card.card-custom.mt-4,
+    .card.card-custom.mt-4 .btn-brand,
+    #tbl .btn-sm,
+    div.dataTables_wrapper div.dataTables_length select,
+    div.dataTables_wrapper div.dataTables_filter input,
+    div.dataTables_wrapper ul.pagination .page-item .page-link {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .card.card-custom.mt-4 h3.card-title i {
+        transform: none;
+    }
 }
