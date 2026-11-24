@@ -18,7 +18,11 @@ class EstablecimientoController extends Controller
 {
     public function index()
     {
-        $establecimientos = Establecimiento::with('distrito.municipio.departamento', 'distrito.municipio.departamento.zona','creador.perfil')->orderBy('id_establecimiento', 'DESC')->get();
+        $establecimientos = $this->establecimientosVisibles()
+            ->with('distrito.municipio.departamento', 'distrito.municipio.departamento.zona','creador.perfil')
+            ->orderBy('id_establecimiento', 'DESC')
+            ->get();
+
         $departamentos = Departamento::orderBy('nombre_departamento', 'ASC')->get();
         $municipios = Municipio::orderBy('nombre_municipio', 'ASC')->get();
         $distritos = Distrito::orderBy('nombre_distrito', 'ASC')->get();
@@ -47,15 +51,22 @@ class EstablecimientoController extends Controller
     // Método para exportar a Excel
     public function exportarExcel()
     {
-        // Descarga el archivo generado por la clase EstablecimientosExport
-        return Excel::download(new EstablecimientosExport, 'Reporte_Establecimientos.xlsx');
+        $usuario = Auth::user();
+
+        // El administrador conserva el reporte global; el afiliado exporta solo sus establecimientos.
+        $idUsuario = $usuario->tieneAlgunRol(['admin']) ? null : $usuario->id_usuario;
+
+        return Excel::download(new EstablecimientosExport($idUsuario), 'Reporte_Establecimientos.xlsx');
     }
 
     // Método para exportar a PDF
     public function exportarPdf()
     {
-        // Consultamos los datos con sus relaciones (Eager Loading)
-        $establecimientos = Establecimiento::with('municipio.departamento')->orderBy('id_establecimiento', 'DESC')->get();
+        // Consultamos los datos con las mismas reglas de acceso que el listado.
+        $establecimientos = $this->establecimientosVisibles()
+            ->with('distrito.municipio.departamento')
+            ->orderBy('id_establecimiento', 'DESC')
+            ->get();
 
         // Cargamos la vista que acabamos de crear y le pasamos los datos
         $pdf = Pdf::loadView('Establecimiento.PDF.TablaEstablecimientoPdf', compact('establecimientos'));
@@ -69,6 +80,10 @@ class EstablecimientoController extends Controller
     // Método para actualizar los datos
     public function update(ActualizarEstablecimientoRequest $request, $id)
     {
+        // Primero verificamos que el establecimiento pertenezca al usuario o sea visible para el administrador.
+        // Se realiza antes de almacenar una posible imagen para evitar escrituras no autorizadas.
+        $establecimiento = $this->establecimientosVisibles()->findOrFail($id);
+
         $datos = $request->validated();
 
         // Verificamos si se adjuntó una nueva imagen
@@ -77,9 +92,25 @@ class EstablecimientoController extends Controller
         }
 
         // Llamamos al método estático del modelo para actualizar
-        Establecimiento::actualizar($datos, $id);
+        Establecimiento::actualizar($datos, $establecimiento->id_establecimiento);
 
         return back()->with('success', 'Establecimiento actualizado exitosamente.');
+    }
+
+    /**
+     * Consulta los establecimientos que puede visualizar el usuario autenticado.
+     * El administrador mantiene acceso global y cada afiliado queda limitado a sus registros.
+     */
+    private function establecimientosVisibles()
+    {
+        $usuario = Auth::user();
+        $consulta = Establecimiento::query();
+
+        if (!$usuario->tieneAlgunRol(['admin'])) {
+            $consulta->where('id_usuario', $usuario->id_usuario);
+        }
+
+        return $consulta;
     }
 
 }

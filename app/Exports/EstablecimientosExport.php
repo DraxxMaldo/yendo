@@ -12,12 +12,28 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class EstablecimientosExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
+    private ?int $idUsuario;
+
+    public function __construct(?int $idUsuario)
+    {
+        $this->idUsuario = $idUsuario;
+    }
+
     /**
-     * 1. Obtenemos los datos con sus relaciones para evitar el problema N+1
+     * 1. Obtenemos los datos con sus relaciones para evitar el problema N+1.
+     * Si recibe un ID de usuario, limita el reporte a sus establecimientos.
+     * Si recibe null, conserva el reporte global del administrador.
      */
     public function collection()
     {
-        return Establecimiento::with('municipio.departamento')->orderBy('id_establecimiento', 'DESC')->get();
+        $consulta = Establecimiento::with('distrito.municipio.departamento')
+            ->orderBy('id_establecimiento', 'DESC');
+
+        if ($this->idUsuario !== null) {
+            $consulta->where('id_usuario', $this->idUsuario);
+        }
+
+        return $consulta->get();
     }
 
     /**
@@ -42,8 +58,8 @@ class EstablecimientosExport implements FromCollection, WithHeadings, WithMappin
         return [
             $establecimiento->id_establecimiento,
             $establecimiento->nombre,
-            $establecimiento->municipio->departamento->nombre_departamento ?? 'Sin Departamento',
-            $establecimiento->municipio->nombre_municipio ?? 'Sin Municipio',
+            $establecimiento->distrito?->municipio?->departamento?->nombre_departamento ?? 'Sin Departamento',
+            $establecimiento->distrito?->municipio?->nombre_municipio ?? 'Sin Municipio',
             $establecimiento->direccion_exacta,
         ];
     }
