@@ -52,6 +52,7 @@
                     </div>
                 </button>
 
+                @if(auth()->user()->tieneAlgunRol(['admin']))
                 <!-- Botón Agregar Departamento -->
                 <button class="btn-agregar-doble" data-toggle="modal" data-target="#modalDepartamento">
                     <i class="fas fa-plus"></i>
@@ -69,6 +70,7 @@
                         <span>Municipio</span>
                     </div>
                 </button>
+                @endif
             </div>
         </div>
 
@@ -237,6 +239,7 @@
         </div>
     </div>
 
+    @if(auth()->user()->tieneAlgunRol(['admin']))
     {{-- MODAL CREAR DEPARTAMENTO --}}
     <div class="modal fade modal-modern" id="modalDepartamento" tabindex="-1" aria-labelledby="modalDepartamentoLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -323,6 +326,8 @@
             </div>
         </div>
     </div>
+
+    @endif
 
     {{-- MODAL CREAR ESTABLECIMIENTO --}}
     <div class="modal fade modal-modern" id="modalEstablecimiento" tabindex="-1" aria-labelledby="modalEstablecimientoLabel" aria-hidden="true">
