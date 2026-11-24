@@ -13,23 +13,37 @@ use App\Http\Requests\Auth\CompletarRegistroRequest;
 use App\Models\UsuarioCredencial;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\RateLimiter;
 
 class RegistroController extends Controller
 {
     // Método para generar y enviar el código
     public function enviarCodigo(ValidarCorreoRegistroRequest $request)
     {
-        // Si llega a esta línea, es porque pasó todas las validaciones de tu Request con éxito
-        $correo = $request->correo;
+        $correo = strtolower(trim($request->correo));
+        $claveCorreo = hash('sha256', $correo);
+        $limiteEnvios = 'registro:envios:' . $claveCorreo . ':' . $request->ip();
 
-        // Genera un código aleatorio de 6 dígitos
-        $codigo = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        // Máximo 3 envíos por correo e IP cada 10 minutos.
+        if (RateLimiter::tooManyAttempts($limiteEnvios, 3)) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'Has solicitado demasiados códigos. Inténtalo nuevamente más tarde.',
+                'segundos_restantes' => RateLimiter::availableIn($limiteEnvios)
+            ], 429);
+        }
 
-        // Guarda el código en Caché por 1 minuto (60 segundos)
-        Cache::put('codigo_registro_' . $correo, $codigo, 60);
+        RateLimiter::hit($limiteEnvios, 600);
 
-        // Envía el correo
+        // Un nuevo envío invalida cualquier autorización anterior de esta sesión.
+        $request->session()->forget('registro_correo_verificado');
+
+        // Genera un código aleatorio criptográficamente seguro de 6 dígitos.
+        $codigo = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        // Conserva la vigencia actual del código: 60 segundos.
+        Cache::put('codigo_registro_' . $claveCorreo, $codigo, 60);
+
         Mail::to($correo)->send(new CodigoRegistroMail($codigo));
 
         return response()->json(['success' => true, 'mensaje' => 'Código enviado al correo.']);
@@ -38,64 +52,84 @@ class RegistroController extends Controller
     // Método para verificar si el código ingresado coincide
     public function verificarCodigo(Request $request)
     {
-        $request->validate([
+        $datos = $request->validate([
             'correo' => 'required|email',
             'codigo' => 'required|digits:6'
         ]);
 
-        $codigoGuardado = Cache::get('codigo_registro_' . $request->correo);
+        $correo = strtolower(trim($datos['correo']));
+        $claveCorreo = hash('sha256', $correo);
+        $limiteIntentos = 'registro:verificaciones:' . hash('sha256', $correo . '|' . $request->ip());
+
+        // Máximo 5 intentos de verificación por correo e IP cada 10 minutos.
+        if (RateLimiter::tooManyAttempts($limiteIntentos, 5)) {
+            return response()->json([
+                'success' => false,
+                'mensaje' => 'Has superado el número de intentos. Solicita un nuevo código más tarde.',
+                'segundos_restantes' => RateLimiter::availableIn($limiteIntentos)
+            ], 429);
+        }
+
+        $codigoGuardado = Cache::get('codigo_registro_' . $claveCorreo);
 
         if (!$codigoGuardado) {
-            return response()->json(['success' => false, 'mensaje' => 'El código ha expirado. Por favor, solicita uno nuevo.']);
+            return response()->json(['success' => false, 'mensaje' => 'El código ha expirado. Por favor, solicita uno nuevo.'], 422);
         }
 
-        if ($codigoGuardado !== $request->codigo) {
-            return response()->json(['success' => false, 'mensaje' => 'El código es incorrecto.']);
+        RateLimiter::hit($limiteIntentos, 600);
+
+        if (!hash_equals((string) $codigoGuardado, (string) $datos['codigo'])) {
+            return response()->json(['success' => false, 'mensaje' => 'El código es incorrecto.'], 422);
         }
 
-        // Si es correcto, podemos borrarlo de caché por seguridad
-        Cache::forget('codigo_registro_' . $request->correo);
+        // El código se consume y se crea una autorización temporal ligada a esta sesión y correo.
+        Cache::forget('codigo_registro_' . $claveCorreo);
+        RateLimiter::clear($limiteIntentos);
+
+        $request->session()->put('registro_correo_verificado', [
+            'correo' => $correo,
+            'expira' => now()->addMinutes(10)->timestamp
+        ]);
 
         return response()->json(['success' => true]);
     }
 
-    // NUEVO MÉTODO: Guarda los datos finales en las dos tablas
+    // Guarda los datos finales únicamente si esta sesión verificó el mismo correo.
     public function finalizarRegistro(CompletarRegistroRequest $request)
     {
         try {
             DB::beginTransaction();
 
-            // 1. Crear el usuario en usuarios_credenciales
             $usuario = UsuarioCredencial::create([
-                'correo_electronico' => $request->correo_final,
-                'contrasenha'        => Hash::make($request->password), // Encriptamos la contraseña
-                'id_rol'             => 3, // 3 = Básico
-                'estado_cuenta'      => 1  // 1 = Activo
+                'correo_electronico' => strtolower(trim($request->correo_final)),
+                'contrasenha'        => Hash::make($request->password),
+                'id_rol'             => 3,
+                'estado_cuenta'      => 1
             ]);
 
-            // 2. Crear el perfil asociado en perfiles_personas
             PerfilPersona::create([
                 'id_usuario'     => $usuario->id_usuario,
                 'nombres'        => $request->nombres,
                 'apellidos'      => $request->apellidos,
-                // Agregamos valores por defecto para que la BD no explote por campos vacíos
                 'telefono'       => '00000000',
                 'nombre_negocio' => 'Por definir'
             ]);
 
             DB::commit();
 
+            // Se consume la autorización solo después de confirmar la transacción.
+            $request->session()->forget('registro_correo_verificado');
+
             return response()->json([
                 'success' => true,
                 'mensaje' => '¡Cuenta creada con éxito! Ahora puedes iniciar sesión.'
             ]);
 
-            // Cambiamos Exception por Throwable para atrapar TODO
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
-                'mensaje' => 'Error BD: ' . $e->getMessage()
+                'mensaje' => 'No fue posible completar el registro. Inténtalo nuevamente.'
             ], 500);
         }
     }
