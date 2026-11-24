@@ -2,6 +2,13 @@
 
 @section('titulo', 'Bitácora de Auditoría')
 
+@push('estilos')
+    {{-- CSS de DataTables --}}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('css/toast.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bitacora.css') }}">
+@endpush
+
 @section('contenido')
     <div class="card mt-4 shadow-sm border-0">
         <div class="card-header bg-white pt-4 pb-2 px-4 border-0">
@@ -44,7 +51,7 @@
 
             {{-- TABLA DE REGISTROS --}}
             <div class="table-responsive">
-                <table class="table table-hover table-striped align-middle">
+                <table id="tbl" class="table table-hover table-striped align-middle w-100 table-brand">
                     <thead class="table-dark">
                     <tr>
                         <th>Fecha y Hora</th>
@@ -55,14 +62,12 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{-- @forelse es la forma profesional de renderizar listados manejando estados vacíos[cite: 4] --}}
                     @forelse($bitacoras as $b)
                         <tr>
                             <td class="text-muted small fw-bold">
                                 {{ $b->created_at->format('d/m/Y h:i A') }}
                             </td>
                             <td>
-                                {{-- Insignias de color diferenciadas usando @switch[cite: 4] --}}
                                 @switch($b->evento)
                                     @case('LOGIN_OK')
                                         <span class="badge badge-success px-2 py-1"><i class="fas fa-check-circle"></i> LOGIN</span>
@@ -109,5 +114,11 @@
     </div>
 @endsection
 
+@push('scripts')
+    {{-- JS de DataTables --}}
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap4.min.js"></script>
 
-
+    {{-- Script local de inicialización de DataTables --}}
+    <script src="{{ asset('js/dataTable.js') }}"></script>
+@endpush
