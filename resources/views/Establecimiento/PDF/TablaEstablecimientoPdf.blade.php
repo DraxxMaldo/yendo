@@ -34,8 +34,8 @@
         <tr>
             <td>{{ $est->id_establecimiento }}</td>
             <td>{{ $est->nombre }}</td>
-            <td>{{ $est->municipio->departamento->nombre_departamento ?? 'N/A' }}</td>
-            <td>{{ $est->municipio->nombre_municipio ?? 'N/A' }}</td>
+            <td>{{ $est->distrito?->municipio?->departamento?->nombre_departamento ?? 'N/A' }}</td>
+            <td>{{ $est->distrito?->municipio?->nombre_municipio ?? 'N/A' }}</td>
             <td>{{ $est->direccion_exacta }}</td>
         </tr>
     @empty
