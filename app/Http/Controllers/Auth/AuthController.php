@@ -33,10 +33,12 @@ class AuthController extends Controller
         // NOTA: Para la contraseña, la llave SIEMPRE debe llamarse 'password' en Auth::attempt
         $credenciales = [
             'correo_electronico' => $request->correo,
-            'password'           => $request->clave
+            'password'           => $request->clave,
+            // El filtro evita autenticar cuentas desactivadas sin revelar su estado.
+            'estado_cuenta'      => true,
         ];
 
-        // Auth::attempt verifica automáticamente el correo y hace el Hash::check de la clave
+        // Auth::attempt verifica correo, estado de cuenta y contraseña.
         if (Auth::attempt($credenciales)) {
             $request->session()->regenerate();
 
@@ -49,8 +51,11 @@ class AuthController extends Controller
         // ---> 1.a. REGISTRO LOGIN_FALLIDO:
         Bitacora::registrar(Bitacora::LOGIN_FALLIDO, 'Autenticación', null, 'Credenciales incorrectas', $request->correo);
 
-        // Si falla, disparamos el Toast de error que ya tienes configurado
-        return redirect()->route('login')->with('error', 'Las credenciales proporcionadas son incorrectas.');
+        // Se utiliza el mismo mensaje para credenciales incorrectas y cuentas no habilitadas.
+        return redirect()->route('login')->with(
+            'error',
+            'No fue posible iniciar sesión. Verifica tus credenciales o contacta al administrador.'
+        );
     }
 
     // 3. Cerrar sesión
