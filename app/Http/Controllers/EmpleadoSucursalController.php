@@ -112,8 +112,13 @@ class EmpleadoSucursalController extends Controller
                 return back()->with('error', 'El establecimiento seleccionado no te pertenece o no es válido.');
             }
 
-            // Buscar la relación en empleado_sucursal
-            $empleadoSucursal = EmpleadoSucursal::where('id_usuario', $id)->firstOrFail();
+            // Seguridad: el empleado debe pertenecer actualmente a un establecimiento del afiliado autenticado.
+            // whereHas comprueba la propiedad del establecimiento actual, no solo la del destino.
+            $empleadoSucursal = EmpleadoSucursal::where('id_usuario', $id)
+                ->whereHas('establecimiento', function ($query) use ($usuarioActual) {
+                    $query->where('id_usuario', $usuarioActual->id_usuario);
+                })
+                ->firstOrFail();
 
             // Actualizar únicamente el establecimiento asignado
             $empleadoSucursal->update([
