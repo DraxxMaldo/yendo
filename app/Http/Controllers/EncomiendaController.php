@@ -12,6 +12,7 @@ use App\Models\EmpleadoSucursal;
 use App\Models\CatalogoPrecio;
 use App\Models\Bitacora;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 
 class EncomiendaController extends Controller
@@ -40,8 +41,6 @@ class EncomiendaController extends Controller
             $preciosCatalogo = CatalogoPrecio::where('estado', true)
                 ->where('id_usuario', $idAfiliadoDueño)
                 ->get();
-        } else {
-            $preciosCatalogo = CatalogoPrecio::where('estado', true)->get();
         }
 
         $establecimientos = Establecimiento::all();
@@ -70,24 +69,55 @@ class EncomiendaController extends Controller
         try {
             $usuario = Auth::user();
 
-            $empleadoSucursal = EmpleadoSucursal::where('id_usuario', $usuario->id_usuario)->first();
+            // Obtener el establecimiento asignado al cajero y determinar su afiliado propietario.
+            $empleadoSucursal = EmpleadoSucursal::where('id_usuario', $usuario->id_usuario)
+                ->with('establecimiento')
+                ->first();
 
-            if (!$empleadoSucursal) {
-                return back()->with('error', 'No tienes ningún establecimiento asignado como personal. Contacta al administrador.');
+            if (!$empleadoSucursal || !$empleadoSucursal->establecimiento) {
+                return back()->with('error', 'No tienes ningún establecimiento válido asignado como personal. Contacta al administrador.');
             }
 
-            // Validar que se reciban múltiples precios del catálogo
+            $idAfiliadoDueño = $empleadoSucursal->establecimiento->id_usuario;
+
+            // No permitir utilizar un catálogo global cuando no se puede identificar al propietario.
+            if (!$idAfiliadoDueño) {
+                return back()->with('error', 'No se pudo determinar la empresa propietaria de tu establecimiento. Contacta al administrador.');
+            }
+
+            // Validar que cada tarifa exista, pertenezca al afiliado del cajero y siga activa.
             $request->validate([
                 'id_precios'   => ['required', 'array', 'min:1'],
-                'id_precios.*' => ['required', 'integer', 'exists:catalogo_precios,id_precio'],
+                'id_precios.*' => [
+                    'required',
+                    'integer',
+                    Rule::exists('catalogo_precios', 'id_precio')->where(function ($query) use ($idAfiliadoDueño) {
+                        $query->where('id_usuario', $idAfiliadoDueño)
+                            ->where('estado', true);
+                    }),
+                ],
                 'valor_declarado_producto' => ['required', 'numeric', 'min:0'],
                 'es_pago_contraentrega'    => ['required', 'boolean'],
+            ], [
+                'id_precios.*.exists' => 'Una o más tarifas no pertenecen a tu empresa o se encuentran inactivas. Actualiza el formulario e inténtalo nuevamente.',
             ]);
 
-            // Sumar las tarifas de todos los elementos seleccionados en el catálogo
+            // Sumar únicamente tarifas que sigan perteneciendo al afiliado y estén activas.
             $sumaTarifas = 0;
             foreach ($request->id_precios as $idPrecioItem) {
-                $itemCatalogo = CatalogoPrecio::findOrFail($idPrecioItem);
+                $itemCatalogo = CatalogoPrecio::where('id_precio', $idPrecioItem)
+                    ->where('id_usuario', $idAfiliadoDueño)
+                    ->where('estado', true)
+                    ->first();
+
+                // Reconfirmar la disponibilidad por si la tarifa cambió después de la validación.
+                if (!$itemCatalogo) {
+                    return back()
+                        ->withErrors(['id_precios' => 'Una o más tarifas ya no están disponibles. Actualiza el formulario e inténtalo nuevamente.'])
+                        ->withInput()
+                        ->with('error', 'No fue posible registrar la encomienda porque una tarifa dejó de estar disponible.');
+                }
+
                 $sumaTarifas += floatval($itemCatalogo->precio);
             }
 
